@@ -1435,8 +1435,8 @@ class npc_tirion_icc : public CreatureScript
                 return true;
             }
 
-            if ((instance->GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE && instance->GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE && instance->GetBossState(DATA_SINDRAGOSA) == DONE) || player->isGameMaster())
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            //if ((instance->GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE && instance->GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE && instance->GetBossState(DATA_SINDRAGOSA) == DONE) || player->isGameMaster())
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
 
             player->SEND_GOSSIP_MENU(GOSSIP_MENU, creature->GetGUID());
 
