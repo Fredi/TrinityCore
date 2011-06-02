@@ -402,8 +402,7 @@ public:
         {
             switch (emote)
             {
-                case TEXT_EMOTE_KISS:
-
+                case 58: // KISS
                     if (me->HasAura(FROG_LOVE))
                         return;
 
