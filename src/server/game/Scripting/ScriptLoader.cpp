@@ -1240,6 +1240,7 @@ void AddSC_argen_tournament();
 void AddSC_DuelReset();
 void AddSC_npc_teleport();
 void AddSC_npc_vip();
+void AddSC_event_npc();
 #endif
 
 void AddCustomScripts()
@@ -1250,5 +1251,6 @@ void AddCustomScripts()
     AddSC_DuelReset();
     AddSC_npc_teleport();
     AddSC_npc_vip();
+    AddSC_event_npc();
 #endif
 }
