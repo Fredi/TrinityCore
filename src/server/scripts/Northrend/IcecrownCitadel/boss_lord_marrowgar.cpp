@@ -208,7 +208,7 @@ class boss_lord_marrowgar : public CreatureScript
                                 events.RescheduleEvent(EVENT_BONE_SPIKE_GRAVEYARD, urand(15000, 20000), EVENT_GROUP_SPECIAL);
                             break;
                         case EVENT_ENABLE_BONE_SLICE:
-                            _boneSlice = true;
+                            _boneSlice = false;
                             break;
                         case EVENT_ENRAGE:
                             DoCast(me, SPELL_BERSERK, true);
