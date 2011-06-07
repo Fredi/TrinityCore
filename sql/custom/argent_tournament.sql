@@ -10,6 +10,13 @@ INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
 ('62960', 'spell_tournament_charge'),
 ('69672', 'spell_sunreaver_disguise');
 
+-- Argent tournament
+--  npc_squire_danny
+UPDATE `creature_template` SET `KillCredit1` = 33708 WHERE `entry` = 33707;
+UPDATE `creature_template` SET `ScriptName` = 'npc_squire_danny' WHERE `entry` = 33518;
+-- npc_argent_champion
+UPDATE `creature_template` SET `ScriptName` = 'npc_argent_champion' WHERE `entry` = 33707;
+
 -- npc_lake_frog
 UPDATE `creature_template` SET `ScriptName` = 'npc_lake_frog' WHERE `entry` IN (33211,33224);
 UPDATE `creature_template` SET `gossip_menu_id` = 33220 WHERE `entry` = 33220;
