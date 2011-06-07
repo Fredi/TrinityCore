@@ -1243,6 +1243,7 @@ void AddSC_DuelReset();
 void AddSC_npc_teleport();
 void AddSC_npc_vip();
 void AddSC_event_npc();
+void AddSC_custom_spells();
 #endif
 
 void AddCustomScripts()
@@ -1254,5 +1255,6 @@ void AddCustomScripts()
     AddSC_npc_teleport();
     AddSC_npc_vip();
     AddSC_event_npc();
+    AddSC_custom_spells();
 #endif
 }

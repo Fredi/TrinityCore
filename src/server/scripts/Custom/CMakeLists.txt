@@ -15,6 +15,7 @@ set(scripts_STAT_SRCS
   Custom/npc_teleport.cpp
   Custom/npc_vip.cpp
   Custom/event_npc.cpp
+  Custom/spells.cpp
 )
 
 message("  -> Prepared: Custom")
