@@ -123,7 +123,7 @@ SpellMgr::SpellMgr()
             case TARGET_UNIT_SUMMONER:
                 SpellTargetType[i] = TARGET_TYPE_UNIT_CASTER;
                 break;
-            case TARGET_UNIT_TARGET_PUPPET:
+            case TARGET_UNIT_TARGET_MINIPET:
             case TARGET_UNIT_TARGET_ALLY:
             case TARGET_UNIT_TARGET_RAID:
             case TARGET_UNIT_TARGET_ANY:
@@ -4037,6 +4037,13 @@ void SpellMgr::LoadSpellCustomAttr()
         case 64381: // Strength of the Pack
             spellInfo->StackAmount = 4;
             ++count;
+            break;
+        case 63018: // Searing Light
+        case 65121: // Searing Light (25m)
+        case 63024: // Gravity Bomb
+        case 64234: // Gravity Bomb (25m)
+            spellInfo->MaxAffectedTargets = 1;
+            count++;
             break;
         // ENDOF ULDUAR SPELLS
         //
