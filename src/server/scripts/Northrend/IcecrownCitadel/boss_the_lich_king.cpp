@@ -479,7 +479,7 @@ class boss_the_lich_king : public CreatureScript
                 events.ScheduleEvent(EVENT_SUMMON_DRUDGE_GHOULS, 10000, 0, PHASE_1);
                 //About 5 seconds after the encounter starts properly Lich King will cast his first Infest
                 //http://www.youtube.com/watch?v=hseFPNkaqjE
-                events.ScheduleEvent(EVENT_INFEST, 5000, 0, PHASE_1);
+                //events.ScheduleEvent(EVENT_INFEST, 5000, 0, PHASE_1);
                 events.ScheduleEvent(EVENT_SUMMON_SHAMBLING_HORROR, 20000, 0, PHASE_1);
                 events.ScheduleEvent(EVENT_NECROTIC_PLAGUE, 35000, 0, PHASE_1);
                 if (IsHeroic())
@@ -686,7 +686,7 @@ class boss_the_lich_king : public CreatureScript
                             events.ScheduleEvent(EVENT_SUMMON_VAL_KYR_SHADOWGUARD, 13000, 0, PHASE_3);
                             events.ScheduleEvent(EVENT_SOUL_REAPER, 35000, 0, PHASE_3);
                             events.ScheduleEvent(EVENT_DEFILE, 32000, 0, PHASE_3);
-                            events.ScheduleEvent(EVENT_INFEST, 8000, 0, PHASE_3);
+                            //events.ScheduleEvent(EVENT_INFEST, 8000, 0, PHASE_3);
                         }
                         else
                         {
