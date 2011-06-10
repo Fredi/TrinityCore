@@ -6924,6 +6924,10 @@ int32 Player::CalculateReputationGain(uint32 creatureOrQuestLevel, int32 rep, in
     if (percent <= 0.0f)
         return 0;
 
+    // VIPs get 10% more reputation
+    if (GetSession()->IsVIP())
+        percent += 10.0f;
+
     return int32(rep*percent/100);
 }
 
