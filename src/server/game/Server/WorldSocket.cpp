@@ -1001,6 +1001,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
 
     m_Crypt.Init(&K);
 
+    m_Session->LoadAccountLinkedState();
     m_Session->LoadGlobalAccountData();
     m_Session->LoadTutorialsData();
     m_Session->ReadAddonsInfo(recvPacket);

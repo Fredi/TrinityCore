@@ -206,6 +206,8 @@ void SocialMgr::GetFriendInfo(Player *player, uint32 friendGUID, FriendInfo &fri
             friendInfo.Status = FRIEND_STATUS_AFK;
         if (pFriend->isDND())
             friendInfo.Status = FRIEND_STATUS_DND;
+        if (pFriend->IsReferAFriendLinked(player))
+            friendInfo.Status = FRIEND_STATUS_RAF;
         friendInfo.Area = pFriend->GetZoneId();
         friendInfo.Level = pFriend->getLevel();
         friendInfo.Class = pFriend->getClass();
