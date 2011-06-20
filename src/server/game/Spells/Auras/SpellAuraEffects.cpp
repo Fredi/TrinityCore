@@ -2006,9 +2006,6 @@ void AuraEffect::PeriodicDummyTick(Unit* target, Unit* caster) const
                     target->RemoveAura(64821);
                 }
                 break;
-            case 75765: // [DND] Music (Operation Gnomeregan event)
-                target->CastSpell(target, 75782, true);
-                break;
         }
         break;
         case SPELLFAMILY_MAGE:
@@ -5958,16 +5955,6 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                     caster->CastCustomSpell(target, 63338, &damage, NULL, NULL, true);
                     break;
                 }
-                case 75572: // Eject!
-                {
-                    if (Vehicle *vehicle = caster->GetVehicleKit())
-                            if (Unit *driver = vehicle->GetPassenger(0))
-                            {
-                                driver->ExitVehicle();
-                                driver->GetMotionMaster()->MoveJump(driver->GetPositionX(), driver->GetPositionY(), driver->GetPositionZ()+7.0f, 2.0f, 2.0f);
-                            }
-                    break;
-                }
                 case 71563:
                     if (Aura* newAura = target->AddAura(71564, target))
                         newAura->SetStackAmount(newAura->GetSpellProto()->StackAmount);
@@ -6051,7 +6038,6 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                             target->CastSpell((Unit*)NULL, GetAmount(), true, NULL, this);
                             break;
                         case 58600: // Restricted Flight Area
-                        case 58730: // Restricted Flight Area
                             if (aurApp->GetRemoveMode() == AURA_REMOVE_BY_EXPIRE)
                                 target->CastSpell(target, 58601, true);
                             break;
