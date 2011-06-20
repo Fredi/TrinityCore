@@ -4252,6 +4252,24 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->Effect[1] = 0;
             ++count;
             break;
+        case 29175: // Ribbon Dance Customization
+            spellInfo->AttributesEx3 |= SPELL_ATTR3_DEATH_PERSISTENT;
+            spellInfo->Effect[0] = 6;
+            spellInfo->Effect[1] = 6;
+            spellInfo->EffectApplyAuraName[0] = SPELL_AURA_MOD_XP_PCT;
+            spellInfo->EffectApplyAuraName[1] = SPELL_AURA_MOD_XP_QUEST_PCT;
+            spellInfo->EffectBasePoints[0] = 10;
+            spellInfo->EffectBasePoints[1] = 10;
+            spellInfo->EffectImplicitTargetA[0] = 1;
+            spellInfo->EffectImplicitTargetA[1] = 1;
+            spellInfo->EffectImplicitTargetB[0] = 0;
+            spellInfo->EffectImplicitTargetB[1] = 0;
+            spellInfo->EffectRadiusIndex[0] = 0;
+            spellInfo->EffectRadiusIndex[1] = 0;
+            spellInfo->StackAmount = 1;
+            spellInfo->DurationIndex = 30;
+            ++count;
+            break;
         default:
             break;
         }
