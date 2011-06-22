@@ -14228,6 +14228,9 @@ void Player::OnGossipSelect(WorldObject* source, uint32 gossipListId, uint32 men
         case GOSSIP_OPTION_LEARNDUALSPEC:
             if (GetSpecsCount() == 1 && getLevel() >= sWorld->getIntConfig(CONFIG_MIN_DUALSPEC_LEVEL))
             {
+                Unmount();
+                RemoveAurasByType(SPELL_AURA_MOUNTED);
+
                 // Cast spells that teach dual spec
                 // Both are also ImplicitTarget self and must be cast by player
                 CastSpell(this, 63680, true, NULL, NULL, GetGUID());
