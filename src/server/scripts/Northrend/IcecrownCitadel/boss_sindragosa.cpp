@@ -1395,7 +1395,7 @@ class spell_rimefang_icy_blast : public SpellScriptLoader
 
             void MarkIcyBlastSpot()
             {
-                if (Position* pos = GetTargetDest())
+                if (WorldLocation const* pos = GetTargetDest())
                     if (TempSummon* summon = GetCaster()->SummonCreature(NPC_TRIGGER, *pos, TEMPSUMMON_TIMED_DESPAWN, 40000))
                     {
                         summon->CastSpell(summon, 65686, true); //Just visual aura
