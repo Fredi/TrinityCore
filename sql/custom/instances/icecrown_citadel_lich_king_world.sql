@@ -1,6 +1,9 @@
 -- Temp solution for frostmourn room
+DELETE FROM `gameobject` WHERE `id` = 193070 and `map` = 631;
 REPLACE INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
 ('2710388', '193070', '631', '15', '1', '520', '-2524', '1038.42', '4.47344', '0', '0', '0.786348', '-0.617784', '300', '255', '1');
+
+DELETE FROM `creature` WHERE `id` in (36823, 36824);
 REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`) VALUES
 ('250250', '36823', '631', '15', '1', '0', '0', '495', '-2502', '1050', '5.49385', '300', '0', '0', '315000', '59910', '0', '0', '0', '0', '0'),
 ('250251', '36824', '631', '15', '1', '0', '0', '495', '-2546', '1050.23', '1.72709', '300', '0', '0', '252000', '0', '0', '0', '0', '0', '0');
@@ -22,9 +25,12 @@ UPDATE `creature_template` SET `ScriptName`='npc_ice_sphere_icc' WHERE `entry` =
 UPDATE `creature_template` SET `ScriptName`='npc_defile_icc' WHERE `entry` = 38757;
 UPDATE `creature_template` SET `ScriptName`='npc_terenas_fighter_icc' WHERE `entry` = 36823;
 UPDATE `creature_template` SET `ScriptName`='npc_spirit_warden_icc' WHERE `entry` = 36824;
+UPDATE `creature_template` SET `ScriptName`='npc_shadow_trap' WHERE `entry` = 39137;
 
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14 WHERE `entry` = 39137;
 UPDATE `creature_template` SET `unit_flags` = 0, `vehicleid` = 533 WHERE `entry` IN (36609, 39120, 39121, 39122);
 UPDATE `creature_template` SET `modelid1` = 11686 WHERE `entry` IN (15214,36633, 39305, 39306, 39307);
+UPDATE `creature_template` SET `mechanic_immune_mask` = 12582928 WHERE `entry` IN (36609, 39120, 39121, 39122);
 
 -- Spell
 -- Linked spell
@@ -34,13 +40,16 @@ REPLACE INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`commen
 (-70337,72846,0, 'The Lich King: Necrotic plague immun'),
 (-70338,70338,0, 'The Lich King: Necrotic jump'),
 (-69200,69201,0, 'The Lich King: Raging Spirit'),
-(-70338,74074,0, 'The Licg King: Plague Siphon');
+(-70338,74074,0, 'The Lich King: Plague Siphon'),
+(70860, 39432,2, 'Gravity when Frozen tron teleport - prevent fall down player');
 
 REPLACE INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
 (72743,'spell_lich_king_defile'),
 (74115,'spell_lich_king_pain_and_suffering'),
 (68980,'spell_lich_king_harvest_soul'),
 (74325,'spell_lich_king_harvest_soul'),
+(74326,'spell_lich_king_harvest_soul'),
+(74327,'spell_lich_king_harvest_soul'),
 (70541,'spell_lich_king_infection'),
 (73779,'spell_lich_king_infection'),
 (73780,'spell_lich_king_infection'),
@@ -70,17 +79,17 @@ REPLACE INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
 (74361,'spell_lich_king_valkyr_summon'),
 (72429,'spell_lich_king_tirion_mass_resurrection');
 
+REPLACE INTO `conditions` VALUES ('13', '0', '71614', '0', '18', '1', '38995', '0', '0', '', 'LichKing - Ice Lock');
 
 UPDATE waypoint_scripts SET delay = 3 WHERE dataint = 38879 AND command = 15;
 DELETE FROM `spell_scripts` WHERE id = 72429 AND command = 15;
-INSERT INTO `spell_scripts` VALUE
-('72429','0','3','15','72423','0','0','0','0','0','0');
+INSERT INTO `spell_scripts` VALUE ('72429','0','3','15','72423','0','0','0','0','0','0');
 
 -- Teleports
 DELETE FROM `npc_text` WHERE `id` BETWEEN 800000 AND 800006;
 INSERT INTO `npc_text` (`id`, `text0_0`) VALUES
 (800000, 'Teleport to the Light\'s Hammer'),
-(800001, 'Teleport to the Oratory of the Damned.'), 
+(800001, 'Teleport to the Oratory of the Damned.'),
 (800002, 'Teleport to the Rampart of Skulls.'),
 (800003, 'Teleport to the Deathbringer\'s Rise.'),
 (800004, 'Teleport to the Upper Spire.'),
