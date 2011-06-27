@@ -268,8 +268,8 @@ class boss_professor_putricide : public CreatureScript
                         summon->SetReactState(REACT_PASSIVE);
                         return;
                     case NPC_CHOKING_GAS_BOMB:
-                        summon->CastSpell(summon, SPELL_CHOKING_GAS_BOMB_PERIODIC, true);
-                        summon->CastSpell(summon, SPELL_CHOKING_GAS_EXPLOSION_TRIGGER, true);
+                        //summon->CastSpell(summon, SPELL_CHOKING_GAS_BOMB_PERIODIC, true);
+                        //summon->CastSpell(summon, SPELL_CHOKING_GAS_EXPLOSION_TRIGGER, true);
                         return;
                     case NPC_MUTATED_ABOMINATION_10:
                     case NPC_MUTATED_ABOMINATION_25:
@@ -594,7 +594,7 @@ class boss_professor_putricide : public CreatureScript
                             break;
                         case EVENT_CHOKING_GAS_BOMB:
                             Talk(EMOTE_CHOKING_GAS_BOMB);
-                            DoCast(me, SPELL_CHOKING_GAS_BOMB);
+                            //DoCast(me, SPELL_CHOKING_GAS_BOMB);
                             events.ScheduleEvent(EVENT_CHOKING_GAS_BOMB, urand(35000, 40000));
                             break;
                         case EVENT_UNBOUND_PLAGUE:
