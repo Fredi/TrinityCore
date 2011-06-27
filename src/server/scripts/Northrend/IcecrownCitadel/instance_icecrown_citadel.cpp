@@ -752,8 +752,10 @@ class instance_icecrown_citadel : public InstanceMapScript
                             instance->SummonCreature(NPC_VALITHRIA_DREAMWALKER_QUEST, ValithriaSpawnPos);
 
                         if (state == DONE)
- 	                        if (GameObject* pChest = instance->GetGameObject(uiDreamwalkerCache))
+                        {
+                            if (GameObject* pChest = instance->GetGameObject(uiDreamwalkerCache))
                                 pChest->SetRespawnTime(pChest->GetRespawnDelay());
+                        }
                         break;
                     case DATA_SINDRAGOSA:
                         HandleGameObject(FrostwingSigilGUID, state != DONE);
