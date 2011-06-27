@@ -905,7 +905,7 @@ void Player::CleanupsBeforeDelete(bool finalCleanup)
             itr->second.save->RemovePlayer(this);
 }
 
-bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 class_, uint8 gender, uint8 skin, uint8 face, uint8 hairStyle, uint8 hairColor, uint8 facialHair, uint8 /*outfitId*/)
+bool Player::Create(uint32 guidlow, CharacterCreateInfo* createInfo)
 {
     //FIXME: outfitId not used in player creating
     // TODO: need more checks against packet modifications
@@ -914,9 +914,9 @@ bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 c
 
     Object::_Create(guidlow, 0, HIGHGUID_PLAYER);
 
-    m_name = name;
+    m_name = createInfo->Name;
 
-    PlayerInfo const* info = sObjectMgr->GetPlayerInfo(race, class_);
+    PlayerInfo const* info = sObjectMgr->GetPlayerInfo(createInfo->Race, createInfo->Class);
     if (!info)
     {
         sLog->outError("Player have incorrect race/class pair. Can't be loaded.");
@@ -928,10 +928,10 @@ bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 c
 
     Relocate(info->positionX, info->positionY, info->positionZ, info->orientation);
 
-    ChrClassesEntry const* cEntry = sChrClassesStore.LookupEntry(class_);
+    ChrClassesEntry const* cEntry = sChrClassesStore.LookupEntry(createInfo->Class);
     if (!cEntry)
     {
-        sLog->outError("Class %u not found in DBC (Wrong DBC files?)", class_);
+        sLog->outError("Class %u not found in DBC (Wrong DBC files?)", createInfo->Class);
         return false;
     }
 
@@ -942,15 +942,15 @@ bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 c
     SetFloatValue(UNIT_FIELD_BOUNDINGRADIUS, DEFAULT_WORLD_OBJECT_SIZE);
     SetFloatValue(UNIT_FIELD_COMBATREACH, 1.5f);
 
-    setFactionForRace(race);
+    setFactionForRace(createInfo->Race);
 
-    if (!IsValidGender(gender))
+    if (!IsValidGender(createInfo->Gender))
     {
-        sLog->outError("Player has invalid gender (%hu), can't be loaded.", gender);
+        sLog->outError("Player has invalid gender (%hu), can't be loaded.", createInfo->Gender);
         return false;
     }
 
-    uint32 RaceClassGender = (race) | (class_ << 8) | (gender << 16);
+    uint32 RaceClassGender = (createInfo->Race) | (createInfo->Class << 8) | (createInfo->Gender << 16);
 
     SetUInt32Value(UNIT_FIELD_BYTES_0, (RaceClassGender | (powertype << 24)));
     InitDisplayIds();
@@ -966,9 +966,9 @@ bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 c
                                                             // -1 is default value
     SetInt32Value(PLAYER_FIELD_WATCHED_FACTION_INDEX, uint32(-1));
 
-    SetUInt32Value(PLAYER_BYTES, (skin | (face << 8) | (hairStyle << 16) | (hairColor << 24)));
-    SetUInt32Value(PLAYER_BYTES_2, (facialHair | (0x00 << 8) | (0x00 << 16) | (0x02 << 24)));
-    SetByteValue(PLAYER_BYTES_3, 0, gender);
+    SetUInt32Value(PLAYER_BYTES, (createInfo->Skin | (createInfo->Face << 8) | (createInfo->HairStyle << 16) | (createInfo->HairColor << 24)));
+    SetUInt32Value(PLAYER_BYTES_2, (createInfo->FacialHair | (0x00 << 8) | (0x00 << 16) | (0x02 << 24)));
+    SetByteValue(PLAYER_BYTES_3, 0, createInfo->Gender);
     SetByteValue(PLAYER_BYTES_3, 3, 0);                     // BattlefieldArenaFaction (0 or 1)
 
     SetUInt32Value(PLAYER_GUILDID, 0);
@@ -1460,12 +1460,17 @@ void Player::SetDrunkValue(uint16 newDrunkenValue, uint32 itemId)
 {
     uint32 oldDrunkenState = Player::GetDrunkenstateByValue(m_drunk);
 
-    if (!newDrunkenValue && !HasAuraType(SPELL_AURA_MOD_FAKE_INEBRIATE))
-        m_invisibilityDetect.AddFlag(INVISIBILITY_DRUNK);
-    else
-        m_invisibilityDetect.DelFlag(INVISIBILITY_DRUNK);
+    // select drunk percent or total SPELL_AURA_MOD_FAKE_INEBRIATE amount, whichever is higher for visibility updates
+    int32 drunkPercent = newDrunkenValue * 100 / 0xFFFF;
+    drunkPercent = std::max(drunkPercent, GetTotalAuraModifier(SPELL_AURA_MOD_FAKE_INEBRIATE));
 
-    m_invisibilityDetect.AddValue(INVISIBILITY_DRUNK, int32(newDrunkenValue - m_drunk) / 256);
+    if (drunkPercent)
+    {
+        m_invisibilityDetect.AddFlag(INVISIBILITY_DRUNK);
+        m_invisibilityDetect.SetValue(INVISIBILITY_DRUNK, drunkPercent);
+    }
+    else if (!HasAuraType(SPELL_AURA_MOD_FAKE_INEBRIATE) && !newDrunkenValue)
+        m_invisibilityDetect.DelFlag(INVISIBILITY_DRUNK);
 
     m_drunk = newDrunkenValue;
     SetUInt32Value(PLAYER_BYTES_3, (GetUInt32Value(PLAYER_BYTES_3) & 0xFFFF0001) | (m_drunk & 0xFFFE));
@@ -3488,7 +3493,7 @@ bool Player::AddTalent(uint32 spell_id, uint8 spec, bool learning)
     return false;
 }
 
-bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool dependent, bool disabled)
+bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool dependent, bool disabled, bool loading /*=false*/)
 {
     SpellEntry const *spellInfo = sSpellStore.LookupEntry(spell_id);
     if (!spellInfo)
@@ -3728,7 +3733,7 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool dependen
 
     // cast talents with SPELL_EFFECT_LEARN_SPELL (other dependent spells will learned later as not auto-learned)
     // note: all spells with SPELL_EFFECT_LEARN_SPELL isn't passive
-    if (talentCost > 0 && IsSpellHaveEffect(spellInfo, SPELL_EFFECT_LEARN_SPELL))
+    if (!loading && talentCost > 0 && IsSpellHaveEffect(spellInfo, SPELL_EFFECT_LEARN_SPELL))
     {
         // ignore stance requirement for talent learn spell (stance set for spell only for client spell description show)
         CastSpell(this, spell_id, true);
@@ -17778,7 +17783,7 @@ void Player::_LoadSpells(PreparedQueryResult result)
     if (result)
     {
         do
-            addSpell((*result)[0].GetUInt32(), (*result)[1].GetBool(), false, false, (*result)[2].GetBool());
+            addSpell((*result)[0].GetUInt32(), (*result)[1].GetBool(), false, false, (*result)[2].GetBool(), true);
         while (result->NextRow());
     }
 }
@@ -19654,7 +19659,7 @@ void Player::AddSpellMod(SpellModifier* mod, bool apply)
 }
 
 // Restore spellmods in case of failed cast
-void Player::RestoreSpellMods(Spell* spell, uint32 ownerAuraId)
+void Player::RestoreSpellMods(Spell* spell, uint32 ownerAuraId, Aura* aura)
 {
     if (!spell || spell->m_appliedMods.empty())
         return;
@@ -19671,6 +19676,9 @@ void Player::RestoreSpellMods(Spell* spell, uint32 ownerAuraId)
 
             // Restore only specific owner aura mods
             if (ownerAuraId && (ownerAuraId != mod->ownerAura->GetSpellProto()->Id))
+                continue;
+
+            if (aura && mod->ownerAura != aura)
                 continue;
 
             // check if mod affected this spell
@@ -19696,6 +19704,13 @@ void Player::RestoreSpellMods(Spell* spell, uint32 ownerAuraId)
             //ASSERT (mod->ownerAura->GetCharges() <= mod->charges);
         }
     }
+}
+
+void Player::RestoreAllSpellMods(uint32 ownerAuraId, Aura* aura)
+{
+    for (uint32 i = 0; i < CURRENT_MAX_SPELL; ++i)
+        if (m_currentSpells[i])
+            RestoreSpellMods(m_currentSpells[i], ownerAuraId, aura);
 }
 
 void Player::RemoveSpellMods(Spell* spell)
