@@ -15,15 +15,15 @@ UPDATE `creature_template` SET `ScriptName`='boss_black_knight' WHERE `entry`=35
 UPDATE `creature_template` SET `ScriptName`='boss_eadric' WHERE `entry`=35119;
 UPDATE `creature_template` SET `ScriptName`='boss_paletress' WHERE `entry`=34928;
 UPDATE `creature_template` SET `ScriptName`='npc_memory' WHERE `entry` IN (35052,35041,35033,35046,35043,35047,35044,35039,35034,35049,35030,34942,35050,35042,35045,35037,35031,35038,35029,35048,35032,35028,35040,35036,35051);
-UPDATE `creature_template` SET `ScriptName`='npc_argent_soldier'  WHERE `entry` IN (35309,35305,35307);
+UPDATE `creature_template` SET `ScriptName`='npc_argent_soldier' WHERE `entry` IN (35309,35305,35307);
 UPDATE `creature_template` SET `ScriptName`='npc_black_knight_skeletal_gryphon' WHERE `entry`=35491;
 
 -- Open Entrance Door
 UPDATE `gameobject` SET `state` = 0 WHERE `guid` = 1804;
 
 -- Mounts
-DELETE FROM `vehicle_template_accessory` WHERE `entry` in (35491,33299,33418,33409,33300,33408,33301,33414,33297,33416,33298);
-INSERT INTO `vehicle_template_accessory` (`entry`,`accessory_entry`,`seat_id`,`minion`,`description`) VALUES
+DELETE FROM `vehicle_accessory` WHERE `guid` in (35491,33299,33418,33409,33300,33408,33301,33414,33297,33416,33298);
+INSERT INTO `vehicle_accessory` (`guid`,`accessory_entry`,`seat_id`,`minion`,`description`) VALUES
 (35491,35451,0,0, 'Black Knight'),
 (33299,35323,0,1, 'Darkspear Raptor'),
 (33418,35326,0,1, 'Silvermoon Hawkstrider'),
@@ -65,8 +65,8 @@ UPDATE `creature` SET `id` = 36558 WHERE `id` = 36559;
 -- Texts
 DELETE FROM `script_texts` WHERE `entry` <= -1999926 and `entry` >= -1999956;
 INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
-(0,-1999926, 'Coming out of the gate Grand Champions other faction.  ' ,0,0,0,1, '' ),
-(0,-1999927, 'Good work! You can get your award from Crusader\'s Coliseum chest!.  ' ,0,1,0,1, '' ),
+(0,-1999926, 'Coming out of the gate Grand Champions other faction. ' ,0,0,0,1, '' ),
+(0,-1999927, 'Good work! You can get your award from Crusader\'s Coliseum chest!. ' ,0,1,0,1, '' ),
 (0,-1999928, 'You spoiled my grand entrance. Rat.' ,16256,1,0,5, '' ),
 (0,-1999929, 'Did you honestly think an agent if the Lich King would be bested on the field of your pathetic little tournament?' ,16257,1,0,5, '' ),
 (0,-1999930, 'I have come to finish my task ' ,16258,1,0,5, '' ),
@@ -115,6 +115,7 @@ INSERT INTO `script_waypoint` VALUES
 -- Griphon of black Knight before battle start
 REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES
 (35492, 0, 0, 0, 0, 0, 29842, 0, 0, 0, 'Black Knight\'s Skeletal Gryphon', '', '', 0, 80, 80, 2, 35, 35, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 33554432, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1048576, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 486, 0, 0, '', 0, 3, 15, 1, 0, 0, 0, 0, 0, 0, 0, 164, 1, 0, 0, 0, 'npc_gr');
+
 DELETE FROM `script_waypoint` WHERE `entry`=35492;
 INSERT INTO `script_waypoint` VALUES
 (35492,1,741.067078, 634.471558, 411.569366,0,''),
@@ -131,6 +132,7 @@ DELETE FROM `creature_template` WHERE `entry` in (35591,35592);
 INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES
 (35591, 0, 0, 0, 0, 0, 29894, 0, 0, 0, 'Jaeren Sunsworn', '', '', 0, 75, 75, 2, 14, 14, 0, 1, 1, 0, 0, 0, 0, 0, 1, 2000, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 'npc_anstart'),
 (35592, 0, 0, 0, 0, 0, 29893, 0, 0, 0, 'Arelas Brightstar', '', '', 0, 75, 75, 2, 14, 14, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 512, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 'npc_anstart');
+
 -- Spawn Announcer in normal/heroic mode
 DELETE FROM `creature` WHERE `id` in (35004, 35005);
 DELETE FROM `creature` WHERE `guid` in (180100, 180101);
@@ -140,48 +142,50 @@ INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equ
 -- Addons
 REPLACE INTO `creature_template_addon` VALUES
 -- Argent
-(35309, 0, 0, 0, 1, 0, '63501'),
-(35310, 0, 0, 0, 1, 0, '63501'),
-(35305, 0, 0, 0, 1, 0, '63501'),
-(35306, 0, 0, 0, 1, 0, '63501'),
-(35307, 0, 0, 0, 1, 0, '63501'),
-(35308, 0, 0, 0, 1, 0, '63501'),
-(35119, 0, 0, 0, 1, 0, '63501'),
-(35518, 0, 0, 0, 1, 0, '63501'),
-(34928, 0, 0, 0, 1, 0, '63501'),
-(35517, 0, 0, 0, 1, 0, '63501'),
+(35309, 0, 0, 0, 1, 0, '63501 0'),
+(35310, 0, 0, 0, 1, 0, '63501 0'),
+(35305, 0, 0, 0, 1, 0, '63501 0'),
+(35306, 0, 0, 0, 1, 0, '63501 0'),
+(35307, 0, 0, 0, 1, 0, '63501 0'),
+(35308, 0, 0, 0, 1, 0, '63501 0'),
+(35119, 0, 0, 0, 1, 0, '63501 0'),
+(35518, 0, 0, 0, 1, 0, '63501 0'),
+(34928, 0, 0, 0, 1, 0, '63501 0'),
+(35517, 0, 0, 0, 1, 0, '63501 0'),
+
 -- Faction_champ
-(35323, 0, 0, 0, 1, 0, '63399 62852 64723'),
-(35570, 0, 0, 0, 1, 0, '63399 62852 64723'),
-(36091, 0, 0, 0, 1, 0, '63399 62852 64723'),
-(35326, 0, 0, 0, 1, 0, '63403 62852 64723'),
-(35569, 0, 0, 0, 1, 0, '63403 62852 64723'),
-(36085, 0, 0, 0, 1, 0, '63403 62852 64723'),
-(35314, 0, 0, 0, 1, 0, '63433 62852 64723'),
-(35572, 0, 0, 0, 1, 0, '63433 62852 64723'),
-(36089, 0, 0, 0, 1, 0, '63433 62852 64723'),
-(35325, 0, 0, 0, 1, 0, '63436 62852 64723'),
-(35571, 0, 0, 0, 1, 0, '63436 62852 64723'),
-(36090, 0, 0, 0, 1, 0, '63436 62852 64723'),
-(35329, 0, 0, 0, 1, 0, '63427 62852 64723'),
-(34703, 0, 0, 0, 1, 0, '63427 62852 64723'),
-(36087, 0, 0, 0, 1, 0, '63427 62852 64723'),
-(35331, 0, 0, 0, 1, 0, '63396 62852 64723'),
-(34702, 0, 0, 0, 1, 0, '63396 62852 64723'),
-(36082, 0, 0, 0, 1, 0, '63396 62852 64723'),
-(35327, 0, 0, 0, 1, 0, '63430 62852 64723'),
-(35617, 0, 0, 0, 1, 0, '63430 62852 64723'),
-(36084, 0, 0, 0, 1, 0, '63430 62852 64723'),
-(35328, 0, 0, 0, 1, 0, '62594 62852 64723'),
-(34705, 0, 0, 0, 1, 0, '62594 62852 64723'),
-(36088, 0, 0, 0, 1, 0, '62594 62852 64723'),
-(35330, 0, 0, 0, 1, 0, '63423 62852 64723'),
-(34701, 0, 0, 0, 1, 0, '63423 62852 64723'),
-(36083, 0, 0, 0, 1, 0, '63423 62852 64723'),
-(35332, 0, 0, 0, 1, 0, '63406 62852 64723'),
-(36086, 0, 0, 0, 1, 0, '63406 62852 64723'),
-(34657, 0, 0, 0, 1, 0, '63406 62852 64723');
--- Immunes (crash fix xD )
+(35323, 0, 0, 0, 1, 0, '63399 0 62852 0 64723 0'),
+(35570, 0, 0, 0, 1, 0, '63399 0 62852 0 64723 0'),
+(36091, 0, 0, 0, 1, 0, '63399 0 62852 0 64723 0'),
+(35326, 0, 0, 0, 1, 0, '63403 0 62852 0 64723 0'),
+(35569, 0, 0, 0, 1, 0, '63403 0 62852 0 64723 0'),
+(36085, 0, 0, 0, 1, 0, '63403 0 62852 0 64723 0'),
+(35314, 0, 0, 0, 1, 0, '63433 0 62852 0 64723 0'),
+(35572, 0, 0, 0, 1, 0, '63433 0 62852 0 64723 0'),
+(36089, 0, 0, 0, 1, 0, '63433 0 62852 0 64723 0'),
+(35325, 0, 0, 0, 1, 0, '63436 0 62852 0 64723 0'),
+(35571, 0, 0, 0, 1, 0, '63436 0 62852 0 64723 0'),
+(36090, 0, 0, 0, 1, 0, '63436 0 62852 0 64723 0'),
+(35329, 0, 0, 0, 1, 0, '63427 0 62852 0 64723 0'),
+(34703, 0, 0, 0, 1, 0, '63427 0 62852 0 64723 0'),
+(36087, 0, 0, 0, 1, 0, '63427 0 62852 0 64723 0'),
+(35331, 0, 0, 0, 1, 0, '63396 0 62852 0 64723 0'),
+(34702, 0, 0, 0, 1, 0, '63396 0 62852 0 64723 0'),
+(36082, 0, 0, 0, 1, 0, '63396 0 62852 0 64723 0'),
+(35327, 0, 0, 0, 1, 0, '63430 0 62852 0 64723 0'),
+(35617, 0, 0, 0, 1, 0, '63430 0 62852 0 64723 0'),
+(36084, 0, 0, 0, 1, 0, '63430 0 62852 0 64723 0'),
+(35328, 0, 0, 0, 1, 0, '62594 0 62852 0 64723 0'),
+(34705, 0, 0, 0, 1, 0, '62594 0 62852 0 64723 0'),
+(36088, 0, 0, 0, 1, 0, '62594 0 62852 0 64723 0'),
+(35330, 0, 0, 0, 1, 0, '63423 0 62852 0 64723 0'),
+(34701, 0, 0, 0, 1, 0, '63423 0 62852 0 64723 0'),
+(36083, 0, 0, 0, 1, 0, '63423 0 62852 0 64723 0'),
+(35332, 0, 0, 0, 1, 0, '63406 0 62852 0 64723 0'),
+(36086, 0, 0, 0, 1, 0, '63406 0 62852 0 64723 0'),
+(34657, 0, 0, 0, 1, 0, '63406 0 62852 0 64723 0');
+
+-- Immunes (crash fix)
 UPDATE `creature_template` SET `mechanic_immune_mask`=`mechanic_immune_mask`|1073741823 WHERE `entry` IN
 (35309,35310, -- Argent Lightwielder
 35305,35306, -- Argent Monk

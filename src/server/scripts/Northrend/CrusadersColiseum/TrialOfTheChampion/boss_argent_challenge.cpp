@@ -1,18 +1,25 @@
 /*
- * Copyright (C) 2010 TrinityScript 2
+ * Copyright (C) 2005-2011 MaNGOS <http://www.getmangos.com/>
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
+ * Copyright (C) 2008-2011 Trinity <http://www.trinitycore.org/>
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
+ * Copyright (C) 2006-2011 ScriptDev2 <http://www.scriptdev2.com/>
  *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2010-2011 Project SkyFire <http://www.projectskyfire.org/>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 #include "ScriptPCH.h"
@@ -82,7 +89,7 @@ class OrientationCheck : public std::unary_function<Unit*, bool>
         {
             return !unit->isInFront(caster, 40.0f, 2.5f);
         }
-
+    
     private:
         Unit* caster;
 };
@@ -98,14 +105,14 @@ class spell_eadric_radiance : public SpellScriptLoader
             {
                 unitList.remove_if(OrientationCheck(GetCaster()));
             }
-
+            
             void Register()
             {
                 OnUnitTargetSelect += SpellUnitTargetFn(spell_eadric_radiance_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_AREA_ENEMY_SRC);
                 OnUnitTargetSelect += SpellUnitTargetFn(spell_eadric_radiance_SpellScript::FilterTargets, EFFECT_1, TARGET_UNIT_AREA_ENEMY_SRC);
             }
         };
-
+        
         SpellScript *GetSpellScript() const
         {
             return new spell_eadric_radiance_SpellScript();
@@ -130,6 +137,8 @@ public:
             pCreature->SetReactState(REACT_PASSIVE);
             pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
     		pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NOT_SELECTABLE);
+			me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
+            me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_GRIP, true);
         }
 
         InstanceScript* pInstance;
@@ -248,6 +257,8 @@ public:
             pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
     		pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NOT_SELECTABLE);
             pCreature->RestoreFaction();
+			me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
+            me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_GRIP, true);
         }
 
         InstanceScript* pInstance;
@@ -306,8 +317,9 @@ public:
                 if (GameObject* pGO = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_MAIN_GATE1)))
                         pInstance->HandleGameObject(pGO->GetGUID(),true);		
                 pInstance->SetData(BOSS_ARGENT_CHALLENGE_P, DONE);
-
-            }
+                if (IsHeroic())
+                    pInstance->DoCompleteAchievement(ACHIEV_CONF);
+    		}
         }
 
         void MovementInform(uint32 MovementType, uint32 Data)
@@ -501,10 +513,10 @@ public:
 
             if (uiShadowsPastTimer <= uiDiff)
             {
-                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM,1))
+                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1))
                 {
                     if (pTarget && pTarget->isAlive())
-                        DoCast(pTarget,SPELL_SHADOWS_PAST);
+                        DoCast(pTarget, SPELL_SHADOWS_PAST);
                 }
                 uiShadowsPastTimer = 20000;
             }else uiShadowsPastTimer -= uiDiff;
@@ -552,19 +564,19 @@ public:
         InstanceScript* pInstance;
 
         uint8 uiWaypoint;
-    	
-    	uint32 uiStrikeTimer;
-    	uint32 uiCleaveTimer;
+
+        uint32 uiStrikeTimer;
+        uint32 uiCleaveTimer;
         uint32 uiPummelTimer;
-    	uint32 uiPainTimer;
+        uint32 uiPainTimer;
         uint32 uiMindTimer;
-    	uint32 uiSsmiteTimer;
+        uint32 uiSsmiteTimer;
         uint32 uiFontTimer;
         uint32 uiLightTimer;
-    	uint32 uiFlurryTimer;
+        uint32 uiFlurryTimer;
         uint32 uiFinalTimer;
         uint32 uiDivineTimer;
-    	uint32 uiResetTimer;
+        uint32 uiResetTimer;
     	
         void Reset()
         {
