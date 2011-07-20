@@ -338,7 +338,7 @@ void AnticheatMgr::BuildReport(Player* player,uint8 reportType)
         //sWorld->SendGlobalGMMessage(&data);
         str = "Possible cheater found: " + std::string(player->GetName());
         sWorld->BanCharacter(player->GetName(), "1h", str, "Anticheat");
-        sWorld->SendWorldText("|cFFFFFC00[ANTICHEAT]|cFF00FFFF[|cFF60FF00%s|cFF00FFFF] Banned for cheating!|r", player->GetName());
+        sWorld->SendWorldText(LANG_BAN_CHEATER, player->GetName());
     }
 }
 
