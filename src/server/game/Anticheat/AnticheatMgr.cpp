@@ -332,10 +332,13 @@ void AnticheatMgr::BuildReport(Player* player,uint8 reportType)
     {
         // display warning at the center of the screen, hacky way?
         std::string str = "";
-        str = "|cFFFFFC00[AC]|cFF00FFFF[|cFF60FF00" + std::string(player->GetName()) + "|cFF00FFFF] Possible cheater!";
-        WorldPacket data(SMSG_NOTIFICATION, (str.size()+1));
-        data << str;
-        sWorld->SendGlobalGMMessage(&data);
+        //str = "|cFFFFFC00[AC]|cFF00FFFF[|cFF60FF00" + std::string(player->GetName()) + "|cFF00FFFF] Possible cheater!";
+        //WorldPacket data(SMSG_NOTIFICATION, (str.size()+1));
+        //data << str;
+        //sWorld->SendGlobalGMMessage(&data);
+        str = "Possible cheater found: " + std::string(player->GetName());
+        sWorld->BanCharacter(player->GetName(), "1h", str, "Anticheat");
+        sWorld->SendWorldText("|cFFFFFC00[ANTICHEAT]|cFF00FFFF[|cFF60FF00%s|cFF00FFFF] Banned for cheating!|r", player->GetName());
     }
 }
 
