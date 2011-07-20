@@ -75,7 +75,7 @@ public:
                 return;
 
             //Let's players can pass id has quest
-            if (pPlayer->HasAura(70973) || pPlayer->HasAura(70974))
+            if (player->HasAura(70973) || player->HasAura(70974))
                 return;
 
             switch (me->GetEntry())
