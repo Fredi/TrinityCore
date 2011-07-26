@@ -502,6 +502,35 @@ class spell_marrowgar_bone_spike_graveyard : public SpellScriptLoader
         }
 };
 
+// DELETE FROM spell_script_names WHERE spell_id = 69065;
+// INSERT INTO spell_script_names VALUES (69065, 'spell_marrowgar_impaled_damage');
+class spell_marrowgar_impaled_damage : public SpellScriptLoader
+{
+    public:
+        spell_marrowgar_impaled_damage() : SpellScriptLoader("spell_marrowgar_impaled_damage") { }
+
+        class spell_marrowgar_impaled_damage_AuraScript : public AuraScript
+        {
+            PrepareAuraScript(spell_marrowgar_impaled_damage_AuraScript);
+
+            void HandleEffectCalcAmount(AuraEffect const* /*aurEff*/, int32& amount, bool& canBeRecalculated)
+            {
+                amount = 5; // 5% damage every 1 second (instead of default 10%)
+                canBeRecalculated = false;
+            }
+
+            void Register()
+            {
+                DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_marrowgar_impaled_damage_AuraScript::HandleEffectCalcAmount, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE_PERCENT);
+            }
+        };
+
+        AuraScript* GetAuraScript() const
+        {
+            return new spell_marrowgar_impaled_damage_AuraScript();
+        }
+};
+
 class spell_marrowgar_bone_storm : public SpellScriptLoader
 {
     public:
@@ -536,5 +565,6 @@ void AddSC_boss_lord_marrowgar()
     new spell_marrowgar_coldflame();
     new spell_marrowgar_coldflame_damage();
     new spell_marrowgar_bone_spike_graveyard();
+    new spell_marrowgar_impaled_damage();
     new spell_marrowgar_bone_storm();
 }
