@@ -1242,6 +1242,7 @@ void AddSC_npc_teleport();
 void AddSC_npc_vip();
 void AddSC_event_npc();
 void AddSC_custom_spells();
+void AddSC_npc_legion_master();
 #endif
 
 void AddCustomScripts()
@@ -1254,5 +1255,6 @@ void AddCustomScripts()
     AddSC_npc_vip();
     AddSC_event_npc();
     AddSC_custom_spells();
+    AddSC_npc_legion_master();
 #endif
 }
