@@ -25,7 +25,16 @@ enum Events
     EVENT_P2_CHILLING_WAVE      = 5,
 
     // Phase three only
-    EVENT_P3_SHADOW_BOLT        = 6
+    EVENT_P3_SHADOW_BOLT        = 6,
+
+    // Phase four only
+    EVENT_P4_BLIZZARD           = 7,
+    EVENT_P4_MANA_DETONATION    = 8,
+
+    // Phase five only
+    EVENT_P5_FURY               = 9,
+    EVENT_P5_STUNNING_FORCE     = 10,
+    EVENT_P5_FLASH_HEAL         = 11
 };
 
 enum Spells
@@ -36,7 +45,15 @@ enum Spells
     SPELL_DOMINATE_MIND         = 71289,
     SPELL_INCITE_TERROR         = 73070,
     SPELL_CHILLING_WAVE         = 68778,
-    SPELL_SHADOW_BOLT           = 71254
+    SPELL_SHADOW_BOLT           = 71254,
+    SPELL_BLIZZARD              = 71118,
+    SPELL_STUNNING_FORCE        = 52402,
+    SPELL_MANA_DETONATION       = 27819,
+    SPELL_FLASH_HEAL            = 71783,
+    SPELL_CLEAR_DEBUFFS         = 34098,
+    SPELL_REPELLING_WAVE        = 74509,
+    SPELL_FURY                  = 66721,
+    SPELL_FRENZY                = 47774
 };
 
 enum Summons
@@ -54,6 +71,7 @@ enum Models
 #define LM_YELL_KILL        "Morra!!"
 #define LM_YELL_DIE         "Oh nao... eu... voltarei..."
 #define LM_YELL_BERSERK     "Provem a minha furia!"
+#define LM_YELL_ENFURECIDO  "JA CHEGA!!!"
 
 class npc_legion_master : public CreatureScript
 {
@@ -69,6 +87,7 @@ class npc_legion_master : public CreatureScript
                 _Reset();
 
                 me->RemoveAurasDueToSpell(SPELL_BERSERK);
+                me->RemoveAurasDueToSpell(SPELL_FURY);
 
                 me->SetDisplayId(MODEL_BOY);
                 me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.0f);
@@ -137,16 +156,22 @@ class npc_legion_master : public CreatureScript
                 if (events.GetPhaseMask() & PHASE_THREE_MASK && !HealthAbovePct(26))
                 {
                     CastInciteTerror();
-                    events.RescheduleEvent(EVENT_SUMMON_SNOBOLD_VASSAL, 5000);
                     events.SetPhase(PHASE_FOUR);
+                    events.ScheduleEvent(EVENT_P4_BLIZZARD, 5000, 0, PHASE_FOUR);
+                    events.ScheduleEvent(EVENT_P4_MANA_DETONATION, 6000, 0, PHASE_FOUR);
                     return;
                 }
 
                 if (events.GetPhaseMask() & PHASE_FOUR_MASK && !HealthAbovePct(11))
                 {
-                    CastInciteTerror();
-                    events.RescheduleEvent(EVENT_SUMMON_SNOBOLD_VASSAL, 5000);
+                    me->MonsterYell(LM_YELL_ENFURECIDO, LANG_UNIVERSAL, 0);
+                    DoCast(me, SPELL_CLEAR_DEBUFFS);
+                    DoCast(me, SPELL_REPELLING_WAVE);
                     events.SetPhase(PHASE_FIVE);
+                    events.RescheduleEvent(EVENT_SUMMON_SNOBOLD_VASSAL, 5000);
+                    events.ScheduleEvent(EVENT_P5_FURY, 6000, 0, PHASE_FIVE);
+                    events.ScheduleEvent(EVENT_P5_STUNNING_FORCE, 10000, 0, PHASE_FIVE);
+                    events.ScheduleEvent(EVENT_P5_FLASH_HEAL, 5000, 0, PHASE_FIVE);
                     return;
                 }
             }
@@ -154,6 +179,9 @@ class npc_legion_master : public CreatureScript
             void JustSummoned(Creature* summon)
             {
                 summons.Summon(summon);
+
+                summon->CastSpell(summon, SPELL_FRENZY, true);
+                summon->CastSpell(summon, SPELL_FURY, true);
 
                 if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 0.0f, true))
                 {
@@ -178,28 +206,74 @@ class npc_legion_master : public CreatureScript
                     case EVENT_DEATH_AND_DECAY:
                         if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM))
                             DoCast(target, SPELL_DEATH_AND_DECAY);
-                        events.ScheduleEvent(EVENT_DEATH_AND_DECAY, urand(10000, 12000));
+                        events.RepeatEvent(urand(10000, 12000));
                         break;
                     case EVENT_SUMMON_SNOBOLD_VASSAL:
                         me->SummonCreature(NPC_SNOBOLD_VASSAL, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN);
-                        events.ScheduleEvent(EVENT_SUMMON_SNOBOLD_VASSAL, 20000);
+                        events.RepeatEvent(20000);
                         break;
                     case EVENT_DOMINATE_MIND:
+                    {
                         for (uint8 i = 0; i < 3; i++)
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 0.0f, true, -SPELL_DOMINATE_MIND))
                                 DoCast(target, SPELL_DOMINATE_MIND);
-                        events.ScheduleEvent(EVENT_DOMINATE_MIND, urand(40000, 45000));
+                        events.RepeatEvent(urand(40000, 45000));
                         break;
+                    }
                     case EVENT_P2_CHILLING_WAVE:
                         DoCast(me, SPELL_CHILLING_WAVE);
-                        events.ScheduleEvent(EVENT_P2_CHILLING_WAVE, 30000, 0, PHASE_TWO);
+                        events.RepeatEvent(urand(20000, 30000));
                         break;
                     case EVENT_P3_SHADOW_BOLT:
+                    {
                         std::list<Unit*> targets;
                         SelectTargetList(targets, 5, SELECT_TARGET_RANDOM, 100, true);
                         for (std::list<Unit*>::const_iterator itr = targets.begin(); itr != targets.end(); ++itr)
                             DoCast(*itr, SPELL_SHADOW_BOLT);
-                        events.ScheduleEvent(EVENT_P3_SHADOW_BOLT, urand(20000, 30000), 0, PHASE_THREE);
+                        events.RepeatEvent(urand(20000, 30000));
+                        break;
+                    }
+                    case EVENT_P4_BLIZZARD:
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM))
+                            DoCast(target, SPELL_BLIZZARD);
+                        events.RepeatEvent(urand(20000, 25000));
+                        break;
+                    case EVENT_P4_MANA_DETONATION:
+                    {
+                        // Select a random target in the threat list that has mana
+                        std::vector<Unit*> unitList;
+                        std::list<HostileReference*>& threatList = me->getThreatManager().getThreatList();
+                        for (std::list<HostileReference*>::const_iterator itr = threatList->begin(); itr != threatList->end(); ++itr)
+                        {
+                            if (Unit* target = Unit::GetUnit(*me, (*itr)->getUnitGuid()))
+                                if (target->GetCreateMana() > 0) // target has mana
+                                    unitList.push_back(target);
+                        }
+
+                        if (!unitList.empty())
+                        {
+                            std::vector<Unit*>::const_iterator itr = unitList.begin();
+                            advance(itr, rand() % unitList.size());
+                            DoCast(*itr, SPELL_MANA_DETONATION);
+                        }
+
+                        events.RepeatEvent(urand(20000, 40000));
+                        break;
+                    }
+                    case EVENT_P5_FURY:
+                        if (urand(0, 4) == 0)) // 20% chance to increase damage
+                            me->CastSpell(me, SPELL_FURY, true);
+                        events.RepeatEvent(urand(4000, 6000));
+                        break;
+                    case EVENT_P5_STUNNING_FORCE:
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 0.0f, true))
+                            me->CastSpell(target, SPELL_STUNNING_FORCE, true);
+                        events.RepeatEvent(urand(8000, 12000));
+                        break;
+                    case EVENT_P5_FLASH_HEAL:
+                        if (urand(0, 1) == 0) // 50% chance to heal
+                            me->CastSpell(me, SPELL_FLASH_HEAL, true);
+                        events.RepeatEvent(5000);
                         break;
                 }
             }
