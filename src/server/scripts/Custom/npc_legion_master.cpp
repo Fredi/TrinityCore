@@ -261,7 +261,7 @@ class npc_legion_master : public CreatureScript
                         break;
                     }
                     case EVENT_P5_FURY:
-                        if (urand(0, 4) == 0)) // 20% chance to increase damage
+                        if (urand(0, 4) == 0) // 20% chance to increase damage
                             me->CastSpell(me, SPELL_FURY, true);
                         events.RepeatEvent(urand(4000, 6000));
                         break;
