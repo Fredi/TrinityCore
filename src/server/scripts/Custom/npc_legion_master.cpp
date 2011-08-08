@@ -25,7 +25,7 @@ enum Events
     EVENT_P2_CHILLING_WAVE      = 5,
 
     // Phase three only
-    EVENT_P3_SHADOW_BOLT        = 6,
+    EVENT_P3_TWILIGHT_BLOODBOLT = 6,
 
     // Phase four only
     EVENT_P4_BLIZZARD           = 7,
@@ -45,7 +45,7 @@ enum Spells
     SPELL_DOMINATE_MIND         = 71289,
     SPELL_INCITE_TERROR         = 73070,
     SPELL_CHILLING_WAVE         = 68778,
-    SPELL_SHADOW_BOLT           = 71254,
+    SPELL_TWILIGHT_BLOODBOLT    = 71446,
     SPELL_BLIZZARD              = 71118,
     SPELL_STUNNING_FORCE        = 52402,
     SPELL_MANA_DETONATION       = 27819,
@@ -149,7 +149,7 @@ class npc_legion_master : public CreatureScript
                 {
                     CastInciteTerror();
                     events.SetPhase(PHASE_THREE);
-                    events.ScheduleEvent(EVENT_P3_SHADOW_BOLT, 5000, 0, PHASE_THREE);
+                    events.ScheduleEvent(EVENT_P3_TWILIGHT_BLOODBOLT, 5000, 0, PHASE_THREE);
                     return;
                 }
 
@@ -224,13 +224,13 @@ class npc_legion_master : public CreatureScript
                         DoCast(me, SPELL_CHILLING_WAVE);
                         events.ScheduleEvent(EVENT_P2_CHILLING_WAVE, urand(20000, 30000), 0, PHASE_TWO);
                         break;
-                    case EVENT_P3_SHADOW_BOLT:
+                    case EVENT_P3_TWILIGHT_BLOODBOLT:
                     {
                         std::list<Unit*> targets;
                         SelectTargetList(targets, 5, SELECT_TARGET_RANDOM, 100, true);
                         for (std::list<Unit*>::const_iterator itr = targets.begin(); itr != targets.end(); ++itr)
-                            DoCast(*itr, SPELL_SHADOW_BOLT);
-                        events.ScheduleEvent(EVENT_P3_SHADOW_BOLT, urand(15000, 25000), 0, PHASE_THREE);
+                            DoCast(*itr, SPELL_TWILIGHT_BLOODBOLT);
+                        events.ScheduleEvent(EVENT_P3_TWILIGHT_BLOODBOLT, urand(15000, 25000), 0, PHASE_THREE);
                         break;
                     }
                     case EVENT_P4_BLIZZARD:
