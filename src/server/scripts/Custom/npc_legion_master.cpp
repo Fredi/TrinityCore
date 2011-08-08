@@ -206,23 +206,23 @@ class npc_legion_master : public CreatureScript
                     case EVENT_DEATH_AND_DECAY:
                         if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM))
                             DoCast(target, SPELL_DEATH_AND_DECAY);
-                        events.RepeatEvent(urand(10000, 12000));
+                        events.ScheduleEvent(EVENT_DEATH_AND_DECAY, urand(10000, 12000));
                         break;
                     case EVENT_SUMMON_SNOBOLD_VASSAL:
                         me->SummonCreature(NPC_SNOBOLD_VASSAL, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN);
-                        events.RepeatEvent(20000);
+                        events.ScheduleEvent(EVENT_SUMMON_SNOBOLD_VASSAL, 20000);
                         break;
                     case EVENT_DOMINATE_MIND:
                     {
                         for (uint8 i = 0; i < 3; i++)
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 0.0f, true, -SPELL_DOMINATE_MIND))
                                 DoCast(target, SPELL_DOMINATE_MIND);
-                        events.RepeatEvent(urand(40000, 45000));
+                        events.ScheduleEvent(EVENT_DOMINATE_MIND, urand(40000, 45000));
                         break;
                     }
                     case EVENT_P2_CHILLING_WAVE:
                         DoCast(me, SPELL_CHILLING_WAVE);
-                        events.RepeatEvent(urand(20000, 30000));
+                        events.ScheduleEvent(EVENT_P2_CHILLING_WAVE, urand(20000, 30000), 0, PHASE_TWO);
                         break;
                     case EVENT_P3_SHADOW_BOLT:
                     {
@@ -230,13 +230,13 @@ class npc_legion_master : public CreatureScript
                         SelectTargetList(targets, 5, SELECT_TARGET_RANDOM, 100, true);
                         for (std::list<Unit*>::const_iterator itr = targets.begin(); itr != targets.end(); ++itr)
                             DoCast(*itr, SPELL_SHADOW_BOLT);
-                        events.RepeatEvent(urand(20000, 30000));
+                        events.ScheduleEvent(EVENT_P3_SHADOW_BOLT, urand(15000, 25000), 0, PHASE_THREE);
                         break;
                     }
                     case EVENT_P4_BLIZZARD:
                         if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM))
                             DoCast(target, SPELL_BLIZZARD);
-                        events.RepeatEvent(urand(20000, 25000));
+                        events.ScheduleEvent(EVENT_P4_BLIZZARD, urand(20000, 25000), 0, PHASE_FOUR);
                         break;
                     case EVENT_P4_MANA_DETONATION:
                     {
@@ -257,23 +257,23 @@ class npc_legion_master : public CreatureScript
                             DoCast(*itr, SPELL_MANA_DETONATION);
                         }
 
-                        events.RepeatEvent(urand(20000, 40000));
+                        events.ScheduleEvent(EVENT_P4_MANA_DETONATION, urand(20000, 40000), 0, PHASE_FOUR);
                         break;
                     }
                     case EVENT_P5_FURY:
                         if (urand(0, 4) == 0) // 20% chance to increase damage
                             me->CastSpell(me, SPELL_FURY, true);
-                        events.RepeatEvent(urand(4000, 6000));
+                        events.ScheduleEvent(EVENT_P5_FURY, urand(4000, 6000), 0, PHASE_FIVE);
                         break;
                     case EVENT_P5_STUNNING_FORCE:
                         if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 0.0f, true))
                             me->CastSpell(target, SPELL_STUNNING_FORCE, true);
-                        events.RepeatEvent(urand(8000, 12000));
+                        events.ScheduleEvent(EVENT_P5_STUNNING_FORCE, urand(8000, 12000), 0, PHASE_FIVE);
                         break;
                     case EVENT_P5_FLASH_HEAL:
                         if (urand(0, 1) == 0) // 50% chance to heal
                             me->CastSpell(me, SPELL_FLASH_HEAL, true);
-                        events.RepeatEvent(5000);
+                        events.ScheduleEvent(EVENT_P5_FLASH_HEAL, 5000, 0, PHASE_FIVE);
                         break;
                 }
             }
