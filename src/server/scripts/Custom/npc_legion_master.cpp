@@ -6,6 +6,7 @@ enum Phases
     PHASE_TWO           = 2,
     PHASE_THREE         = 3,
     PHASE_FOUR          = 4,
+    PHASE_FIVE          = 5,
 
     PHASE_ONE_MASK      = 1 << PHASE_ONE,
     PHASE_TWO_MASK      = 1 << PHASE_TWO,
@@ -51,8 +52,8 @@ enum Models
 
 #define LM_YELL_AGGRO       "Enviarei todos ao inferno!"
 #define LM_YELL_KILL        "Morra!!"
-#define LM_YELL_DIE         "Oh não... eu... voltarei..."
-#define LM_YELL_BERSERK     "Provem a minha fúria!"
+#define LM_YELL_DIE         "Oh nao... eu... voltarei..."
+#define LM_YELL_BERSERK     "Provem a minha furia!"
 
 class npc_legion_master : public CreatureScript
 {
@@ -80,7 +81,7 @@ class npc_legion_master : public CreatureScript
             void EnterCombat(Unit* /*who*/)
             {
                 me->SetDisplayId(MODEL_MONSTER);
-                me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.5f);
+                me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.2f);
 
                 me->MonsterYell(LM_YELL_AGGRO, LANG_UNIVERSAL, 0);
 
@@ -125,7 +126,7 @@ class npc_legion_master : public CreatureScript
                     return;
                 }
 
-                if (events.GetPhaseMask() & PHASE_TWO_MASK && !HealthAbovePct(41))
+                if (events.GetPhaseMask() & PHASE_TWO_MASK && !HealthAbovePct(51))
                 {
                     CastInciteTerror();
                     events.SetPhase(PHASE_THREE);
@@ -133,11 +134,19 @@ class npc_legion_master : public CreatureScript
                     return;
                 }
 
-                if (events.GetPhaseMask() & PHASE_THREE_MASK && !HealthAbovePct(11))
+                if (events.GetPhaseMask() & PHASE_THREE_MASK && !HealthAbovePct(26))
                 {
                     CastInciteTerror();
                     events.RescheduleEvent(EVENT_SUMMON_SNOBOLD_VASSAL, 5000);
                     events.SetPhase(PHASE_FOUR);
+                    return;
+                }
+
+                if (events.GetPhaseMask() & PHASE_FOUR_MASK && !HealthAbovePct(11))
+                {
+                    CastInciteTerror();
+                    events.RescheduleEvent(EVENT_SUMMON_SNOBOLD_VASSAL, 5000);
+                    events.SetPhase(PHASE_FIVE);
                     return;
                 }
             }
