@@ -80,14 +80,6 @@ struct AccountData
     std::string Data;
 };
 
-enum AccountLinkedState
-{
-    STATE_NOT_LINKED = 0x00,
-    STATE_REFER      = 0x01,
-    STATE_REFERRAL   = 0x02,
-    STATE_DUAL       = 0x04,
-};
-
 enum PartyOperation
 {
     PARTY_OP_INVITE = 0,
@@ -323,7 +315,6 @@ class WorldSession
         AccountData *GetAccountData(AccountDataType type) { return &m_accountData[type]; }
         void SetAccountData(AccountDataType type, time_t tm, std::string data);
         void SendAccountDataTimes(uint32 mask);
-        void LoadAccountLinkedState();
         void LoadGlobalAccountData();
         void LoadAccountData(PreparedQueryResult result, uint32 mask);
 
@@ -401,7 +392,6 @@ class WorldSession
 
         // Recruit-A-Friend Handling
         uint32 GetRecruiterId() { return recruiterId; }
-        uint32 GetAccountLinkedState() { return m_recruiterState; }
 
     public:                                                 // opcodes handlers
 
@@ -904,10 +894,6 @@ class WorldSession
         void HandleEnterPlayerVehicle(WorldPacket &data);
         void HandleUpdateProjectilePosition(WorldPacket& recvPacket);
 
-        // Refer-A-Friend
-        void HandleGrantLevel(WorldPacket& recv_data);
-        void HandleAcceptGrantLevel(WorldPacket& recv_data);
-
     private:
         void InitializeQueryCallbackParameters();
         void ProcessQueryCallbacks();
@@ -966,7 +952,6 @@ class WorldSession
         bool   m_TutorialsChanged;
         AddonsList m_addonsList;
         uint32 recruiterId;
-        AccountLinkedState m_recruiterState;
         ACE_Based::LockedQueue<WorldPacket*, ACE_Thread_Mutex> _recvQueue;
 };
 #endif
