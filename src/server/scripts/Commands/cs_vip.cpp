@@ -70,7 +70,7 @@ public:
             return false;
         }
 
-        uint32 targetAccountId = sAccountMgr->GetId(account_name);
+        uint32 targetAccountId = AccountMgr::GetId(account_name);
         if (!targetAccountId)
         {
             handler->PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, account_name.c_str());
@@ -127,7 +127,7 @@ public:
                 return false;
             }
 
-            accountId = sAccountMgr->GetId(account_name);
+            accountId = AccountMgr::GetId(account_name);
             if (!accountId)
             {
                 handler->PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, account_name.c_str());

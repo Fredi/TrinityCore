@@ -140,7 +140,7 @@ public:
 
         // number or [name] Shift-click form |color|Hspell:spell_id|h[name]|h|r or Htalent form
         uint32 spell = handler->extractSpellIdFromLink((char*)args);
-        if (!spell || !sSpellStore.LookupEntry(spell))
+        if (!spell || !sSpellMgr->GetSpellInfo(spell))
             return false;
 
         uint32 pclass = targetPlayer->getClass();
@@ -160,7 +160,7 @@ public:
             return true;
         }
 
-        SpellEntry const* spellInfo = sSpellStore.LookupEntry(spell);
+        SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
         if (!spellInfo || !SpellMgr::IsSpellValid(spellInfo, handler->GetSession()->GetPlayer()))
         {
             handler->PSendSysMessage(LANG_COMMAND_SPELL_BROKEN, spell);
@@ -179,10 +179,6 @@ public:
         }
 
         targetPlayer->learnSpell(spell, false);
-
-        uint32 first_spell = sSpellMgr->GetFirstSpellInChain(spell);
-        if (GetTalentSpellCost(first_spell))
-            targetPlayer->SendTalentsInfoData(false);
 
         return true;
     }
