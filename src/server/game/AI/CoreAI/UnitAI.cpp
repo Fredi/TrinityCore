@@ -42,24 +42,18 @@ void UnitAI::DoMeleeAttackIfReady()
     if (me->HasUnitState(UNIT_STAT_CASTING))
         return;
 
+    Unit *victim = me->getVictim();
     //Make sure our attack is ready and we aren't currently casting before checking distance
-    if (me->isAttackReady())
+    if (me->isAttackReady() && me->IsWithinMeleeRange(victim))
     {
-        //If we are within range melee the target
-        if (me->IsWithinMeleeRange(me->getVictim()))
-        {
-            me->AttackerStateUpdate(me->getVictim());
-            me->resetAttackTimer();
-        }
+        me->AttackerStateUpdate(victim);
+        me->resetAttackTimer();
     }
-    if (me->haveOffhandWeapon() && me->isAttackReady(OFF_ATTACK))
+
+    if (me->haveOffhandWeapon() && me->isAttackReady(OFF_ATTACK) && me->IsWithinMeleeRange(victim))
     {
-        //If we are within range melee the target
-        if (me->IsWithinMeleeRange(me->getVictim()))
-        {
-            me->AttackerStateUpdate(me->getVictim(), OFF_ATTACK);
-            me->resetAttackTimer(OFF_ATTACK);
-        }
+        me->AttackerStateUpdate(victim, OFF_ATTACK);
+        me->resetAttackTimer(OFF_ATTACK);
     }
 }
 

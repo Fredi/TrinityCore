@@ -2423,7 +2423,7 @@ bool ChatHandler::HandleReviveCommand(const char *args)
 
     if (target)
     {
-        target->ResurrectPlayer(target->GetSession()->GetSecurity() > SEC_PLAYER ? 1.0f : 0.5f);
+        target->ResurrectPlayer(!AccountMgr::IsPlayerAccount(target->GetSession()->GetSecurity()) ? 1.0f : 0.5f);
         target->SpawnCorpseBones();
         target->SaveToDB();
     }
@@ -3563,7 +3563,7 @@ bool ChatHandler::HandleBanInfoAccountCommand(const char *args)
         return false;
     }
 
-    uint32 accountid = sAccountMgr->GetId(account_name);
+    uint32 accountid = AccountMgr::GetId(account_name);
     if (!accountid)
     {
         PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, account_name.c_str());
@@ -3840,7 +3840,7 @@ bool ChatHandler::HandleBanListHelper(QueryResult result)
                 account_name = fields[1].GetString();
             // "character" case, name need extract from another DB
             else
-                sAccountMgr->GetName (account_id, account_name);
+                AccountMgr::GetName (account_id, account_name);
 
             // No SQL injection. id is uint32.
             QueryResult banInfo = LoginDatabase.PQuery("SELECT bandate, unbandate, bannedby, banreason FROM account_banned WHERE id = %u ORDER BY unbandate", account_id);
@@ -4003,7 +4003,7 @@ bool ChatHandler::HandlePDumpLoadCommand(const char *args)
         return false;
     }
 
-    uint32 account_id = sAccountMgr->GetId(account_name);
+    uint32 account_id = AccountMgr::GetId(account_name);
     if (!account_id)
     {
         account_id = atoi(account);                             // use original string
@@ -4015,7 +4015,7 @@ bool ChatHandler::HandlePDumpLoadCommand(const char *args)
         }
     }
 
-    if (!sAccountMgr->GetName(account_id, account_name))
+    if (!AccountMgr::GetName(account_id, account_name))
     {
         PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, account_name.c_str());
         SetSentErrorMessage(true);
@@ -4706,8 +4706,6 @@ bool ChatHandler::HandleServerSetMotdCommand(const char *args)
 /// Set whether we accept new clients
 bool ChatHandler::HandleServerSetClosedCommand(const char *args)
 {
-    std::string arg = args;
-
     if (strncmp(args, "on", 3) == 0)
     {
         SendSysMessage(LANG_WORLD_CLOSED);
