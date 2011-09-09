@@ -915,10 +915,10 @@ void OutdoorPvPWG::OnGameObjectCreate(GameObject *go)
                 itr->second->type = BUILDING_TOWER;
             if (itr->second->damageState == DAMAGE_INTACT && !itr->second->health)
             {
-                itr->second->health = go->GetGOValue()->building.health;
+                itr->second->health = go->GetGOValue()->Building.Health;
                 go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_DESTROYED);
             } else {
-                go->GetGOValue()->building.health = itr->second->health;
+                go->GetGOValue()->Building.Health = itr->second->health;
                 if (itr->second->damageState == DAMAGE_DAMAGED)
                     go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_DAMAGED);
                 else if (itr->second->damageState == DAMAGE_DESTROYED)
@@ -969,8 +969,8 @@ void OutdoorPvPWG::RebuildAllBuildings()
         if (itr->second->building && itr->second->building->GetGoType() == GAMEOBJECT_TYPE_DESTRUCTIBLE_BUILDING)
         {
             UpdateGameObjectInfo(itr->second->building);
-            itr->second->building->Rebuild();
-            itr->second->health = itr->second->building->GetGOValue()->building.health;
+            itr->second->Building->SetDestructibleState(GO_DESTRUCTIBLE_REBUILDING, NULL, true);
+            itr->second->health = itr->second->building->GetGOValue()->Building.Health;
             itr->second->damageState = DAMAGE_INTACT;
         }
         else
@@ -1534,7 +1534,7 @@ bool OutdoorPvPWG::Update(uint32 diff)
                         Creature* sh = NULL;
                         for (std::vector<uint64>::const_iterator itr2 = (itr->second).begin(); itr2 != (itr->second).end(); ++itr2)
                         {
-                            Player *plr = sObjectMgr->GetPlayer(*itr2);
+                            Player* plr = ObjectAccessor::GetPlayer(*itr2);
                             if (!plr)
                                 continue;
                             if (!sh && plr->IsInWorld())
@@ -1564,7 +1564,7 @@ bool OutdoorPvPWG::Update(uint32 diff)
             {
                 for (std::vector<uint64>::const_iterator itr = m_ResurrectQueue.begin(); itr != m_ResurrectQueue.end(); ++itr)
                 {
-                    Player *plr = sObjectMgr->GetPlayer(*itr);
+                    Player* plr = ObjectAccessor::GetPlayer(*itr);
                     if (!plr)
                         continue;
                     plr->ResurrectPlayer(1.0f);
@@ -2009,7 +2009,7 @@ void OutdoorPvPWG::AddPlayerToResurrectQueue(uint64 npc_guid, uint64 player_guid
 {
     m_ReviveQueue[npc_guid].push_back(player_guid);
 
-    Player *plr = sObjectMgr->GetPlayer(player_guid);
+    Player* plr = ObjectAccessor::GetPlayer(player_guid);
     if (!plr)
         return;
 
@@ -2026,7 +2026,7 @@ void OutdoorPvPWG::RemovePlayerFromResurrectQueue(uint64 player_guid)
             {
                 (itr->second).erase(itr2);
 
-                Player *plr = sObjectMgr->GetPlayer(player_guid);
+                Player* plr = ObjectAccessor::GetPlayer(player_guid);
                 if (!plr)
                     return;
 
@@ -2050,7 +2050,7 @@ void OutdoorPvPWG::RelocateAllianceDeadPlayers(Creature *cr)
         WorldSafeLocsEntry const *ClosestGrave = NULL;
         for (std::vector<uint64>::const_iterator itr = ghost_list.begin(); itr != ghost_list.end(); ++itr)
         {
-            Player* plr = sObjectMgr->GetPlayer(*itr);
+            Player* plr = ObjectAccessor::GetPlayer(*itr);
             if (!plr)
                 continue;
 
@@ -2077,7 +2077,7 @@ void OutdoorPvPWG::RelocateHordeDeadPlayers(Creature *cr)
         WorldSafeLocsEntry const *ClosestGrave = NULL;
         for (std::vector<uint64>::const_iterator itr = ghost_list.begin(); itr != ghost_list.end(); ++itr)
         {
-            Player* plr = sObjectMgr->GetPlayer(*itr);
+            Player* plr = ObjectAccessor::GetPlayer(*itr);
             if (!plr)
                 continue;
             if (plr->getFaction() == HORDE)
