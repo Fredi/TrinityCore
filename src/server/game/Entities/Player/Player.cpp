@@ -5531,8 +5531,8 @@ void Player::RepopAtGraveyard()
             GetSession()->SendPacket(&data);
         }
     }
-	else if (GetZoneId() == 130) TeleportTo(0, 1040.989746, 1673.020996, 54.154667, 4.44.7449);
-	
+    else if (GetZoneId() == 130) // Custom Teleport Graveyard to Event Location in Gilneas.
+        TeleportTo(0, 1040.989746, 1673.020996, 54.154667, 4.447449);
     else if (GetPositionZ() < -500.0f)
         TeleportTo(m_homebindMapId, m_homebindX, m_homebindY, m_homebindZ, GetOrientation());
 }
