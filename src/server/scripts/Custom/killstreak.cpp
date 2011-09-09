@@ -70,7 +70,7 @@ void OnPvPKill(Player *pKiller, Player *pVictim)
 	}
 };
 
-void AddSC_System()
+void AddSC_killstreak()
 {
     new System_OnPvPKill;
 }
