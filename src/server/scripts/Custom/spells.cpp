@@ -18,9 +18,8 @@ class spell_oracle_wolvar : public SpellScriptLoader
                     if (pTarget->GetTypeId() != TYPEID_PLAYER)
                         return;
 
-                    int32  rep_change = GetSpellInfo()->EffectBasePoints[EFFECT_1] + 1;
-
-                    uint32 faction_id = GetSpellInfo()->EffectBasePoints[EFFECT_0] + 1;
+                    int32  rep_change = GetSpellInfo()->Effects[EFFECT_1].BasePoints + 1;
+                    uint32 faction_id = GetSpellInfo()->Effects[EFFECT_0].BasePoints + 1;
 
                     FactionEntry const* factionEntry = sFactionStore.LookupEntry(faction_id);
 
