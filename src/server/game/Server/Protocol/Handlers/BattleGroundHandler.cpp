@@ -522,6 +522,11 @@ void WorldSession::HandleLeaveBattlefieldOpcode(WorldPacket& recv_data)
             if (bg->GetStatus() != STATUS_WAIT_LEAVE)
                 return;
 
+    // don't allow to leave arenas before finishing (just to difficult farming)
+    if (Battleground* bg = _player->GetBattleground())
+        if (bg->isArena() && bg->GetStatus() != STATUS_WAIT_LEAVE)
+            return;
+
     _player->LeaveBattleground();
 }
 
