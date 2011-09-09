@@ -1256,5 +1256,6 @@ void AddCustomScripts()
     AddSC_event_npc();
     AddSC_custom_spells();
     AddSC_npc_legion_master();
+	AddSC_killstreak()
 #endif
 }
