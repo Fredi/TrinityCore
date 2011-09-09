@@ -17,6 +17,7 @@ set(scripts_STAT_SRCS
   Custom/event_npc.cpp
   Custom/spells.cpp
   Custom/npc_legion_master.cpp
+  Custom/killstreak.cpp
 )
 
 message("  -> Prepared: Custom")
