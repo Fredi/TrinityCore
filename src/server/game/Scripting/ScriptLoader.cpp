@@ -1243,6 +1243,7 @@ void AddSC_npc_vip();
 void AddSC_event_npc();
 void AddSC_custom_spells();
 void AddSC_npc_legion_master();
+void AddSC_killstreak();
 #endif
 
 void AddCustomScripts()
