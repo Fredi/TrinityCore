@@ -969,7 +969,7 @@ void OutdoorPvPWG::RebuildAllBuildings()
         if (itr->second->building && itr->second->building->GetGoType() == GAMEOBJECT_TYPE_DESTRUCTIBLE_BUILDING)
         {
             UpdateGameObjectInfo(itr->second->building);
-            itr->second->Building->SetDestructibleState(GO_DESTRUCTIBLE_REBUILDING, NULL, true);
+            itr->second->building->SetDestructibleState(GO_DESTRUCTIBLE_REBUILDING, NULL, true);
             itr->second->health = itr->second->building->GetGOValue()->Building.Health;
             itr->second->damageState = DAMAGE_INTACT;
         }
