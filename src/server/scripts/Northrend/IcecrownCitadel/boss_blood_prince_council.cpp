@@ -396,7 +396,7 @@ class boss_prince_keleseth_icc : public CreatureScript
                 if (!me->isDead())
                     JustRespawned();
 
-                me->SetReactState(REACT_DEFENSIVE);
+                //me->SetReactState(REACT_DEFENSIVE);
             }
 
             void Reset()
@@ -408,13 +408,15 @@ class boss_prince_keleseth_icc : public CreatureScript
                 _isEmpowered = false;
                 me->SetHealth(_spawnHealth);
                 instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(true));
-                me->SetReactState(REACT_DEFENSIVE);
+                //me->SetReactState(REACT_DEFENSIVE);
                 if (IsHeroic())
                     DoCast(me, SPELL_SHADOW_PRISON);
             }
 
             void EnterCombat(Unit* /*who*/)
             {
+                return;
+
                 if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
                     DoZoneInCombat(controller);
 
@@ -446,7 +448,7 @@ class boss_prince_keleseth_icc : public CreatureScript
 
             void JustRespawned()
             {
-                DoCast(me, SPELL_FEIGN_DEATH);
+                //DoCast(me, SPELL_FEIGN_DEATH);
                 me->SetHealth(_spawnHealth);
             }
 
@@ -616,7 +618,7 @@ class boss_prince_taldaram_icc : public CreatureScript
                 if (!me->isDead())
                     JustRespawned();
 
-                me->SetReactState(REACT_DEFENSIVE);
+                //me->SetReactState(REACT_DEFENSIVE);
             }
 
             void Reset()
@@ -628,9 +630,9 @@ class boss_prince_taldaram_icc : public CreatureScript
                 _isEmpowered = false;
                 me->SetHealth(_spawnHealth);
                 instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(true));
-                me->SetReactState(REACT_DEFENSIVE);
-                if (IsHeroic())
-                    DoCast(me, SPELL_SHADOW_PRISON);
+                //me->SetReactState(REACT_DEFENSIVE);
+                //if (IsHeroic())
+                //    DoCast(me, SPELL_SHADOW_PRISON);
             }
 
             void MoveInLineOfSight(Unit* /*who*/)
@@ -639,6 +641,8 @@ class boss_prince_taldaram_icc : public CreatureScript
 
             void EnterCombat(Unit* /*who*/)
             {
+                return;
+
                 if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
                     DoZoneInCombat(controller);
 
@@ -670,7 +674,7 @@ class boss_prince_taldaram_icc : public CreatureScript
 
             void JustRespawned()
             {
-                DoCast(me, SPELL_FEIGN_DEATH);
+                //DoCast(me, SPELL_FEIGN_DEATH);
                 me->SetHealth(_spawnHealth);
             }
 
@@ -839,7 +843,7 @@ class boss_prince_valanar_icc : public CreatureScript
                 if (!me->isDead())
                     JustRespawned();
 
-                me->SetReactState(REACT_DEFENSIVE);
+                //me->SetReactState(REACT_DEFENSIVE);
             }
 
             void Reset()
@@ -851,9 +855,9 @@ class boss_prince_valanar_icc : public CreatureScript
                 _isEmpowered = false;
                 me->SetHealth(me->GetMaxHealth());
                 instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(true));
-                me->SetReactState(REACT_DEFENSIVE);
-                if (IsHeroic())
-                    DoCast(me, SPELL_SHADOW_PRISON);
+                //me->SetReactState(REACT_DEFENSIVE);
+                //if (IsHeroic())
+                //    DoCast(me, SPELL_SHADOW_PRISON);
             }
 
             void MoveInLineOfSight(Unit* /*who*/)
@@ -862,6 +866,8 @@ class boss_prince_valanar_icc : public CreatureScript
 
             void EnterCombat(Unit* /*who*/)
             {
+                return;
+
                 if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
                     DoZoneInCombat(controller);
 
@@ -893,7 +899,7 @@ class boss_prince_valanar_icc : public CreatureScript
 
             void JustRespawned()
             {
-                DoCast(me, SPELL_FEIGN_DEATH);
+                //DoCast(me, SPELL_FEIGN_DEATH);
                 me->SetHealth(_spawnHealth);
             }
 
