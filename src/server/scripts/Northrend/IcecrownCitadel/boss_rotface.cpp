@@ -98,7 +98,7 @@ class boss_rotface : public CreatureScript
             void Reset()
             {
                 _Reset();
-                events.ScheduleEvent(EVENT_SLIME_SPRAY, 20000);
+                //events.ScheduleEvent(EVENT_SLIME_SPRAY, 20000);
                 events.ScheduleEvent(EVENT_HASTEN_INFECTIONS, 90000);
                 events.ScheduleEvent(EVENT_MUTATED_INFECTION, 14000);
                 infectionStage = 0;

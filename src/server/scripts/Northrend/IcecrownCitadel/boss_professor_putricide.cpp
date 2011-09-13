@@ -212,7 +212,7 @@ class boss_professor_putricide : public CreatureScript
                 me->setActive(true);
                 events.Reset();
                 events.ScheduleEvent(EVENT_BERSERK, 600000);
-                events.ScheduleEvent(EVENT_SLIME_PUDDLE, 10000);
+                //events.ScheduleEvent(EVENT_SLIME_PUDDLE, 10000);
                 events.ScheduleEvent(EVENT_UNSTABLE_EXPERIMENT, urand(25000, 30000));
                 if (IsHeroic())
                     events.ScheduleEvent(EVENT_UNBOUND_PLAGUE, 20000);
@@ -383,8 +383,8 @@ class boss_professor_putricide : public CreatureScript
                         me->SetReactState(REACT_PASSIVE);
                         _oozeFloodStage = 0;
                         DoZoneInCombat(me);
-                        if (IsHeroic())
-                            events.ScheduleEvent(EVENT_ROTFACE_VILE_GAS, urand(15000, 20000), 0, PHASE_ROTFACE);
+                        //if (IsHeroic())
+                            //events.ScheduleEvent(EVENT_ROTFACE_VILE_GAS, urand(15000, 20000), 0, PHASE_ROTFACE);
                         // init random sequence of floods
                         if (Creature* rotface = Unit::GetCreature(*me, instance->GetData64(DATA_ROTFACE)))
                         {
