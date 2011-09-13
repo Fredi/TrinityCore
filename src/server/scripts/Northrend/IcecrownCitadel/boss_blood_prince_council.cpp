@@ -549,6 +549,8 @@ class boss_prince_keleseth_icc : public CreatureScript
 
             void UpdateAI(uint32 const diff)
             {
+                return;
+
                 if (!UpdateVictim() || !CheckRoom())
                     return;
 
@@ -772,10 +774,14 @@ class boss_prince_taldaram_icc : public CreatureScript
                 if (!UpdateVictim() || !CheckRoom())
                     return;
 
-                events.Update(diff);
+                //events.Update(diff);
 
                 if (me->HasUnitState(UNIT_STAT_CASTING))
                     return;
+
+                DoMeleeAttackIfReady();
+
+                return;
 
                 while (uint32 eventId = events.ExecuteEvent())
                 {
@@ -1011,10 +1017,14 @@ class boss_prince_valanar_icc : public CreatureScript
                 if (!UpdateVictim() || !CheckRoom())
                     return;
 
-                events.Update(diff);
+                //events.Update(diff);
 
                 if (me->HasUnitState(UNIT_STAT_CASTING))
                     return;
+
+                DoMeleeAttackIfReady();
+
+                return;
 
                 while (uint32 eventId = events.ExecuteEvent())
                 {
