@@ -55,7 +55,7 @@ class icecrown_citadel_teleport : public GameObjectScript
                     player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT(GOSSIP_TELEPORT_UPPER_SPIRE), GOSSIP_SENDER_ICC_PORT, UPPER_SPIRE_TELEPORT);
                 if (instance->GetBossState(DATA_VALITHRIA_DREAMWALKER) == DONE)
                     player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT(GOSSIP_TELEPORT_SINDRAGOSAS_LAIR), GOSSIP_SENDER_ICC_PORT, SINDRAGOSA_S_LAIR_TELEPORT);
-                if (instance->GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE && instance->GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE && instance->GetBossState(DATA_SINDRAGOSA) == DONE)
+                if (instance->GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE)
                     player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT(GOSSIP_TELEPORT_FROZEN_THRONE), GOSSIP_SENDER_ICC_PORT, FROZEN_THRONE_TELEPORT);
             }
 
@@ -102,10 +102,7 @@ class at_frozen_throne_teleport : public AreaTriggerScript
         bool OnTrigger(Player* player, AreaTriggerEntry const* /*areaTrigger*/)
         {
             if (InstanceScript* instance = player->GetInstanceScript())
-                if (instance->GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE &&
-                    instance->GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE &&
-                    instance->GetBossState(DATA_SINDRAGOSA) == DONE &&
-                    instance->GetBossState(DATA_THE_LICH_KING) != IN_PROGRESS)
+                if (instance->GetBossState(DATA_THE_LICH_KING) != IN_PROGRESS)
                     player->CastSpell(player, FROZEN_THRONE_TELEPORT, true);
 
             return true;
