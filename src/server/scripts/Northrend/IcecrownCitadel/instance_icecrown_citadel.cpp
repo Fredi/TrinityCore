@@ -1049,6 +1049,8 @@ class instance_icecrown_citadel : public InstanceMapScript
 
             bool CheckPlagueworks(uint32 bossId) const
             {
+                return true;
+
                 switch (bossId)
                 {
                     case DATA_THE_LICH_KING:
@@ -1068,6 +1070,8 @@ class instance_icecrown_citadel : public InstanceMapScript
 
             bool CheckCrimsonHalls(uint32 bossId) const
             {
+                return true;
+
                 switch (bossId)
                 {
                     case DATA_THE_LICH_KING:
@@ -1087,6 +1091,8 @@ class instance_icecrown_citadel : public InstanceMapScript
 
             bool CheckFrostwingHalls(uint32 bossId) const
             {
+                return true;
+
                 switch (bossId)
                 {
                     case DATA_THE_LICH_KING:
@@ -1106,6 +1112,8 @@ class instance_icecrown_citadel : public InstanceMapScript
 
             bool CheckLowerSpire(uint32 bossId) const
             {
+                return true;
+
                 switch (bossId)
                 {
                     case DATA_THE_LICH_KING:
