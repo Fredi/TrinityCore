@@ -2,7 +2,7 @@
 
 enum ChatMonitor
 {
-    CHAT_MONITOR_WORD_COUNT = 8
+    CHAT_MONITOR_WORD_COUNT = 15
 };
 
 class chat_monitor : public PlayerScript
@@ -40,7 +40,6 @@ public:
         if (player->isGameMaster())
             return;
 
-        std::string words[CHAT_MONITOR_WORD_COUNT] = {"server", "servidor", "http", "www", "@", "realm", "hack", "cheat"};
         bool found = false;
 
         std::string lower = msg;
@@ -64,7 +63,14 @@ public:
         data << report;
         sWorld->SendGlobalGMMessage(&data);
     }
+
+private:
+    std::string static const words[CHAT_MONITOR_WORD_COUNT];
 };
+
+std::string const chat_monitor::words[CHAT_MONITOR_WORD_COUNT] = {
+    "server", "servidor", "http", "www", "@", "realm", "hack", "cheat",
+    "emu", "warden", "sentinel", "pacote", "packet", "script", "wpe"};
 
 void AddSC_chat_monitor()
 {
