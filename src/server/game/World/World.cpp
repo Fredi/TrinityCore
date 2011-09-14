@@ -401,6 +401,8 @@ void World::LoadConfigSettings(bool reload)
             sLog->outError("World settings reload fail: can't read settings from %s.", sConfig->GetFilename().c_str());
             return;
         }
+
+        sLog->ReloadConfig(); // Reload log levels and filters
     }
 
     ///- Read the player limit and the Message of the day from the config file
@@ -1364,7 +1366,7 @@ void World::SetInitialWorldSettings()
     LoadRandomEnchantmentsTable();
 
     sLog->outString("Loading Disables");
-    sDisableMgr->LoadDisables();                                 // must be before loading quests and items
+    DisableMgr::LoadDisables();                                  // must be before loading quests and items
 
     sLog->outString("Loading Items...");                         // must be after LoadRandomEnchantmentsTable and LoadPageTexts
     sObjectMgr->LoadItemTemplates();
@@ -1430,7 +1432,7 @@ void World::SetInitialWorldSettings()
     sObjectMgr->LoadQuests();                                    // must be loaded after DBCs, creature_template, item_template, gameobject tables
 
     sLog->outString("Checking Quest Disables");
-    sDisableMgr->CheckQuestDisables();                           // must be after loading quests
+    DisableMgr::CheckQuestDisables();                           // must be after loading quests
 
     sLog->outString("Loading Quest POI");
     sObjectMgr->LoadQuestPOI();
@@ -1613,7 +1615,7 @@ void World::SetInitialWorldSettings()
     sTicketMgr->LoadSurveys();
 
     sLog->outString("Loading client addons...");
-    sAddonMgr->LoadFromDB();
+    AddonMgr::LoadFromDB();
 
     ///- Handle outdated emails (delete/return)
     sLog->outString("Returning old mails...");
