@@ -1245,6 +1245,7 @@ void AddSC_custom_spells();
 void AddSC_npc_legion_master();
 void AddSC_killstreak();
 void AddSC_level_rewards();
+void AddSC_chat_monitor();
 #endif
 
 void AddCustomScripts()
@@ -1260,5 +1261,6 @@ void AddCustomScripts()
     AddSC_npc_legion_master();
     AddSC_killstreak();
     AddSC_level_rewards();
+    AddSC_chat_monitor();
 #endif
 }

@@ -19,6 +19,7 @@ set(scripts_STAT_SRCS
   Custom/npc_legion_master.cpp
   Custom/killstreak.cpp
   Custom/level_rewards.cpp
+  Custom/chat_monitor.cpp
 )
 
 message("  -> Prepared: Custom")
