@@ -15,35 +15,32 @@ public:
         if (player->isGameMaster())
             return;
 
-        if (newLevel % 10 != 0) // return if not multiple of ten
-            return;
-
         uint32 money = 0;
 
         switch (newLevel)
         {
-            case 10:
+            case 9:
                 money = 150000;
                 break;
-            case 20:
+            case 19:
                 money = 250000;
                 break;
-            case 30:
+            case 29:
                 money = 400000;
                 break;
-            case 40:
+            case 39:
                 money = 500000;
                 break;
-            case 50:
+            case 49:
                 money = 600000;
                 break;
-            case 60:
+            case 59:
                 money = 1000000;
                 break;
-            case 70:
+            case 69:
                 money = 1500000;
                 break;
-            case 80:
+            case 79:
                 money = 2000000;
                 break;
             default:
@@ -52,14 +49,14 @@ public:
 
         MailSender sender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM);
 
-        MailDraft draft("Parabéns", "Você está avançando no jogo e merece uma recompensa. Pegue isto e gaste em algo útil. :)");
+        MailDraft draft("Parabens", "Voce esta avancando no jogo e merece uma recompensa. Pegue isto e gaste em algo util. :)");
 
         SQLTransaction trans = CharacterDatabase.BeginTransaction();
 
         if (money > 0)
             draft.AddMoney(money);
 
-        if (newLevel == 80)
+        if (newLevel == 79)
         {
             Item* item = Item::CreateItem(EMBLEM_OF_CONQUEST, 300, 0);
             item->SaveToDB(trans);
@@ -73,5 +70,5 @@ public:
 
 void AddSC_level_rewards()
 {
-    new level_rewards;
+    new level_rewards();
 }
