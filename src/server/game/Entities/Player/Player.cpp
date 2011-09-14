@@ -15071,13 +15071,8 @@ void Player::RewardQuest(Quest const *pQuest, uint32 reward, Object* questGiver,
 
     // Custom Random Experience Boost Buff
     if (XP > 0 && getLevel() < sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
-    {
-        if (urand(0, 9) == 0) // 10% chance
-        {
-            CastSpell(this, 29175, true);            // Cast Buff
-            CastSpell(this, 62003, true);            // Cast Visual Effect
-        }
-    }
+        if (GetSession()->IsVIP() || urand(0, 9) == 0) // 10% chance if  not VIP
+            CastSpell(this, 29175, true); // Cast Buff
 }
 
 void Player::FailQuest(uint32 questId)
