@@ -10,14 +10,14 @@ class level_rewards : public PlayerScript
 public:
     level_rewards() : PlayerScript("level_rewards") {}
 
-    void OnLevelChanged(Player* player, uint8 newLevel)
+    void OnLevelChanged(Player* player, uint8 oldLevel)
     {
         if (player->isGameMaster())
             return;
 
         uint32 money = 0;
 
-        switch (newLevel)
+        switch (oldLevel)
         {
             case 9:
                 money = 150000;
@@ -56,7 +56,7 @@ public:
         if (money > 0)
             draft.AddMoney(money);
 
-        if (newLevel == 79)
+        if (oldLevel == 79)
         {
             Item* item = Item::CreateItem(EMBLEM_OF_CONQUEST, 300, 0);
             item->SaveToDB(trans);
