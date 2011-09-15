@@ -2,7 +2,7 @@
 
 enum ChatMonitor
 {
-    CHAT_MONITOR_WORD_COUNT = 15
+    CHAT_MONITOR_WORD_COUNT = 13
 };
 
 class chat_monitor : public PlayerScript
@@ -69,8 +69,8 @@ private:
 };
 
 std::string const chat_monitor::words[CHAT_MONITOR_WORD_COUNT] = {
-    "server", "servidor", "http", "www", "@", "realm", "hack", "cheat",
-    "emu", "warden", "sentinel", "pacote", "packet", "script", "wpe"};
+    "server", "servidor", "http", "www", "realm", "hack", "cheat",
+    "emu", "sentinel", "pacote", "packet", "wpe", ".com"};
 
 void AddSC_chat_monitor()
 {
