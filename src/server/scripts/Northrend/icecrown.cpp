@@ -393,7 +393,7 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature* creature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new npc_argent_valiantAI(creature);
     }
@@ -452,7 +452,7 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature* creature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new npc_alorah_and_grimminAI(creature);
     }
@@ -499,7 +499,7 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature* creature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new npc_guardian_pavilionAI(creature);
     }
@@ -544,7 +544,7 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new npc_vereth_the_cunningAI(creature);
     }
