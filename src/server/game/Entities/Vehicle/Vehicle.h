@@ -24,7 +24,6 @@
 
 struct VehicleEntry;
 struct VehicleSeatEntry;
-struct Position;
 class Unit;
 
 class Vehicle
@@ -54,7 +53,6 @@ class Vehicle
         void RelocatePassengers(float x, float y, float z, float ang);
         void RemoveAllPassengers();
         void Dismiss();
-        void Relocate(Position pos);
         bool IsVehicleInUse() { return Seats.begin() != Seats.end(); }
 
         SeatMap Seats;
