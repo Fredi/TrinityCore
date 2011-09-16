@@ -21,7 +21,6 @@
 #include "ScriptPCH.h"
 #include "OutdoorPvPWG.h"
 #include "OutdoorPvPMgr.h"
-#include "Vehicle.h"
 
 #define GOSSIP_HELLO_DEMO1  "Build catapult."
 #define GOSSIP_HELLO_DEMO2  "Build demolisher."
@@ -415,17 +414,17 @@ class go_wg_veh_teleporter : public GameObjectScript
 public:
     go_wg_veh_teleporter() : GameObjectScript("go_wg_veh_teleporter") { }
 
-    bool OnGossipHello(Player* player, GameObject* go)
+    bool OnGossipHello(Player *pPlayer, GameObject * pGO)
     {
-        if (GameObject* trigger = go->FindNearestGameObject(190375, 500)) // Wintergrasp Fortress Gate
-            if (Vehicle* vehicle = player->GetVehicle())
+        if (GameObject* trigger = pGO->FindNearestGameObject(190375, 500)) // Wintergrasp Fortress Gate
+            if (Vehicle * veh = pPlayer->GetVehicle())
             {
                 Position triggerPos;
                 trigger->GetPosition(&triggerPos);
                 triggerPos.m_positionX -= 30;
-                vehicle->Relocate(triggerPos);
+                veh->Relocate(triggerPos);
             }
-
+        
         return true;
     }
 };
