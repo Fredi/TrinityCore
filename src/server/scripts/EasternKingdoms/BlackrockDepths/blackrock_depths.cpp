@@ -1745,7 +1745,21 @@ enum eBrewfestBarkQuests
     BARK_FOR_THE_THUNDERBREWS       = 11294,
     BARK_FOR_TCHALIS_VOODOO_BREWERY = 11408,
     BARK_FOR_THE_BARLEYBREWS        = 11293,
-    BARK_FOR_DROHNS_DISTILLERY      = 11407
+    BARK_FOR_DROHNS_DISTILLERY      = 11407,
+    SPELL_BREWFEST_RAM              = 43883,
+    SPELL_RAM_FATIGUE               = 43052,
+    SPELL_SPEED_RAM_GALLOP          = 42994,
+    SPELL_SPEED_RAM_CANTER          = 42993,
+    SPELL_SPEED_RAM_TROT            = 42992,
+    SPELL_SPEED_RAM_NORMAL          = 43310,
+    SPELL_SPEED_RAM_EXHAUSED        = 43332,
+    NPC_SPEED_BUNNY_GREEN           = 24263,
+    NPC_SPEED_BUNNY_YELLOW          = 24264,
+    NPC_SPEED_BUNNY_RED             = 24265,
+    NPC_BARKER_BUNNY_1              = 24202,
+    NPC_BARKER_BUNNY_2              = 24203,
+    NPC_BARKER_BUNNY_3              = 24204,
+    NPC_BARKER_BUNNY_4              = 24205,
 };
 
 class npc_brewfest_trigger : public CreatureScript
@@ -1753,44 +1767,50 @@ class npc_brewfest_trigger : public CreatureScript
 public:
     npc_brewfest_trigger() : CreatureScript("npc_brewfest_trigger") { }
 
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new npc_brewfest_triggerAI(creature);
+    }
+
     struct npc_brewfest_triggerAI : public ScriptedAI
     {
         npc_brewfest_triggerAI(Creature* c) : ScriptedAI(c) {}
         
         void MoveInLineOfSight(Unit *who)
         {
-            Player *pPlayer = who->ToPlayer();
-            if (!pPlayer)
+            if (!who)
                 return;
-            if (pPlayer->GetQuestStatus(BARK_FOR_THE_THUNDERBREWS) == QUEST_STATUS_INCOMPLETE
-                || pPlayer->GetQuestStatus(BARK_FOR_TCHALIS_VOODOO_BREWERY) == QUEST_STATUS_INCOMPLETE
-                || pPlayer->GetQuestStatus(BARK_FOR_THE_BARLEYBREWS) == QUEST_STATUS_INCOMPLETE
-                || pPlayer->GetQuestStatus(BARK_FOR_DROHNS_DISTILLERY) == QUEST_STATUS_INCOMPLETE)
-                pPlayer->KilledMonsterCredit(me->GetEntry(),0);
+
+            if (who->GetTypeId() == TYPEID_PLAYER)
+            {
+                if (!(CAST_PLR(who)->GetAura(SPELL_BREWFEST_RAM)))
+                    return;
+
+                if (CAST_PLR(who)->GetQuestStatus(BARK_FOR_THE_THUNDERBREWS) == QUEST_STATUS_INCOMPLETE||
+                    CAST_PLR(who)->GetQuestStatus(BARK_FOR_TCHALIS_VOODOO_BREWERY) == QUEST_STATUS_INCOMPLETE||
+                    CAST_PLR(who)->GetQuestStatus(BARK_FOR_THE_BARLEYBREWS) == QUEST_STATUS_INCOMPLETE||
+                    CAST_PLR(who)->GetQuestStatus(BARK_FOR_DROHNS_DISTILLERY) == QUEST_STATUS_INCOMPLETE)
+                {
+                    uint32 creditMarkerId = me->GetEntry();
+                    if ((creditMarkerId >= 24202) && (creditMarkerId <= 24205))
+                    {
+                        // 24202: Brewfest Barker Bunny 1, 24203: Brewfest Barker Bunny 2, 24204: Brewfest Barker Bunny 3, 24205: Brewfest Barker Bunny 4
+                        if (!CAST_PLR(who)->GetReqKillOrCastCurrentCount(BARK_FOR_THE_BARLEYBREWS, creditMarkerId)||
+                            !CAST_PLR(who)->GetReqKillOrCastCurrentCount(BARK_FOR_THE_THUNDERBREWS, creditMarkerId)||
+                            !CAST_PLR(who)->GetReqKillOrCastCurrentCount(BARK_FOR_DROHNS_DISTILLERY, creditMarkerId)||
+                            !CAST_PLR(who)->GetReqKillOrCastCurrentCount(BARK_FOR_TCHALIS_VOODOO_BREWERY, creditMarkerId))
+                            CAST_PLR(who)->KilledMonsterCredit(creditMarkerId, me->GetGUID());
+                        // Caso para quest 11293 que no se completa teniendo todas las marcas
+                        if (CAST_PLR(who)->GetReqKillOrCastCurrentCount(BARK_FOR_THE_BARLEYBREWS, NPC_BARKER_BUNNY_1)&&
+                            CAST_PLR(who)->GetReqKillOrCastCurrentCount(BARK_FOR_THE_BARLEYBREWS, NPC_BARKER_BUNNY_2)&&
+                            CAST_PLR(who)->GetReqKillOrCastCurrentCount(BARK_FOR_THE_BARLEYBREWS, NPC_BARKER_BUNNY_3)&&
+                            CAST_PLR(who)->GetReqKillOrCastCurrentCount(BARK_FOR_THE_BARLEYBREWS, NPC_BARKER_BUNNY_4))
+                            CAST_PLR(who)->CompleteQuest(BARK_FOR_THE_BARLEYBREWS);
+                    }
+                }
+            }
         }
     };
-
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_brewfest_triggerAI(creature);
-    }
-};
-
-/**
-## Ram Barrel Run Quest (A/H)
-TODO:
-
-**/
-
-enum eBrewfestSpeedSpells
-{
-    SPELL_BREWFEST_RAM          = 43883,
-    SPELL_RAM_FATIGUE           = 43052,
-    SPELL_SPEED_RAM_GALLOP      = 42994,
-    SPELL_SPEED_RAM_CANTER      = 42993,
-    SPELL_SPEED_RAM_TROT        = 42992,
-    SPELL_SPEED_RAM_NORMAL      = 43310,
-    SPELL_SPEED_RAM_EXHAUSED    = 43332
 };
 
 class spell_brewfest_speed : public SpellScriptLoader
@@ -1827,6 +1847,7 @@ public:
         {
             if (GetId() == SPELL_SPEED_RAM_EXHAUSED)
                 return;
+
             Player* pCaster = GetCaster()->ToPlayer();
             if (!pCaster)
                 return;
@@ -1834,9 +1855,9 @@ public:
             switch (GetId())
             {
                 case SPELL_SPEED_RAM_GALLOP:
-                     for (i = 0; i < 5; i++)
-                       pCaster->AddAura(SPELL_RAM_FATIGUE,pCaster);
-                   break;
+                    for (i = 0; i < 5; i++)
+                        pCaster->AddAura(SPELL_RAM_FATIGUE,pCaster);
+                    break;
                 case SPELL_SPEED_RAM_CANTER:
                     pCaster->AddAura(SPELL_RAM_FATIGUE,pCaster);
                     break;
@@ -1850,16 +1871,31 @@ public:
                 case SPELL_SPEED_RAM_NORMAL:
                     if (pCaster->HasAura(SPELL_RAM_FATIGUE))
                         if (pCaster->GetAura(SPELL_RAM_FATIGUE)->GetStackAmount() <= 4)
-                             pCaster->RemoveAura(SPELL_RAM_FATIGUE);
-                        else
-                            pCaster->GetAura(SPELL_RAM_FATIGUE)->ModStackAmount(-4);
+                            pCaster->RemoveAura(SPELL_RAM_FATIGUE);
+                       else
+                           pCaster->GetAura(SPELL_RAM_FATIGUE)->ModStackAmount(-4);
+                    break;
+            }
+
+            switch (aurEff->GetId())
+            {
+                case SPELL_SPEED_RAM_TROT:
+                    if (aurEff->GetTickNumber() == 4)
+                        pCaster->KilledMonsterCredit(NPC_SPEED_BUNNY_GREEN, 0);
+                    break;
+                case SPELL_SPEED_RAM_CANTER:
+                    if (aurEff->GetTickNumber() == 8)
+                        pCaster->KilledMonsterCredit(NPC_SPEED_BUNNY_YELLOW, 0);
+                    break;
+                case SPELL_SPEED_RAM_GALLOP:
+                    if (aurEff->GetTickNumber() == 8)
+                        pCaster->KilledMonsterCredit(NPC_SPEED_BUNNY_RED, 0);
                     break;
             }
             if (pCaster->HasAura(SPELL_RAM_FATIGUE))
                 if (pCaster->GetAura(SPELL_RAM_FATIGUE)->GetStackAmount() >= 100)
                     pCaster->CastSpell(pCaster,SPELL_SPEED_RAM_EXHAUSED, false);
         }
-
 
         void OnRemove(AuraEffect const * aurEff, AuraEffectHandleModes /*mode*/)
         {
@@ -1900,16 +1936,18 @@ public:
             switch (GetId())
             {
                 case SPELL_SPEED_RAM_GALLOP:
-                   pCaster->GetAura(SPELL_SPEED_RAM_GALLOP)->SetDuration(4000);
+                    pCaster->GetAura(SPELL_SPEED_RAM_GALLOP)->SetDuration(4000);
                     break;
                 case SPELL_SPEED_RAM_CANTER:
                     pCaster->GetAura(SPELL_SPEED_RAM_CANTER)->SetDuration(4000);
                     break;
                 case SPELL_SPEED_RAM_TROT:
-                   pCaster->GetAura(SPELL_SPEED_RAM_TROT)->SetDuration(4000);
+                    pCaster->GetAura(SPELL_SPEED_RAM_TROT)->SetDuration(4000);
                     break;
              }
         }
+
+
 
         void Register()
         {
