@@ -1947,8 +1947,6 @@ public:
              }
         }
 
-
-
         void Register()
         {
             OnEffectApply += AuraEffectApplyFn(spell_brewfest_speed_AuraScript::OnApply, EFFECT_0, SPELL_AURA_MOD_INCREASE_MOUNTED_SPEED, AURA_EFFECT_HANDLE_REAL);
