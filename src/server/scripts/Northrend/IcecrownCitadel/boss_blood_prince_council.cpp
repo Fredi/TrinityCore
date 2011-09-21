@@ -439,11 +439,11 @@ class boss_prince_keleseth_icc : public CreatureScript
                 instance->SendEncounterUnit(ENCOUNTER_FRAME_REMOVE, me);
                 me->SetHealth(_spawnHealth);
                 _isEmpowered = false;
-                if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
+                /*if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
                 {
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
-                }
+                }*/
             }
 
             void JustRespawned()
@@ -487,14 +487,14 @@ class boss_prince_keleseth_icc : public CreatureScript
                     instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(false));
             }
 
-            void DamageTaken(Unit* attacker, uint32& damage)
+            /*void DamageTaken(Unit* attacker, uint32& damage)
             {
                 if (!_isEmpowered)
                 {
                     me->AddThreat(attacker, float(damage));
                     damage = 0;
                 }
-            }
+            }*/
 
             void KilledUnit(Unit* victim)
             {
@@ -667,11 +667,11 @@ class boss_prince_taldaram_icc : public CreatureScript
                 instance->SendEncounterUnit(ENCOUNTER_FRAME_REMOVE, me);
                 me->SetHealth(_spawnHealth);
                 _isEmpowered = false;
-                if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
+                /*if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
                 {
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
-                }
+                }*/
             }
 
             void JustRespawned()
@@ -709,14 +709,14 @@ class boss_prince_taldaram_icc : public CreatureScript
                     instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(false));
             }
 
-            void DamageTaken(Unit* attacker, uint32& damage)
+            /*void DamageTaken(Unit* attacker, uint32& damage)
             {
                 if (!_isEmpowered)
                 {
                     me->AddThreat(attacker, float(damage));
                     damage = 0;
                 }
-            }
+            }*/
 
             void KilledUnit(Unit* victim)
             {
@@ -896,11 +896,11 @@ class boss_prince_valanar_icc : public CreatureScript
                 instance->SendEncounterUnit(ENCOUNTER_FRAME_REMOVE, me);
                 me->SetHealth(me->GetMaxHealth());
                 _isEmpowered = false;
-                if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
+                /*if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
                 {
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
-                }
+                }*/
             }
 
             void JustRespawned()
@@ -952,14 +952,14 @@ class boss_prince_valanar_icc : public CreatureScript
                     instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(false));
             }
 
-            void DamageTaken(Unit* attacker, uint32& damage)
+            /*void DamageTaken(Unit* attacker, uint32& damage)
             {
                 if (!_isEmpowered)
                 {
                     me->AddThreat(attacker, float(damage));
                     damage = 0;
                 }
-            }
+            }*/
 
             void KilledUnit(Unit* victim)
             {
