@@ -465,7 +465,7 @@ class boss_professor_putricide : public CreatureScript
                             case PHASE_COMBAT_1:
                                 SetPhase(PHASE_COMBAT_2);
                                 events.ScheduleEvent(EVENT_MALLEABLE_GOO, urand(21000, 26000));
-                                events.ScheduleEvent(EVENT_CHOKING_GAS_BOMB, urand(35000, 40000));
+                                //events.ScheduleEvent(EVENT_CHOKING_GAS_BOMB, urand(35000, 40000));
                                 break;
                             case PHASE_COMBAT_2:
                                 SetPhase(PHASE_COMBAT_3);
