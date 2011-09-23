@@ -791,3 +791,89 @@ INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`pr
 (@ENTRY,1,0,"SOMEONE TRY THIS SUPER BREW!",14,0,100,0,0,0,"Ita Thunderbrew"),
 (@ENTRY,2,0,"Chug and chuck! Chug and chuck!",12,0,100,1,0,0,"Ita Thunderbrew"),
 (@ENTRY,2,1,"Down the free brew and pelt the Guzzlers with your mug!",12,0,100,1,0,0,"Ita Thunderbrew");
+
+-- Quest 12491 y 12492 no tienen prerequisito en el 2010
+UPDATE `quest_template` SET `PrevQuestId`=0 WHERE `entry`=12491;
+UPDATE `quest_template` SET `PrevQuestId`=0 WHERE `entry`=12492;
+
+-- Fix Vendedores Blix Fixwidget y Ray'ma Horda
+DELETE FROM `npc_vendor` WHERE `entry` IN (24495,27489);
+INSERT INTO `npc_vendor` (`entry`,`slot`,`item`,`ExtendedCost`) VALUES
+(24495,1,33968,2274),
+(24495,11,34008,2275),
+(24495,12,39477,2424),
+(24495,13,46707,2275),
+(24495,14,33927,2275),
+(24495,15,37750,2398),
+(24495,16,37816,2399),
+-- (24495,17,32233,0), Only appears on EU realms
+(24495,2,33864,2274),
+(24495,3,33967,2274),
+(24495,4,33969,2274),
+(24495,5,33863,2276),
+(24495,6,33966,2275),
+(24495,7,33862,2276),
+(24495,8,33868,2275),
+(24495,9,37599,2276),
+(27489,1,33968,2274),
+(27489,11,34008,2275),
+(27489,12,39477,2424),
+(27489,13,46707,2275),
+(27489,14,33927,2275),
+(27489,15,37750,2398),
+(27489,16,37816,2399),
+-- (27489,17,32233,0), Only appears on EU realms
+(27489,2,33864,2274),
+(27489,3,33967,2274),
+(27489,4,33969,2274),
+(27489,5,33863,2276),
+(27489,6,33966,2275),
+(27489,7,33862,2276),
+(27489,8,33868,2275),
+(27489,9,37599,2276);
+
+-- Update Vendedores Belbi Quikswitch y Larkin Thunderbrew Alianza
+DELETE FROM `npc_vendor` WHERE `entry` IN (23710,27478);
+INSERT INTO `npc_vendor` (`entry`,`slot`,`item`,`ExtendedCost`) VALUES
+(23710,1,33968,2274),
+(23710,11,33047,2275),
+(23710,12,39476,2424),
+(23710,13,46707,2275),
+(23710,14,33927,2275),
+(23710,15,37750,2398),
+(23710,16,37816,2399),
+-- (23710,17,32233,0), Only appears on EU realms
+(23710,2,33864,2274),
+(23710,3,33967,2274),
+(23710,4,33969,2274),
+(23710,5,33863,2276),
+(23710,6,33966,2275),
+(23710,7,33862,2276),
+(23710,8,33868,2275),
+(23710,9,37736,2276),
+(27478,1,33968,2274),
+(27478,11,33047,2275),
+(27478,12,39476,2424),
+(27478,13,46707,2275),
+(27478,14,33927,2275),
+(27478,15,37750,2398),
+(27478,16,37816,2399),
+-- (27478,17,32233,0), Only appears on EU realms
+(27478,2,33864,2274),
+(27478,3,33967,2274),
+(27478,4,33969,2274),
+(27478,5,33863,2276),
+(27478,6,33966,2275),
+(27478,7,33862,2276),
+(27478,8,33868,2275),
+(27478,9,37736,2276);
+
+-- Add la quest Catch the Wild Wolpertinger! al Npc Horda
+INSERT INTO `creature_involvedrelation` (`id`, `quest`) VALUES
+(24657, 11431);
+INSERT INTO `creature_questrelation` (`id`, `quest`) VALUES
+(24657, 11431);
+
+-- Arregla Quest Say, There Wouldn't Happen to be a Souvenir This Year, Would There? Alianza
+INSERT INTO `creature_involvedrelation` (`id`, `quest`) VALUES
+(23710, 12193);
