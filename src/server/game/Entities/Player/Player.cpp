@@ -2211,9 +2211,7 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
         if (!sMapMgr->CanPlayerEnter(mapid, this, false))
             return false;
 
-        // If the map is not created, assume it is possible to enter it.
-        // It will be created in the WorldPortAck.
-        Map* map = sMapMgr->FindMap(mapid);
+        Map* map = sMapMgr->CreateMap(mapid, this, 0);
         if (!map || map->CanEnter(this))
         {
             //lets reset near teleport flag if it wasn't reset during chained teleports
@@ -2336,6 +2334,7 @@ bool Player::TeleportToBGEntryPoint()
 
     ScheduleDelayedOperation(DELAYED_BG_MOUNT_RESTORE);
     ScheduleDelayedOperation(DELAYED_BG_TAXI_RESTORE);
+    ScheduleDelayedOperation(DELAYED_BG_GROUP_RESTORE);
     return TeleportTo(m_bgData.joinPos);
 }
 
@@ -2390,7 +2389,13 @@ void Player::ProcessDelayedOperations()
             ContinueTaxiFlight();
         }
     }
-
+    
+    if (m_DelayedOperations & DELAYED_BG_GROUP_RESTORE)
+    {
+        if (Group *g = GetGroup())
+            g->SendUpdateToPlayer(GetGUID());
+    }
+    
     //we have executed ALL delayed ops, so clear the flag
     m_DelayedOperations = 0;
 }
@@ -20655,6 +20660,7 @@ void Player::UpdateHomebindTime(uint32 time)
 void Player::UpdatePvPState(bool onlyFFA)
 {
     // TODO: should we always synchronize UNIT_FIELD_BYTES_2, 1 of controller and controlled?
+    // no, we shouldn't, those are checked for affecting player by client
     if (!pvpInfo.inNoPvPArea && !isGameMaster()
         && (pvpInfo.inFFAPvPArea || sWorld->IsFFAPvPRealm()))
     {
@@ -23071,7 +23077,7 @@ void Player::UpdateCharmedAI()
         GetMotionMaster()->MoveFollow(charmer, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
 
     Unit* target = getVictim();
-    if (!target || !charmer->canAttack(target))
+    if (!target || !charmer->IsValidAttackTarget(target))
     {
         target = charmer->SelectNearestTarget();
         if (!target)

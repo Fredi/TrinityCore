@@ -202,6 +202,14 @@ enum SpellState
     SPELL_STATE_DELAYED   = 5
 };
 
+enum SpellEffectHandleMode
+{
+    SPELL_EFFECT_HANDLE_LAUNCH,
+    SPELL_EFFECT_HANDLE_LAUNCH_TARGET,
+    SPELL_EFFECT_HANDLE_HIT,
+    SPELL_EFFECT_HANDLE_HIT_TARGET,
+};
+
 enum SpellTargets
 {
     SPELL_TARGETS_NONE      = 0,
@@ -400,6 +408,7 @@ class Spell
 
         void InitExplicitTargets(SpellCastTargets const& targets);
         void SelectSpellTargets();
+        void SelectEffectTypeImplicitTargets(uint8 effIndex);
         uint32 SelectEffectTargets(uint32 i, SpellImplicitTargetInfo const& cur);
         void SelectTrajTargets();
 
@@ -701,26 +710,13 @@ namespace Trinity
                     case SPELL_TARGETS_ENEMY:
                         if (target->isTotem())
                             continue;
-                        // can't be checked in SpellInfo::CheckTarget - needs more research
-                        if (target->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE))
+                        if (!i_source->_IsValidAttackTarget(target, i_spellProto))
                             continue;
-                        if (target->HasUnitState(UNIT_STAT_UNATTACKABLE))
-                            continue;
-                        if (i_source->IsControlledByPlayer())
-                        {
-                            if (i_source->IsFriendlyTo(target))
-                                continue;
-                        }
-                        else
-                        {
-                            if (!i_source->IsHostileTo(target))
-                                continue;
-                        }
                         break;
                     case SPELL_TARGETS_ALLY:
                         if (target->isTotem())
                             continue;
-                        if (!i_source->IsFriendlyTo(target))
+                        if (!i_source->_IsValidAssistTarget(target, i_spellProto))
                             continue;
                         break;
                     case SPELL_TARGETS_ENTRY:

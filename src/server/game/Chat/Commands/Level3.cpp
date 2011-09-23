@@ -2913,10 +2913,10 @@ bool ChatHandler::HandleListAurasCommand (const char * /*args*/)
         ss_name << "|cffffffff|Hspell:" << aura->GetId() << "|h[" << name << "]|h|r";
 
         PSendSysMessage(LANG_COMMAND_TARGET_AURADETAIL, aura->GetId(), (m_session ? ss_name.str().c_str() : name),
-		    aurApp->GetEffectMask(), aura->GetCharges(), aura->GetStackAmount(), aurApp->GetSlot(),
+            aurApp->GetEffectMask(), aura->GetCharges(), aura->GetStackAmount(), aurApp->GetSlot(),
             aura->GetDuration(), aura->GetMaxDuration(), (aura->IsPassive() ? passiveStr : ""),
-		    (talent ? talentStr : ""), IS_PLAYER_GUID(aura->GetCasterGUID()) ? "player" : "creature",
-		    GUID_LOPART(aura->GetCasterGUID()));
+            (talent ? talentStr : ""), IS_PLAYER_GUID(aura->GetCasterGUID()) ? "player" : "creature",
+            GUID_LOPART(aura->GetCasterGUID()));
     }
     for (uint16 i = 0; i < TOTAL_AURAS; ++i)
     {
@@ -4358,8 +4358,6 @@ bool ChatHandler::HandleCastBackCommand(const char *args)
 
     bool triggered = (trig_str != NULL);
 
-    caster->SetFacingToObject(m_session->GetPlayer());
-
     caster->CastSpell(m_session->GetPlayer(), spell, triggered);
 
     return true;
@@ -4450,8 +4448,6 @@ bool ChatHandler::HandleCastTargetCommand(const char *args)
     }
 
     bool triggered = (trig_str != NULL);
-
-    caster->SetFacingToObject(m_session->GetPlayer());
 
     caster->CastSpell(caster->getVictim(), spell, triggered);
 
