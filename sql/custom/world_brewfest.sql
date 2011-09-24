@@ -426,7 +426,7 @@ UPDATE `creature` SET `spawntimesecs` = 604800 WHERE `id`  = 23972;
 
 
 -- Posible Fix Reward DF Core Direbrew
-DELETE FROM `instance_encounters WHERE `entry`=900;
+DELETE FROM `instance_encounters` WHERE `entry`=900;
 INSERT INTO `instance_encounters` (`entry`, `creditType`, `creditEntry`, `lastEncounterDungeon`, `comment`) 
  VALUES ('900','0','23872','287','Coren Direbrew');-- Entry es incremental fue seleccionado por la ultima entrada a este campo.
 
