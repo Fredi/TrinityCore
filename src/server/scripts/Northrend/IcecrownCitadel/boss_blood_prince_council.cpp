@@ -396,7 +396,7 @@ class boss_prince_keleseth_icc : public CreatureScript
                 if (!me->isDead())
                     JustRespawned();
 
-                //me->SetReactState(REACT_DEFENSIVE);
+                me->SetReactState(REACT_DEFENSIVE);
             }
 
             void Reset()
@@ -408,19 +408,20 @@ class boss_prince_keleseth_icc : public CreatureScript
                 _isEmpowered = false;
                 me->SetHealth(_spawnHealth);
                 instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(true));
-                //me->SetReactState(REACT_DEFENSIVE);
-                if (IsHeroic())
-                    DoCast(me, SPELL_SHADOW_PRISON);
+                me->SetReactState(REACT_DEFENSIVE);
+                //if (IsHeroic())
+                //    DoCast(me, SPELL_SHADOW_PRISON);
             }
 
             void EnterCombat(Unit* /*who*/)
             {
-                return;
-
                 if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
                     DoZoneInCombat(controller);
 
                 events.ScheduleEvent(EVENT_BERSERK, 600000);
+
+                return;
+
                 events.ScheduleEvent(EVENT_SHADOW_RESONANCE, urand(10000, 15000));
                 events.ScheduleEvent(EVENT_SHADOW_LANCE, 2000);
             }
@@ -439,16 +440,16 @@ class boss_prince_keleseth_icc : public CreatureScript
                 instance->SendEncounterUnit(ENCOUNTER_FRAME_REMOVE, me);
                 me->SetHealth(_spawnHealth);
                 _isEmpowered = false;
-                /*if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
+                if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
                 {
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
-                }*/
+                }
             }
 
             void JustRespawned()
             {
-                //DoCast(me, SPELL_FEIGN_DEATH);
+                DoCast(me, SPELL_FEIGN_DEATH);
                 me->SetHealth(_spawnHealth);
             }
 
@@ -487,14 +488,14 @@ class boss_prince_keleseth_icc : public CreatureScript
                     instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(false));
             }
 
-            /*void DamageTaken(Unit* attacker, uint32& damage)
+            void DamageTaken(Unit* attacker, uint32& damage)
             {
                 if (!_isEmpowered)
                 {
                     me->AddThreat(attacker, float(damage));
                     damage = 0;
                 }
-            }*/
+            }
 
             void KilledUnit(Unit* victim)
             {
@@ -549,8 +550,6 @@ class boss_prince_keleseth_icc : public CreatureScript
 
             void UpdateAI(uint32 const diff)
             {
-                return;
-
                 if (!UpdateVictim() || !CheckRoom())
                     return;
 
@@ -620,7 +619,7 @@ class boss_prince_taldaram_icc : public CreatureScript
                 if (!me->isDead())
                     JustRespawned();
 
-                //me->SetReactState(REACT_DEFENSIVE);
+                me->SetReactState(REACT_DEFENSIVE);
             }
 
             void Reset()
@@ -632,7 +631,7 @@ class boss_prince_taldaram_icc : public CreatureScript
                 _isEmpowered = false;
                 me->SetHealth(_spawnHealth);
                 instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(true));
-                //me->SetReactState(REACT_DEFENSIVE);
+                me->SetReactState(REACT_DEFENSIVE);
                 //if (IsHeroic())
                 //    DoCast(me, SPELL_SHADOW_PRISON);
             }
@@ -643,12 +642,13 @@ class boss_prince_taldaram_icc : public CreatureScript
 
             void EnterCombat(Unit* /*who*/)
             {
-                return;
-
                 if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
                     DoZoneInCombat(controller);
 
                 events.ScheduleEvent(EVENT_BERSERK, 600000);
+
+                return;
+
                 events.ScheduleEvent(EVENT_GLITTERING_SPARKS, urand(12000, 15000));
                 events.ScheduleEvent(EVENT_CONJURE_FLAME, 20000);
             }
@@ -667,16 +667,16 @@ class boss_prince_taldaram_icc : public CreatureScript
                 instance->SendEncounterUnit(ENCOUNTER_FRAME_REMOVE, me);
                 me->SetHealth(_spawnHealth);
                 _isEmpowered = false;
-                /*if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
+                if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
                 {
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
-                }*/
+                }
             }
 
             void JustRespawned()
             {
-                //DoCast(me, SPELL_FEIGN_DEATH);
+                DoCast(me, SPELL_FEIGN_DEATH);
                 me->SetHealth(_spawnHealth);
             }
 
@@ -709,14 +709,14 @@ class boss_prince_taldaram_icc : public CreatureScript
                     instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(false));
             }
 
-            /*void DamageTaken(Unit* attacker, uint32& damage)
+            void DamageTaken(Unit* attacker, uint32& damage)
             {
                 if (!_isEmpowered)
                 {
                     me->AddThreat(attacker, float(damage));
                     damage = 0;
                 }
-            }*/
+            }
 
             void KilledUnit(Unit* victim)
             {
@@ -774,14 +774,10 @@ class boss_prince_taldaram_icc : public CreatureScript
                 if (!UpdateVictim() || !CheckRoom())
                     return;
 
-                //events.Update(diff);
+                events.Update(diff);
 
                 if (me->HasUnitState(UNIT_STAT_CASTING))
                     return;
-
-                DoMeleeAttackIfReady();
-
-                return;
 
                 while (uint32 eventId = events.ExecuteEvent())
                 {
@@ -849,7 +845,7 @@ class boss_prince_valanar_icc : public CreatureScript
                 if (!me->isDead())
                     JustRespawned();
 
-                //me->SetReactState(REACT_DEFENSIVE);
+                me->SetReactState(REACT_DEFENSIVE);
             }
 
             void Reset()
@@ -861,7 +857,7 @@ class boss_prince_valanar_icc : public CreatureScript
                 _isEmpowered = false;
                 me->SetHealth(me->GetMaxHealth());
                 instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(true));
-                //me->SetReactState(REACT_DEFENSIVE);
+                me->SetReactState(REACT_DEFENSIVE);
                 //if (IsHeroic())
                 //    DoCast(me, SPELL_SHADOW_PRISON);
             }
@@ -872,12 +868,13 @@ class boss_prince_valanar_icc : public CreatureScript
 
             void EnterCombat(Unit* /*who*/)
             {
-                return;
-
                 if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
                     DoZoneInCombat(controller);
 
                 events.ScheduleEvent(EVENT_BERSERK, 600000);
+
+                return;
+
                 events.ScheduleEvent(EVENT_KINETIC_BOMB, urand(18000, 24000));
                 events.ScheduleEvent(EVENT_SHOCK_VORTEX, urand(15000, 20000));
             }
@@ -896,16 +893,16 @@ class boss_prince_valanar_icc : public CreatureScript
                 instance->SendEncounterUnit(ENCOUNTER_FRAME_REMOVE, me);
                 me->SetHealth(me->GetMaxHealth());
                 _isEmpowered = false;
-                /*if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
+                if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_PRINCES_CONTROL)))
                 {
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
-                }*/
+                }
             }
 
             void JustRespawned()
             {
-                //DoCast(me, SPELL_FEIGN_DEATH);
+                DoCast(me, SPELL_FEIGN_DEATH);
                 me->SetHealth(_spawnHealth);
             }
 
@@ -952,14 +949,14 @@ class boss_prince_valanar_icc : public CreatureScript
                     instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(false));
             }
 
-            /*void DamageTaken(Unit* attacker, uint32& damage)
+            void DamageTaken(Unit* attacker, uint32& damage)
             {
                 if (!_isEmpowered)
                 {
                     me->AddThreat(attacker, float(damage));
                     damage = 0;
                 }
-            }*/
+            }
 
             void KilledUnit(Unit* victim)
             {
@@ -1017,14 +1014,10 @@ class boss_prince_valanar_icc : public CreatureScript
                 if (!UpdateVictim() || !CheckRoom())
                     return;
 
-                //events.Update(diff);
+                events.Update(diff);
 
                 if (me->HasUnitState(UNIT_STAT_CASTING))
                     return;
-
-                DoMeleeAttackIfReady();
-
-                return;
 
                 while (uint32 eventId = events.ExecuteEvent())
                 {
