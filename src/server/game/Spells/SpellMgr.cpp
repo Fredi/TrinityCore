@@ -3383,6 +3383,23 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectRadiusIndex[0] = 52;
                 spellInfo->EffectRadiusIndex[1] = 52;
                 break;
+            // CUSTOM STUFF
+            //
+            // Trial Of The Crusader (lowering damage)
+            case 66013: // Penetrating Cold
+            case 66880: // Acid Spit 
+            case 66901: // Paralytic Spray
+            case 66902: // Burning Spray
+            case 66796: // Fire Spit
+            case 66048: // Light Vortex
+            case 66058: // Dark Vortex
+            case 65795: // Unleashed Light
+            case 65808: // Unleashed Dark
+                spellInfo->Effect[0].BasePoints /= 2;
+                break;
+            case 66118: // Leeching Swarm (lower damage to 5% each second)
+                spellInfo->Effect[0].BasePoints = 4;
+                break;
             default:
                 break;
         }
