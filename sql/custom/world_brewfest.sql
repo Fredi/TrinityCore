@@ -304,8 +304,8 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment
 ('-43880','-42146','0','Remove brewfest speed buffs when player dismounted'),
 ('-43880','-43310','0','Remove brewfest speed buffs when player dismounted'),
 ('-43880','-43492','0','Remove brewfest speed buffs when player dismounted'),
-('-43880','-43052','0','Remove brewfest speed buffs when player dismounted'),
 ('-43880','-43332','0','Remove brewfest speed buffs when player dismounted'),
+('-43880','-43052','0','Remove brewfest speed buffs when player dismounted'),
 ('42994','-42993','0','Switch brewfest speed buffs'),
 ('42994','-42992','0','Switch brewfest speed buffs'),
 ('42994','-43310','0','Switch brewfest speed buffs'),
@@ -425,6 +425,10 @@ DELETE FROM `gameobject` WHERE `guid` IN (18015);
 UPDATE `creature` SET `spawntimesecs` = 604800 WHERE `id`  = 23972;
 
 
+-- Posible Fix Reward DF Core Direbrew
+DELETE FROM `instance_encounters WHERE `entry`=900;
+INSERT INTO `instance_encounters` (`entry`, `creditType`, `creditEntry`, `lastEncounterDungeon`, `comment`) 
+ VALUES ('900','0','23872','287','Coren Direbrew');-- Entry es incremental fue seleccionado por la ultima entrada a este campo.
 
 
 /*Dark Iron Attack
@@ -465,7 +469,7 @@ exact same way, together with target_type 1 and target_0 it will always walk out
 
 Brewers only throw in phase 1
 */
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Misc.
 DELETE FROM `gameobject` WHERE `id`=186881; -- Dark Iron Dwarf Plans should be summoned by event
 UPDATE `creature_template` SET `flags_extra`=`flags_extra`|128 WHERE `entry`=24109; -- [DND] Brewfest Target Dummy Move To Target
@@ -793,11 +797,11 @@ INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`pr
 (@ENTRY,2,1,"Down the free brew and pelt the Guzzlers with your mug!",12,0,100,1,0,0,"Ita Thunderbrew");
 
 -- Quest 12491 y 12492 no tienen prerequisito en el 2010
-UPDATE `quest_template` SET `PrevQuestId`=0 WHERE `entry`=12491;
-UPDATE `quest_template` SET `PrevQuestId`=0 WHERE `entry`=12492;
+UPDATE `quest_template` SET `PrevQuestId`=0 WHERE `entry`IN (12491,12492);
 
 -- Fix Vendedores Blix Fixwidget y Ray'ma Horda
-DELETE FROM `npc_vendor` WHERE `entry` IN (24495,27489);
+-- Fix Vendedores Belbi Quikswitch y Larkin Thunderbrew Alianza
+DELETE FROM `npc_vendor` WHERE `entry` IN (24495,27489,23710,27478);
 INSERT INTO `npc_vendor` (`entry`,`slot`,`item`,`ExtendedCost`) VALUES
 (24495,1,33968,2274),
 (24495,11,34008,2275),
@@ -830,11 +834,7 @@ INSERT INTO `npc_vendor` (`entry`,`slot`,`item`,`ExtendedCost`) VALUES
 (27489,6,33966,2275),
 (27489,7,33862,2276),
 (27489,8,33868,2275),
-(27489,9,37599,2276);
-
--- Update Vendedores Belbi Quikswitch y Larkin Thunderbrew Alianza
-DELETE FROM `npc_vendor` WHERE `entry` IN (23710,27478);
-INSERT INTO `npc_vendor` (`entry`,`slot`,`item`,`ExtendedCost`) VALUES
+(27489,9,37599,2276),
 (23710,1,33968,2274),
 (23710,11,33047,2275),
 (23710,12,39476,2424),
@@ -869,11 +869,11 @@ INSERT INTO `npc_vendor` (`entry`,`slot`,`item`,`ExtendedCost`) VALUES
 (27478,9,37736,2276);
 
 -- Add la quest Catch the Wild Wolpertinger! al Npc Horda
+-- Fix Quest Say, There Wouldn't Happen to be a Souvenir This Year, Would There? Alianza
+DELETE FROM `creature_involvedrelation` WHERE `quest` IN (11431, 12193);
 INSERT INTO `creature_involvedrelation` (`id`, `quest`) VALUES
-(24657, 11431);
+(24657, 11431),
+(23710, 12193);
+DELETE FROM `creature_questrelation` WHERE `quest` IN (11431);
 INSERT INTO `creature_questrelation` (`id`, `quest`) VALUES
 (24657, 11431);
-
--- Arregla Quest Say, There Wouldn't Happen to be a Souvenir This Year, Would There? Alianza
-INSERT INTO `creature_involvedrelation` (`id`, `quest`) VALUES
-(23710, 12193);

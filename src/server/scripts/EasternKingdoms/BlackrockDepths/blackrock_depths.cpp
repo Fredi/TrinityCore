@@ -1721,18 +1721,18 @@ class item_brewfest_ChugAndChuck : public ItemScript
 public:
     item_brewfest_ChugAndChuck() : ItemScript("item_brewfest_ChugAndChuck") { }
 
-    bool OnUse(Player* pPlayer, Item* pItem, const SpellCastTargets & /*pTargets*/)
+    bool OnUse(Player* player, Item* pItem, const SpellCastTargets & /*pTargets*/)
     {
-        if (pPlayer->GetQuestStatus(QUEST_CHUG_AND_CHUCK_A) == QUEST_STATUS_INCOMPLETE
-            || pPlayer->GetQuestStatus(QUEST_CHUG_AND_CHUCK_H) == QUEST_STATUS_INCOMPLETE)
+        if (player->GetQuestStatus(QUEST_CHUG_AND_CHUCK_A) == QUEST_STATUS_INCOMPLETE
+            || player->GetQuestStatus(QUEST_CHUG_AND_CHUCK_H) == QUEST_STATUS_INCOMPLETE)
         {
-            if (Creature* pStout = pPlayer->FindNearestCreature(NPC_BREWFEST_STOUT, 10.0f)) // spell range
+            if (Creature* pStout = player->FindNearestCreature(NPC_BREWFEST_STOUT, 10.0f)) // spell range
             {
                 return false;
             } else
-                pPlayer->SendEquipError(EQUIP_ERR_OUT_OF_RANGE, pItem, NULL);
+                player->SendEquipError(EQUIP_ERR_OUT_OF_RANGE, pItem, NULL);
         } else
-            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW ,pItem, NULL);
+            player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW ,pItem, NULL);
         return true;
     }
 };
@@ -1746,6 +1746,7 @@ enum eBrewfestBarkQuests
     BARK_FOR_TCHALIS_VOODOO_BREWERY = 11408,
     BARK_FOR_THE_BARLEYBREWS        = 11293,
     BARK_FOR_DROHNS_DISTILLERY      = 11407,
+    SPELL_RAMSTEIN_SWIFT_WORK_RAM   = 43880,
     SPELL_BREWFEST_RAM              = 43883,
     SPELL_RAM_FATIGUE               = 43052,
     SPELL_SPEED_RAM_GALLOP          = 42994,
@@ -1766,7 +1767,7 @@ class npc_brewfest_trigger : public CreatureScript
 {
 public:
     npc_brewfest_trigger() : CreatureScript("npc_brewfest_trigger") { }
-
+    
     CreatureAI *GetAI(Creature *creature) const
     {
         return new npc_brewfest_triggerAI(creature);
@@ -1789,7 +1790,7 @@ public:
                 if (CAST_PLR(who)->GetQuestStatus(BARK_FOR_THE_THUNDERBREWS) == QUEST_STATUS_INCOMPLETE||
                     CAST_PLR(who)->GetQuestStatus(BARK_FOR_TCHALIS_VOODOO_BREWERY) == QUEST_STATUS_INCOMPLETE||
                     CAST_PLR(who)->GetQuestStatus(BARK_FOR_THE_BARLEYBREWS) == QUEST_STATUS_INCOMPLETE||
-                    CAST_PLR(who)->GetQuestStatus(BARK_FOR_DROHNS_DISTILLERY) == QUEST_STATUS_INCOMPLETE)
+                    CAST_PLR(who)->GetQuestStatus(BARK_FOR_DROHNS_DISTILLERY) == QUEST_STATUS_INCOMPLETE) 
                 {
                     uint32 creditMarkerId = me->GetEntry();
                     if ((creditMarkerId >= 24202) && (creditMarkerId <= 24205))
@@ -1812,7 +1813,7 @@ public:
         }
     };
 };
-
+ 
 class spell_brewfest_speed : public SpellScriptLoader
 {
 public:
@@ -1825,6 +1826,8 @@ public:
         bool Validate(SpellInfo const* /*spellInfo*/)
         {
             if (!sSpellMgr->GetSpellInfo(SPELL_RAM_FATIGUE))
+                return false;
+            if (!sSpellMgr->GetSpellInfo(SPELL_RAMSTEIN_SWIFT_WORK_RAM))
                 return false;
             if (!sSpellMgr->GetSpellInfo(SPELL_BREWFEST_RAM))
                 return false;
@@ -1848,7 +1851,7 @@ public:
             if (GetId() == SPELL_SPEED_RAM_EXHAUSED)
                 return;
 
-            Player* pCaster = GetCaster()->ToPlayer();
+            Player* pCaster = GetCaster()->ToPlayer();            
             if (!pCaster)
                 return;
             int i;
@@ -1902,13 +1905,14 @@ public:
             Player* pCaster = GetCaster()->ToPlayer();
             if (!pCaster)
                 return;
-            if (!pCaster->HasAura(SPELL_BREWFEST_RAM))
+            if (!pCaster->HasAura(SPELL_BREWFEST_RAM) || !pCaster->HasAura(SPELL_RAMSTEIN_SWIFT_WORK_RAM))
                 return;
             if (GetId() == SPELL_SPEED_RAM_EXHAUSED) 
             {
                 if (pCaster->HasAura(SPELL_RAM_FATIGUE))
                     pCaster->GetAura(SPELL_RAM_FATIGUE)->ModStackAmount(-15);
             } else if (!pCaster->HasAura(SPELL_RAM_FATIGUE) || pCaster->GetAura(SPELL_RAM_FATIGUE)->GetStackAmount() < 100)
+                
                 switch (GetId())
                 {
                     case SPELL_SPEED_RAM_GALLOP:
@@ -1967,29 +1971,29 @@ class item_brewfest_ram_reins : public ItemScript
 public:
     item_brewfest_ram_reins() : ItemScript("item_brewfest_ram_reins") { }
 
-    bool OnUse(Player* pPlayer, Item* pItem, const SpellCastTargets & /*pTargets*/)
+    bool OnUse(Player* player, Item* pItem, const SpellCastTargets & /*pTargets*/)
     {
-        if (pPlayer->HasAura(SPELL_BREWFEST_RAM) && !pPlayer->HasAura(SPELL_SPEED_RAM_EXHAUSED))
+        if ((player->HasAura(SPELL_BREWFEST_RAM) || player->HasAura(SPELL_RAMSTEIN_SWIFT_WORK_RAM)) && !player->HasAura(SPELL_SPEED_RAM_EXHAUSED))
         {
-            if (pPlayer->HasAura(SPELL_SPEED_RAM_NORMAL))
-                pPlayer->CastSpell(pPlayer,SPELL_SPEED_RAM_TROT,false);
-            else if (pPlayer->HasAura(SPELL_SPEED_RAM_TROT))
+            if (player->HasAura(SPELL_SPEED_RAM_NORMAL))
+                player->CastSpell(player,SPELL_SPEED_RAM_TROT,false);
+            else if (player->HasAura(SPELL_SPEED_RAM_TROT))
             {
-                if (pPlayer->GetAura(SPELL_SPEED_RAM_TROT)->GetDuration() < 3000)
-                    pPlayer->GetAura(SPELL_SPEED_RAM_TROT)->SetDuration(4000);
+                if (player->GetAura(SPELL_SPEED_RAM_TROT)->GetDuration() < 3000)
+                    player->GetAura(SPELL_SPEED_RAM_TROT)->SetDuration(4000);
                 else
-                  pPlayer->CastSpell(pPlayer,SPELL_SPEED_RAM_CANTER,false);
-            } else if (pPlayer->HasAura(SPELL_SPEED_RAM_CANTER))
+                  player->CastSpell(player,SPELL_SPEED_RAM_CANTER,false);
+            } else if (player->HasAura(SPELL_SPEED_RAM_CANTER))
             {
-                if (pPlayer->GetAura(SPELL_SPEED_RAM_CANTER)->GetDuration() < 3000)
-                    pPlayer->GetAura(SPELL_SPEED_RAM_CANTER)->SetDuration(4000);
+                if (player->GetAura(SPELL_SPEED_RAM_CANTER)->GetDuration() < 3000)
+                    player->GetAura(SPELL_SPEED_RAM_CANTER)->SetDuration(4000);
                 else
-                  pPlayer->CastSpell(pPlayer,SPELL_SPEED_RAM_GALLOP,false);
-            } else if (pPlayer->HasAura(SPELL_SPEED_RAM_GALLOP))
-                pPlayer->GetAura(SPELL_SPEED_RAM_GALLOP)->SetDuration(4000);
+                  player->CastSpell(player,SPELL_SPEED_RAM_GALLOP,false);
+            } else if (player->HasAura(SPELL_SPEED_RAM_GALLOP))
+                player->GetAura(SPELL_SPEED_RAM_GALLOP)->SetDuration(4000);
         } 
         else
-            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW ,pItem, NULL);
+            player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW ,pItem, NULL);
 
         return true;
     }
@@ -2012,11 +2016,11 @@ public:
         
         void MoveInLineOfSight(Unit *who)
         {
-            Player *pPlayer = who->ToPlayer();
-            if (!pPlayer)
+            Player *player = who->ToPlayer();
+            if (!player)
                 return;
-            if (pPlayer->HasAura(SPELL_RAM_FATIGUE) && me->GetDistance(pPlayer->GetPositionX(),pPlayer->GetPositionY(),pPlayer->GetPositionZ()) <= 7.5f)
-                pPlayer->RemoveAura(SPELL_RAM_FATIGUE);
+            if (player->HasAura(SPELL_RAM_FATIGUE) && me->GetDistance(player->GetPositionX(),player->GetPositionY(),player->GetPositionZ()) <= 7.5f)
+                player->RemoveAura(SPELL_RAM_FATIGUE);
         }
     };
 
@@ -2047,15 +2051,15 @@ public:
 
         void MoveInLineOfSight(Unit *who)
         {
-            Player *pPlayer = who->ToPlayer();
-            if (!pPlayer)
+            Player *player = who->ToPlayer();
+            if (!player)
                 return;
-            if (pPlayer->HasAura(SPELL_BREWFEST_RAM) 
-                && me->GetDistance(pPlayer->GetPositionX(),pPlayer->GetPositionY(),pPlayer->GetPositionZ()) <= 25.0f
-                && !pPlayer->HasItemCount(ITEM_BREWFEST_KEG,1))
+            if ((player->HasAura(SPELL_BREWFEST_RAM) || player->HasAura(SPELL_RAMSTEIN_SWIFT_WORK_RAM))
+                && me->GetDistance(player->GetPositionX(),player->GetPositionY(),player->GetPositionZ()) <= 25.0f
+                && !player->HasItemCount(ITEM_BREWFEST_KEG,1))
             {
-                me->CastSpell(pPlayer,SPELL_THROW_KEG,false);
-                me->CastSpell(pPlayer,42414,false);
+                me->CastSpell(player,SPELL_THROW_KEG,false);
+                me->CastSpell(player,42414,false);
             }
         }
     };
@@ -2089,32 +2093,35 @@ public:
         
         void MoveInLineOfSight(Unit *who)
         {
-            Player *pPlayer = who->ToPlayer();
-            if (!pPlayer)
+            Player *player = who->ToPlayer();
+            if (!player)
                 return;
 
-            if (pPlayer->HasAura(SPELL_BREWFEST_RAM) 
-                && me->GetDistance(pPlayer->GetPositionX(),pPlayer->GetPositionY(),pPlayer->GetPositionZ()) <= 5.0f
-                && pPlayer->HasItemCount(ITEM_BREWFEST_KEG,1)) 
+            if ((player->HasAura(SPELL_BREWFEST_RAM) ||  player->HasAura(SPELL_RAMSTEIN_SWIFT_WORK_RAM))
+                && me->GetDistance(player->GetPositionX(),player->GetPositionY(),player->GetPositionZ()) <= 5.0f
+                && player->HasItemCount(ITEM_BREWFEST_KEG,1)) 
             {
-                pPlayer->CastSpell(me,SPELL_THROW_KEG,true);
-                pPlayer->DestroyItemCount(ITEM_BREWFEST_KEG,1,true);
-                pPlayer->GetAura(SPELL_BREWFEST_RAM)->SetDuration(pPlayer->GetAura(SPELL_BREWFEST_RAM)->GetDuration() + 30000);
-                if (pPlayer->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_A) 
-                    || pPlayer->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_H))
+                player->CastSpell(me,SPELL_THROW_KEG,true);
+                player->DestroyItemCount(ITEM_BREWFEST_KEG,1,true);
+                if (player->HasAura(SPELL_BREWFEST_RAM))
+                    player->GetAura(SPELL_BREWFEST_RAM)->SetDuration(player->GetAura(SPELL_BREWFEST_RAM)->GetDuration() + 30000);
+                if (player->HasAura(SPELL_RAMSTEIN_SWIFT_WORK_RAM))
+                    player->GetAura(SPELL_RAMSTEIN_SWIFT_WORK_RAM)->SetDuration(player->GetAura(SPELL_RAMSTEIN_SWIFT_WORK_RAM)->GetDuration() + 30000);
+                if (player->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_A) 
+                    || player->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_H))
                 {
-                    pPlayer->CastSpell(pPlayer,SPELL_CREATE_TICKETS,true);
+                    player->CastSpell(player,SPELL_CREATE_TICKETS,true);
                 }
                 else
                 {
-                    pPlayer->KilledMonsterCredit(NPC_BREWFEST_DELIVERY_BUNNY,0);
-                    if (pPlayer->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_A) == QUEST_STATUS_INCOMPLETE) 
-                        pPlayer->AreaExploredOrEventHappens(QUEST_THERE_AND_BACK_AGAIN_A);
-                    if (pPlayer->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_H) == QUEST_STATUS_INCOMPLETE) 
-                        pPlayer->AreaExploredOrEventHappens(QUEST_THERE_AND_BACK_AGAIN_H);
-                    if (pPlayer->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_A) == QUEST_STATUS_COMPLETE
-                        || pPlayer->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_H) == QUEST_STATUS_COMPLETE)
-                        pPlayer->RemoveAura(SPELL_BREWFEST_RAM);
+                    player->KilledMonsterCredit(NPC_BREWFEST_DELIVERY_BUNNY,0);
+                    if (player->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_A) == QUEST_STATUS_INCOMPLETE) 
+                        player->AreaExploredOrEventHappens(QUEST_THERE_AND_BACK_AGAIN_A);
+                    if (player->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_H) == QUEST_STATUS_INCOMPLETE) 
+                        player->AreaExploredOrEventHappens(QUEST_THERE_AND_BACK_AGAIN_H);
+                    if (player->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_A) == QUEST_STATUS_COMPLETE
+                        || player->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_H) == QUEST_STATUS_COMPLETE)
+                        player->RemoveAura(SPELL_BREWFEST_RAM);
                 }
             }
         }
@@ -2138,46 +2145,46 @@ class npc_brewfest_ram_master : public CreatureScript
 public:
     npc_brewfest_ram_master() : CreatureScript("npc_brewfest_ram_master") { }
 
-    bool OnGossipHello(Player *pPlayer, Creature *pCreature)
+    bool OnGossipHello(Player *player, Creature *pCreature)
     {
         if (pCreature->isQuestGiver())
-            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+            player->PrepareQuestMenu(pCreature->GetGUID());
 
-            if (pPlayer->HasSpellCooldown(SPELL_BREWFEST_SUMMON_RAM) 
-                && !pPlayer->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_A) 
-                && !pPlayer->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_H)
-                && (pPlayer->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_A) == QUEST_STATUS_INCOMPLETE
-                || pPlayer->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_H) == QUEST_STATUS_INCOMPLETE))
-                pPlayer->RemoveSpellCooldown(SPELL_BREWFEST_SUMMON_RAM);
+            if (player->HasSpellCooldown(SPELL_BREWFEST_SUMMON_RAM) 
+                && !player->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_A) 
+                && !player->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_H)
+                && (player->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_A) == QUEST_STATUS_INCOMPLETE
+                || player->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_H) == QUEST_STATUS_INCOMPLETE))
+                player->RemoveSpellCooldown(SPELL_BREWFEST_SUMMON_RAM);
 
-            if (!pPlayer->HasAura(SPELL_BREWFEST_RAM) && ((pPlayer->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_A) == QUEST_STATUS_INCOMPLETE 
-            || pPlayer->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_H) == QUEST_STATUS_INCOMPLETE 
-            || (!pPlayer->HasSpellCooldown(SPELL_BREWFEST_SUMMON_RAM) && 
-                (pPlayer->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_A) 
-                || pPlayer->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_H))))))
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_RAM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            if (!player->HasAura(SPELL_BREWFEST_RAM) && ((player->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_A) == QUEST_STATUS_INCOMPLETE 
+            || player->GetQuestStatus(QUEST_THERE_AND_BACK_AGAIN_H) == QUEST_STATUS_INCOMPLETE 
+            || (!player->HasSpellCooldown(SPELL_BREWFEST_SUMMON_RAM) && 
+                (player->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_A) 
+                || player->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_H))))))
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_RAM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-            if ((pPlayer->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_A) 
-                || pPlayer->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_H))
-                && !pPlayer->HasItemCount(33306,1,true))
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_RAM_REINS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            if ((player->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_A) 
+                || player->GetQuestRewardStatus(QUEST_THERE_AND_BACK_AGAIN_H))
+                && !player->HasItemCount(33306,1,true))
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_RAM_REINS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
-        pPlayer->SEND_GOSSIP_MENU(384, pCreature->GetGUID());
+        player->SEND_GOSSIP_MENU(384, pCreature->GetGUID());
         return true;
     }
 
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* player, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
-            if (pPlayer->HasItemCount(ITEM_BREWFEST_KEG,1)) 
-                pPlayer->DestroyItemCount(ITEM_BREWFEST_KEG,1,true);
-            pPlayer->CastSpell(pPlayer,SPELL_BREWFEST_SUMMON_RAM,true);
-            pPlayer->AddSpellCooldown(SPELL_BREWFEST_SUMMON_RAM,0,time(NULL) + 18*60*60);
+            if (player->HasItemCount(ITEM_BREWFEST_KEG,1)) 
+                player->DestroyItemCount(ITEM_BREWFEST_KEG,1,true);
+            player->CastSpell(player,SPELL_BREWFEST_SUMMON_RAM,true);
+            player->AddSpellCooldown(SPELL_BREWFEST_SUMMON_RAM,0,time(NULL) + 18*60*60);
         }
         if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
         {
-            pPlayer->CastSpell(pPlayer,44371,false);
+            player->CastSpell(player,44371,false);
         }
         return true;
     }
