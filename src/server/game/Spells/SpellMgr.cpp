@@ -3395,10 +3395,10 @@ void SpellMgr::LoadDbcDataCorrections()
             case 66058: // Dark Vortex
             case 65795: // Unleashed Light
             case 65808: // Unleashed Dark
-                spellInfo->Effect[0].BasePoints /= 2;
+                spellInfo->EffectBasePoints[0] /= 2;
                 break;
             case 66118: // Leeching Swarm (lower damage to 5% each second)
-                spellInfo->Effect[0].BasePoints = 4;
+                spellInfo->EffectBasePoints[0] = 4;
                 break;
             default:
                 break;
