@@ -32,7 +32,7 @@ class spell_oracle_wolvar : public SpellScriptLoader
 
             void Register()
             {
-                OnEffect += SpellEffectFn(spell_oracle_wolvar_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+                OnEffectHit += SpellEffectFn(spell_oracle_wolvar_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
             }
         };
 
@@ -69,7 +69,7 @@ class spell_sunreaver_disguise : public SpellScriptLoader
 
             void Register()
             {
-                OnEffect += SpellEffectFn(spell_sunreaver_disguise_SpellScript::HandleEffectScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+                OnEffectHit += SpellEffectFn(spell_sunreaver_disguise_SpellScript::HandleEffectScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
             }
         };
 
