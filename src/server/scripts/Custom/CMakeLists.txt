@@ -20,6 +20,7 @@ set(scripts_STAT_SRCS
   Custom/killstreak.cpp
   Custom/level_rewards.cpp
   Custom/chat_monitor.cpp
+  Custom/npc_icc_ring_recover.cpp
 )
 
 message("  -> Prepared: Custom")
