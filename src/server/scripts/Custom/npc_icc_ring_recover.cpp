@@ -61,73 +61,13 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* player, Creature* /*creature*/, uint32 /*sender*/, uint32 action)
     {
         player->PlayerTalkClass->ClearMenus();
 
-        switch (uiAction)
-        {
-            case GOSSIP_ACTION_INFO_DEF + 1:
-                player->AddItem(rings[0], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 2:
-                player->AddItem(rings[1], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 3:
-                player->AddItem(rings[2], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 4:
-                player->AddItem(rings[3], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 5:
-                player->AddItem(rings[4], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 6:
-                player->AddItem(rings[5], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 7:
-                player->AddItem(rings[6], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 8:
-                player->AddItem(rings[7], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 9:
-                player->AddItem(rings[8], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 10:
-                player->AddItem(rings[9], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 11:
-                player->AddItem(rings[10], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 12:
-                player->AddItem(rings[11], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 13:
-                player->AddItem(rings[12], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 14:
-                player->AddItem(rings[13], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 15:
-                player->AddItem(rings[14], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 16:
-                player->AddItem(rings[15], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 17:
-                player->AddItem(rings[16], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 18:
-                player->AddItem(rings[17], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 19:
-                player->AddItem(rings[18], 1);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 20:
-                player->AddItem(rings[19], 1);
-                break;
-        }
+        int id = action - (GOSSIP_ACTION_INFO_DEF + 1)
+        if (id < 20)
+            player->AddItem(rings[id], 1);
 
         player->CLOSE_GOSSIP_MENU();
         return true;
