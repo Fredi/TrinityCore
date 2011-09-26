@@ -65,7 +65,7 @@ public:
     {
         player->PlayerTalkClass->ClearMenus();
 
-        int id = action - (GOSSIP_ACTION_INFO_DEF + 1)
+        int id = action - (GOSSIP_ACTION_INFO_DEF + 1);
         if (id < 20)
             player->AddItem(rings[id], 1);
 
