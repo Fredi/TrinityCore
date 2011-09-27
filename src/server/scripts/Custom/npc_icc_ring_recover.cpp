@@ -15,12 +15,18 @@ public:
     bool OnGossipHello(Player* player, Creature* creature)
     {
         if (player->GetQuestStatus(QUEST_CHOOSE_YOUR_PATH) != QUEST_STATUS_COMPLETE)
+        {
+            player->SEND_GOSSIP_MENU(NPC_TEXT_ID, creature->GetGUID());
             return true;
+        }
 
         for (int i = 0; i < 20; ++i)
         {
             if (player->HasItemCount(rings[i], 1, true)) // Check items also in bank
+            {
+                player->SEND_GOSSIP_MENU(NPC_TEXT_ID, creature->GetGUID());
                 return true;
+            }
         }
 
         switch (player->GetReputationRank(FACTION_ASHEN_VEREDICT))
@@ -53,8 +59,6 @@ public:
                 player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Melee - Agility (Exalted)", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 19);
                 player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Tank (Exalted)", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 20);
                 break;
-            default:
-                return true;
         }
 
         player->SEND_GOSSIP_MENU(NPC_TEXT_ID, creature->GetGUID());
