@@ -6,166 +6,166 @@ class npc_vip : public CreatureScript
 public:
     npc_vip() : CreatureScript("npc_vip") { }
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* player, Creature* creature)
     {
-        if (!pPlayer->GetSession()->IsVIP() && !pPlayer->isGameMaster())
+        if (!player->GetSession()->IsVIP() && !player->isGameMaster())
         {
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pCreature->MonsterWhisper("Desculpe $N, atendo somente VIPs.", pPlayer->GetGUID(), false);
+            player->CLOSE_GOSSIP_MENU();
+            creature->MonsterWhisper("Desculpe $N, atendo somente VIPs.", player->GetGUID(), false);
             return true;
         }
 
-        if (pCreature->isVendor())
+        if (creature->isVendor())
         {
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->GetSession()->SendListInventory(pCreature->GetGUID());
+            player->CLOSE_GOSSIP_MENU();
+            player->GetSession()->SendListInventory(creature->GetGUID());
             return true;
         }
 
-        if (pCreature->isQuestGiver())
-            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+        if (creature->isQuestGiver())
+            player->PrepareQuestMenu(creature->GetGUID());
 
-        pPlayer->ADD_GOSSIP_ITEM(9, "Heal"                     , GOSSIP_SENDER_MAIN, 1202);
-        pPlayer->ADD_GOSSIP_ITEM(5, "Resetar talentos"          , GOSSIP_SENDER_MAIN, 4035);
-        pPlayer->ADD_GOSSIP_ITEM(7, "[Morfar] ->"               , GOSSIP_SENDER_MAIN, 1203);
-        pPlayer->ADD_GOSSIP_ITEM(7, "[Buffs] ->"                , GOSSIP_SENDER_MAIN, 1206);
+        player->ADD_GOSSIP_ITEM(9, "Heal"                     , GOSSIP_SENDER_MAIN, 1202);
+        player->ADD_GOSSIP_ITEM(5, "Resetar talentos"          , GOSSIP_SENDER_MAIN, 4035);
+        player->ADD_GOSSIP_ITEM(7, "[Morfar] ->"               , GOSSIP_SENDER_MAIN, 1203);
+        player->ADD_GOSSIP_ITEM(7, "[Buffs] ->"                , GOSSIP_SENDER_MAIN, 1206);
 
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
         return true;
     }
 
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 action)
     {
-        pPlayer->PlayerTalkClass->ClearMenus();
+        player->PlayerTalkClass->ClearMenus();
 
-        switch(uiAction)
+        switch(action)
         {
             case 1202: // Heal
-                if (pPlayer->HasAura(45523))
+                if (player->HasAura(45523))
                 {
-                    pPlayer->CLOSE_GOSSIP_MENU();
-                    pCreature->MonsterWhisper("Desculpe $N, não posso fazer isto nesse momento.", pPlayer->GetGUID(), false);
+                    player->CLOSE_GOSSIP_MENU();
+                    creature->MonsterWhisper("Desculpe $N, não posso fazer isto nesse momento.", player->GetGUID(), false);
                 }
                 else
                 {
-                    pPlayer->CLOSE_GOSSIP_MENU();
-                    pPlayer->CastSpell(pPlayer, 39321, true);
-                    pPlayer->CastSpell(pPlayer, 45523, true);
+                    player->CLOSE_GOSSIP_MENU();
+                    player->CastSpell(player, 39321, true);
+                    player->CastSpell(player, 45523, true);
                 }
                 break;
             case 4035: // Reset talents
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->SendTalentWipeConfirm(pCreature->GetGUID());
+                player->CLOSE_GOSSIP_MENU();
+                player->SendTalentWipeConfirm(creature->GetGUID());
                 break;
             case 1203: // Morphs
-                pPlayer->ADD_GOSSIP_ITEM(5, "Illidan", GOSSIP_SENDER_MAIN, 500);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Akama", GOSSIP_SENDER_MAIN, 502);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Deathknight", GOSSIP_SENDER_MAIN, 503);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Tauren", GOSSIP_SENDER_MAIN, 504);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Undead", GOSSIP_SENDER_MAIN, 505);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Human", GOSSIP_SENDER_MAIN, 506);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Lich King", GOSSIP_SENDER_MAIN, 507);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Tirion", GOSSIP_SENDER_MAIN, 508);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Uther Lightbringer", GOSSIP_SENDER_MAIN, 509);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Arthas", GOSSIP_SENDER_MAIN, 510);
-                pPlayer->ADD_GOSSIP_ITEM(5, "DESMORFAR", GOSSIP_SENDER_MAIN, 511);
+                player->ADD_GOSSIP_ITEM(5, "Illidan", GOSSIP_SENDER_MAIN, 500);
+                player->ADD_GOSSIP_ITEM(5, "Akama", GOSSIP_SENDER_MAIN, 502);
+                player->ADD_GOSSIP_ITEM(5, "Deathknight", GOSSIP_SENDER_MAIN, 503);
+                player->ADD_GOSSIP_ITEM(5, "Tauren", GOSSIP_SENDER_MAIN, 504);
+                player->ADD_GOSSIP_ITEM(5, "Undead", GOSSIP_SENDER_MAIN, 505);
+                player->ADD_GOSSIP_ITEM(5, "Human", GOSSIP_SENDER_MAIN, 506);
+                player->ADD_GOSSIP_ITEM(5, "Lich King", GOSSIP_SENDER_MAIN, 507);
+                player->ADD_GOSSIP_ITEM(5, "Tirion", GOSSIP_SENDER_MAIN, 508);
+                player->ADD_GOSSIP_ITEM(5, "Uther Lightbringer", GOSSIP_SENDER_MAIN, 509);
+                player->ADD_GOSSIP_ITEM(5, "Arthas", GOSSIP_SENDER_MAIN, 510);
+                player->ADD_GOSSIP_ITEM(5, "DESMORFAR", GOSSIP_SENDER_MAIN, 511);
 
-                pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
+                player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
 
                 break;
             case 500:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->SetDisplayId(21135);
+                player->CLOSE_GOSSIP_MENU();
+                player->SetDisplayId(21135);
                 break;
             case 502:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->SetDisplayId(20681);
+                player->CLOSE_GOSSIP_MENU();
+                player->SetDisplayId(20681);
                 break;
             case 503:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->SetDisplayId(16508);
+                player->CLOSE_GOSSIP_MENU();
+                player->SetDisplayId(16508);
                 break;
             case 504:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->SetDisplayId(17332);
+                player->CLOSE_GOSSIP_MENU();
+                player->SetDisplayId(17332);
                 break;
             case 505:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->SetDisplayId(2789);
+                player->CLOSE_GOSSIP_MENU();
+                player->SetDisplayId(2789);
                 break;
             case 506:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->SetDisplayId(16280);
+                player->CLOSE_GOSSIP_MENU();
+                player->SetDisplayId(16280);
                 break;
             case 507:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->SetDisplayId(24191);
+                player->CLOSE_GOSSIP_MENU();
+                player->SetDisplayId(24191);
                 break;
             case 508:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->SetDisplayId(22209);
+                player->CLOSE_GOSSIP_MENU();
+                player->SetDisplayId(22209);
                 break;
             case 509:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->SetDisplayId(23889);
+                player->CLOSE_GOSSIP_MENU();
+                player->SetDisplayId(23889);
                 break;
             case 510:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->SetDisplayId(24949);
+                player->CLOSE_GOSSIP_MENU();
+                player->SetDisplayId(24949);
                 break;
             case 511:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->DeMorph();
+                player->CLOSE_GOSSIP_MENU();
+                player->DeMorph();
                 break;
             case 1206: // Buffs
-                pPlayer->ADD_GOSSIP_ITEM(5, "Power Word: Fortitude, Rank 8", GOSSIP_SENDER_MAIN, 4000);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Greater Blessing of Kings", GOSSIP_SENDER_MAIN, 4001);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Greater Bleesing of Mights", GOSSIP_SENDER_MAIN,4002);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Greater Blessing of Wisdom", GOSSIP_SENDER_MAIN, 4003);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Mark of the Wild, Rank 9", GOSSIP_SENDER_MAIN, 4004);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Arcane Intellect, Rank 7", GOSSIP_SENDER_MAIN, 4005);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Thorns, Rank 8", GOSSIP_SENDER_MAIN, 4007);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Divine Spirit, Rank 8", GOSSIP_SENDER_MAIN, 4008);
-                pPlayer->ADD_GOSSIP_ITEM(5, "Shadow Protection, Rank 5", GOSSIP_SENDER_MAIN, 4009);
+                player->ADD_GOSSIP_ITEM(5, "Power Word: Fortitude, Rank 8", GOSSIP_SENDER_MAIN, 4000);
+                player->ADD_GOSSIP_ITEM(5, "Greater Blessing of Kings", GOSSIP_SENDER_MAIN, 4001);
+                player->ADD_GOSSIP_ITEM(5, "Greater Bleesing of Mights", GOSSIP_SENDER_MAIN,4002);
+                player->ADD_GOSSIP_ITEM(5, "Greater Blessing of Wisdom", GOSSIP_SENDER_MAIN, 4003);
+                player->ADD_GOSSIP_ITEM(5, "Mark of the Wild, Rank 9", GOSSIP_SENDER_MAIN, 4004);
+                player->ADD_GOSSIP_ITEM(5, "Arcane Intellect, Rank 7", GOSSIP_SENDER_MAIN, 4005);
+                player->ADD_GOSSIP_ITEM(5, "Thorns, Rank 8", GOSSIP_SENDER_MAIN, 4007);
+                player->ADD_GOSSIP_ITEM(5, "Divine Spirit, Rank 8", GOSSIP_SENDER_MAIN, 4008);
+                player->ADD_GOSSIP_ITEM(5, "Shadow Protection, Rank 5", GOSSIP_SENDER_MAIN, 4009);
 
-                pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
+                player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
 
                 break;
             case 4000:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pCreature->CastSpell(pPlayer, 48161, false); // target, spellid, triggered-e
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 48161, true);
                 break;
             case 4001:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pCreature->CastSpell(pPlayer, 25898, false);
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 25898, true);
                 break;
             case 4002:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pCreature->CastSpell(pPlayer, 48934, false);
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 48934, true);
                 break;
             case 4003:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pCreature->CastSpell(pPlayer, 48938, false);
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 48938, true);
                 break;
             case 4004:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pCreature->CastSpell(pPlayer, 48469, false);
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 48469, true);
                 break;
             case 4005:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pCreature->CastSpell(pPlayer, 42995, false);
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 42995, true);
                 break;
             case 4007:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pCreature->CastSpell(pPlayer, 53307, false);
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 53307, true);
                 break;
             case 4008:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pCreature->CastSpell(pPlayer, 48073, false);
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 48073, true);
                 break;
             case 4009:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pCreature->CastSpell(pPlayer, 48169, false);
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 48169, true);
                 break;
         }
 
