@@ -3366,6 +3366,10 @@ void SpellMgr::LoadDbcDataCorrections()
             case 66118: // Leeching Swarm (lower damage to 5% each second)
                 spellInfo->EffectBasePoints[0] = 4;
                 break;
+            // Icecrown Citadel
+            case 69065: // Impaled (lower damage to 5% each second)
+                spellInfo->EffectBasePoints[1] = 4;
+                break;
             default:
                 break;
         }
