@@ -1190,27 +1190,27 @@ void World::LoadConfigSettings(bool reload)
     // MySQL ping time interval
     m_int_configs[CONFIG_DB_PING_INTERVAL] = ConfigMgr::GetIntDefault("MaxPingTime", 30);
 
-    m_bool_configs[CONFIG_ANTICHEAT_ENABLE] = sConfig->GetBoolDefault("Anticheat.Enable", true);
-    m_int_configs[CONFIG_ANTICHEAT_REPORTS_INGAME_NOTIFICATION] = sConfig->GetIntDefault("Anticheat.ReportsForIngameWarnings", 70);
-    m_int_configs[CONFIG_ANTICHEAT_DETECTIONS_ENABLED] = sConfig->GetIntDefault("Anticheat.DetectionsEnabled",31);
-    m_int_configs[CONFIG_ANTICHEAT_MAX_REPORTS_FOR_DAILY_REPORT] = sConfig->GetIntDefault("Anticheat.MaxReportsForDailyReport",70);
+    m_bool_configs[CONFIG_ANTICHEAT_ENABLE] = ConfigMgr::GetBoolDefault("Anticheat.Enable", true);
+    m_int_configs[CONFIG_ANTICHEAT_REPORTS_INGAME_NOTIFICATION] = ConfigMgr::GetIntDefault("Anticheat.ReportsForIngameWarnings", 70);
+    m_int_configs[CONFIG_ANTICHEAT_DETECTIONS_ENABLED] = ConfigMgr::GetIntDefault("Anticheat.DetectionsEnabled",31);
+    m_int_configs[CONFIG_ANTICHEAT_MAX_REPORTS_FOR_DAILY_REPORT] = ConfigMgr::GetIntDefault("Anticheat.MaxReportsForDailyReport",70);
 
     //Wintergrasp
-    m_bool_configs[CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED]         = sConfig->GetBoolDefault("OutdoorPvP.Wintergrasp.Enabled", true);
-    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_SAVESTATE_PERIOD] = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.SaveState.Period", 10000);
-    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_START_TIME]       = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.StartTime", 30);
-    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_BATTLE_TIME]      = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.BattleTime", 30);
-    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_INTERVAL]         = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.Interval", 150);
-    m_bool_configs[CONFIG_OUTDOORPVP_WINTERGRASP_CUSTOM_HONOR]    = sConfig->GetBoolDefault("OutdoorPvP.Wintergrasp.CustomHonorRewards", false);
-    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_WIN_BATTLE]       = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorBattleWin", 3000);
-    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_LOSE_BATTLE]      = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorBattleLose", 1250);
-    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_DAMAGED_TOWER]    = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorDamageTower", 750);
-    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_DESTROYED_TOWER]  = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorDestroyedTower", 750);
-    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_DAMAGED_BUILDING] = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorDamagedBuilding", 750);
-    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_INTACT_BUILDING]  = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorIntactBuilding", 1500);
-    m_bool_configs[CONFIG_CONFIG_OUTDOORPVP_WINTERGRASP_ANTIFARM_ENABLE]  = sConfig->GetBoolDefault("OutdoorPvP.Wintergrasp.Antifarm.Enable", false);
-    m_int_configs[CONFIG_CONFIG_OUTDOORPVP_WINTERGRASP_ANTIFARM_ATK]  = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.Antifarm.Atk", 5);
-    m_int_configs[CONFIG_CONFIG_OUTDOORPVP_WINTERGRASP_ANTIFARM_DEF]  = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.Antifarm.Def", 5);
+    m_bool_configs[CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED]         = ConfigMgr::GetBoolDefault("OutdoorPvP.Wintergrasp.Enabled", true);
+    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_SAVESTATE_PERIOD] = ConfigMgr::GetIntDefault("OutdoorPvP.Wintergrasp.SaveState.Period", 10000);
+    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_START_TIME]       = ConfigMgr::GetIntDefault("OutdoorPvP.Wintergrasp.StartTime", 30);
+    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_BATTLE_TIME]      = ConfigMgr::GetIntDefault("OutdoorPvP.Wintergrasp.BattleTime", 30);
+    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_INTERVAL]         = ConfigMgr::GetIntDefault("OutdoorPvP.Wintergrasp.Interval", 150);
+    m_bool_configs[CONFIG_OUTDOORPVP_WINTERGRASP_CUSTOM_HONOR]    = ConfigMgr::GetBoolDefault("OutdoorPvP.Wintergrasp.CustomHonorRewards", false);
+    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_WIN_BATTLE]       = ConfigMgr::GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorBattleWin", 3000);
+    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_LOSE_BATTLE]      = ConfigMgr::GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorBattleLose", 1250);
+    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_DAMAGED_TOWER]    = ConfigMgr::GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorDamageTower", 750);
+    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_DESTROYED_TOWER]  = ConfigMgr::GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorDestroyedTower", 750);
+    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_DAMAGED_BUILDING] = ConfigMgr::GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorDamagedBuilding", 750);
+    m_int_configs[CONFIG_OUTDOORPVP_WINTERGRASP_INTACT_BUILDING]  = ConfigMgr::GetIntDefault("OutdoorPvP.Wintergrasp.CustomHonorIntactBuilding", 1500);
+    m_bool_configs[CONFIG_CONFIG_OUTDOORPVP_WINTERGRASP_ANTIFARM_ENABLE]  = ConfigMgr::GetBoolDefault("OutdoorPvP.Wintergrasp.Antifarm.Enable", false);
+    m_int_configs[CONFIG_CONFIG_OUTDOORPVP_WINTERGRASP_ANTIFARM_ATK]  = ConfigMgr::GetIntDefault("OutdoorPvP.Wintergrasp.Antifarm.Atk", 5);
+    m_int_configs[CONFIG_CONFIG_OUTDOORPVP_WINTERGRASP_ANTIFARM_DEF]  = ConfigMgr::GetIntDefault("OutdoorPvP.Wintergrasp.Antifarm.Def", 5);
 
     sScriptMgr->OnConfigLoad(reload);
 }
