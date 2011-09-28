@@ -3374,6 +3374,12 @@ void SpellMgr::LoadDbcDataCorrections()
             case 69065: // Impaled (lower damage to 5% each second)
                 spellInfo->EffectBasePoints[1] = 4;
                 break;
+            case 71623: // Delirious Slash
+                spellInfo->EffectBasePoints[1] /= 2;
+                break;
+            case 72227: // Gastric Explosion
+                spellInfo->EffectBasePoints[0] /= 1.4f;
+                break;
             default:
                 break;
         }
