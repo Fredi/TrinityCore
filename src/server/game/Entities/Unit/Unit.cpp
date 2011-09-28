@@ -888,6 +888,10 @@ void Unit::CastSpell(SpellCastTargets const& targets, SpellInfo const* spellInfo
         if (Unit* owner = GetOwner())
             originalCaster=owner->GetGUID();
 
+    // TODO: this is a workaround - not needed anymore, but required for some scripts :(
+    if (!originalCaster && triggeredByAura)
+        originalCaster = triggeredByAura->GetCasterGUID();
+
     Spell* spell = new Spell(this, spellInfo, triggerFlags, originalCaster);
 
     if (value)
@@ -12143,7 +12147,7 @@ bool Unit::_IsValidAttackTarget(Unit const* target, SpellInfo const* bySpell) co
 
     // can't attack unattackable units or GMs
     if (target->HasUnitState(UNIT_STAT_UNATTACKABLE)
-        || target->GetTypeId() == TYPEID_PLAYER && target->ToPlayer()->isGameMaster())
+        || (target->GetTypeId() == TYPEID_PLAYER && target->ToPlayer()->isGameMaster()))
         return false;
 
     // can't attack own vehicle or passenger
@@ -12237,7 +12241,7 @@ bool Unit::_IsValidAssistTarget(Unit const* target, SpellInfo const* bySpell) co
 
     // can't assist unattackable units or GMs
     if (target->HasUnitState(UNIT_STAT_UNATTACKABLE)
-        || target->GetTypeId() == TYPEID_PLAYER && target->ToPlayer()->isGameMaster())
+        || (target->GetTypeId() == TYPEID_PLAYER && target->ToPlayer()->isGameMaster()))
         return false;
 
     // can't assist own vehicle or passenger
