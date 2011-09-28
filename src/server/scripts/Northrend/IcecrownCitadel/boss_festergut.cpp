@@ -183,7 +183,7 @@ class boss_festergut : public CreatureScript
                             {
                                 Talk(EMOTE_WARN_PUNGENT_BLIGHT);
                                 Talk(SAY_PUNGENT_BLIGHT);
-                                DoCast(me, SPELL_PUNGENT_BLIGHT);
+                                //DoCast(me, SPELL_PUNGENT_BLIGHT);
                                 _inhaleCounter = 0;
                                 if (Creature* professor = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
                                     professor->AI()->DoAction(ACTION_FESTERGUT_GAS);

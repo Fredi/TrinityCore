@@ -192,8 +192,8 @@ class boss_sindragosa : public CreatureScript
                 instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_ICE_TOMB_UNTARGETABLE);
                 instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_ICE_TOMB_DAMAGE);
                 instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_FROST_BEACON);
-                instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_FROST_BREATH_P1);
-                instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_FROST_BREATH_P2);
+                //instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_FROST_BREATH_P1);
+                //instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_FROST_BREATH_P2);
                 instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_MYSTIC_BUFFET);
                 instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_ASPHYXIATION);
                 me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_FROST_AURA, false);
@@ -208,7 +208,7 @@ class boss_sindragosa : public CreatureScript
                 events.ScheduleEvent(EVENT_BERSERK, 600000);
                 events.ScheduleEvent(EVENT_CLEAVE, 10000, EVENT_GROUP_LAND_PHASE);
                 events.ScheduleEvent(EVENT_TAIL_SMASH, 20000, EVENT_GROUP_LAND_PHASE);
-                events.ScheduleEvent(EVENT_FROST_BREATH, urand(8000, 12000), EVENT_GROUP_LAND_PHASE);
+                //events.ScheduleEvent(EVENT_FROST_BREATH, urand(8000, 12000), EVENT_GROUP_LAND_PHASE);
                 events.ScheduleEvent(EVENT_UNCHAINED_MAGIC, urand(9000, 14000), EVENT_GROUP_LAND_PHASE);
                 events.ScheduleEvent(EVENT_ICY_GRIP, 33500, EVENT_GROUP_LAND_PHASE);
                 events.ScheduleEvent(EVENT_AIR_PHASE, 50000);
@@ -288,8 +288,8 @@ class boss_sindragosa : public CreatureScript
                     {
                         _bCanLand = true;
                         ++_bombsLanded;
-                        if (_bombsLanded != 4)
-                            events.ScheduleEvent(EVENT_FROST_BOMB, 1000);
+                        //if (_bombsLanded != 4)
+                        //    events.ScheduleEvent(EVENT_FROST_BOMB, 1000);
                         break;
                     }
                     default:
@@ -332,7 +332,7 @@ class boss_sindragosa : public CreatureScript
                         _bombsLanded = 0;
                         me->CastCustomSpell(SPELL_ICE_TOMB_TARGET, SPELLVALUE_MAX_TARGETS, RAID_MODE<int32>(2, 5, 2, 6), false);
                         //10 seconds instead of 8 because ice block affects players even after it's about to appear.
-                        events.ScheduleEvent(EVENT_FROST_BOMB, 10000);
+                        //events.ScheduleEvent(EVENT_FROST_BOMB, 10000);
                         break;
                     case POINT_LAND:
                         me->SetFlying(false);
@@ -362,13 +362,13 @@ class boss_sindragosa : public CreatureScript
                     //Do not start third phase while flying
                     if (me->IsFlying())
                         return;
-                    events.ScheduleEvent(EVENT_CHECK_MYSTIC_BUFFET, 1000);
+                    //events.ScheduleEvent(EVENT_CHECK_MYSTIC_BUFFET, 1000);
                     instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_FROST_BREATH_P1);
                     Talk(SAY_PHASE_2);
                     events.CancelEvent(EVENT_AIR_PHASE);
                     events.ScheduleEvent(EVENT_ICE_TOMB, urand(7000, 10000));
                     events.RescheduleEvent(EVENT_ICY_GRIP, urand(35000, 40000));
-                    DoCast(me, SPELL_MYSTIC_BUFFET, true);
+                    //DoCast(me, SPELL_MYSTIC_BUFFET, true);
                     me->RemoveAurasDueToSpell(SPELL_MYSTIC_BUFFET_VULNERABILITY);
                     _isThirdPhase = true;
                 }
@@ -469,7 +469,7 @@ class boss_sindragosa : public CreatureScript
                         case EVENT_ICY_GRIP:
                             DoCast(me, SPELL_ICY_GRIP);
                             events.ScheduleEvent(EVENT_ICY_GRIP, urand(70000, 75000), EVENT_GROUP_LAND_PHASE);
-                            events.ScheduleEvent(EVENT_BLISTERING_COLD, 1000, EVENT_GROUP_LAND_PHASE);
+                            //events.ScheduleEvent(EVENT_BLISTERING_COLD, 1000, EVENT_GROUP_LAND_PHASE);
                             break;
                         case EVENT_BLISTERING_COLD:
                             Talk(EMOTE_WARN_BLISTERING_COLD);
