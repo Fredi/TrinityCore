@@ -108,7 +108,7 @@ class at_ring_of_law : public AreaTriggerScript
 public:
     at_ring_of_law() : AreaTriggerScript("at_ring_of_law") { }
 
-    bool OnTrigger(Player* player, const AreaTriggerEntry*  /*at*/)
+    bool OnTrigger(Player* player, const AreaTriggerEntry* /*at*/)
     {
         if (InstanceScript* pInstance = player->GetInstanceScript())
         {
@@ -213,7 +213,7 @@ public:
 
         void WaypointReached(uint32 i)
         {
-            switch(i)
+            switch (i)
             {
             case 0:
                 DoScriptText(SCRIPT_TEXT1, me);//2
@@ -299,7 +299,7 @@ public:
             {
                 if (Event_Timer <= diff)
                 {
-                    switch(EventPhase)
+                    switch (EventPhase)
                     {
                     case 0:
                         DoScriptText(SCRIPT_TEXT5, me);//1
@@ -664,7 +664,7 @@ public:
 
         void WaypointReached(uint32 i)
         {
-        switch(i)
+        switch (i)
             {
             case 0:me->Say(SAY_DUGHAL_FREE, LANG_UNIVERSAL, PlayerGUID); break;
             case 1:pInstance->SetData(DATA_DUGHAL, ENCOUNTER_STATE_OBJECTIVE_COMPLETED);break;
@@ -787,7 +787,7 @@ public:
 
         void WaypointReached(uint32 i)
         {
-        switch(i)
+        switch (i)
             {
             case 1:
                 me->Say(SAY_WINDSOR_1, LANG_UNIVERSAL, PlayerGUID);
@@ -824,7 +824,7 @@ public:
                 me->SetVisibility(VISIBILITY_OFF);
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                me->SummonCreature(MOB_ENTRY_REGINALD_WINDSOR, 403.61f, -51.71f, -63.92f, 3.600434f, TEMPSUMMON_DEAD_DESPAWN , 0);
+                me->SummonCreature(MOB_ENTRY_REGINALD_WINDSOR, 403.61f, -51.71f, -63.92f, 3.600434f, TEMPSUMMON_DEAD_DESPAWN, 0);
                 pInstance->SetData(DATA_SUPPLY_ROOM, ENCOUNTER_STATE_ENDED);
                 break;
             }
@@ -961,7 +961,7 @@ public:
         void WaypointReached(uint32 i)
         {
         wp=i;
-        switch(i)
+        switch (i)
             {
             case 0:
                 me->setFaction(11);
@@ -1168,7 +1168,7 @@ public:
 
         void WaypointReached(uint32 i)
         {
-        switch(i)
+        switch (i)
             {
             case 0:me->Say(SAY_TOBIAS_FREE, LANG_UNIVERSAL, PlayerGUID); break;
             case 2:
@@ -1295,7 +1295,7 @@ public:
             if (!pInstance)
                 return;
 
-            switch(i)
+            switch (i)
             {
             case 1:
                 me->HandleEmoteCommand(EMOTE_ONESHOT_KICK);
