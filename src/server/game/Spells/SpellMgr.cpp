@@ -3378,7 +3378,12 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectBasePoints[1] /= 2;
                 break;
             case 72227: // Gastric Explosion
-                spellInfo->EffectBasePoints[0] /= 1.4f;
+            case 69146: // Coldflame (10N)
+            case 70824: // Coldflame (10H)
+            case 70823: // Coldflame (25N)
+            case 70825: // Coldflame (25H)
+            case 71420: // Frostbolt (Lady Deathwhisper)
+                spellInfo->EffectBasePoints[0] /= 1.4f; // damage 40% lower
                 break;
             default:
                 break;
