@@ -33,13 +33,13 @@ public:
 
     ChatCommand* GetCommands() const
     {
-        static ChatCommand vipCommandTable[] =
+        ChatCommand static vipCommandTable[] =
         {
             { "add",            SEC_ADMINISTRATOR,  false, &HandleVIPAddCommand,              "", NULL },
             { "",               SEC_PLAYER,         true,  &HandleVIPCommand,                 "", NULL },
             { NULL,             0,                  false, NULL,                              "", NULL }
         };
-        static ChatCommand commandTable[] =
+        ChatCommand static commandTable[] =
         {
             { "vip",            SEC_PLAYER,         false, NULL,                    "", vipCommandTable },
             { NULL,             0,                  false, NULL,                               "", NULL }
@@ -47,7 +47,7 @@ public:
         return commandTable;
     }
 
-    static bool HandleVIPAddCommand(ChatHandler* handler, const char* args)
+    bool static HandleVIPAddCommand(ChatHandler* handler, char const* args)
     {
         if (!*args)
             return false;
@@ -59,36 +59,36 @@ public:
         if (!account || !duration || !atoi(duration))
             return false;
 
-        std::string account_name = account;
-        uint32 duration_secs = atoi(duration) * 86400;
+        std::string accountName = account;
+        uint32 durationSecs = atoi(duration) * 86400;
         std::string gm = handler->GetSession()->GetPlayerName();
 
-        if (!AccountMgr::normalizeString(account_name))
+        if (!AccountMgr::normalizeString(accountName))
         {
-            handler->PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, account_name.c_str());
+            handler->PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, accountName.c_str());
             handler->SetSentErrorMessage(true);
             return false;
         }
 
-        uint32 targetAccountId = AccountMgr::GetId(account_name);
+        uint32 targetAccountId = AccountMgr::GetId(accountName);
         if (!targetAccountId)
         {
-            handler->PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, account_name.c_str());
+            handler->PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, accountName.c_str());
             handler->SetSentErrorMessage(true);
             return false;
         }
 
         /// can set vip only for target with less security
         /// This is also reject self apply in fact
-        if (handler->HasLowerSecurityAccount (NULL, targetAccountId, true))
+        if (handler->HasLowerSecurityAccount(NULL, targetAccountId, true))
             return false;
 
         QueryResult resultLogin = LoginDatabase.PQuery("SELECT active FROM account_vip WHERE id = %u AND active = 1", targetAccountId);
         if (resultLogin)
         {
             LoginDatabase.PExecute("UPDATE account_vip "
-            "SET gm = '%s', unsetdate = unsetdate + %u "
-            "WHERE id = %u", gm.c_str(), duration_secs, targetAccountId);
+                "SET gm = '%s', unsetdate = unsetdate + %u "
+                "WHERE id = %u", gm.c_str(), durationSecs, targetAccountId);
 
             handler->PSendSysMessage("VIP atualizado.");
 
@@ -98,16 +98,16 @@ public:
         LoginDatabase.PExecute("DELETE FROM account_vip WHERE id = %u", targetAccountId);
 
         LoginDatabase.PExecute("INSERT INTO account_vip "
-        "(id, gm, setdate, unsetdate, active) "
-        "VALUES ('%u', '%s', UNIX_TIMESTAMP(), UNIX_TIMESTAMP() + %u, 1)",
-        targetAccountId, gm.c_str(), duration_secs);
+            "(id, gm, setdate, unsetdate, active) "
+            "VALUES ('%u', '%s', UNIX_TIMESTAMP(), UNIX_TIMESTAMP() + %u, 1)",
+            targetAccountId, gm.c_str(), durationSecs);
 
         handler->PSendSysMessage("VIP setado com sucesso.");
 
         return true;
     }
 
-    static bool HandleVIPCommand(ChatHandler* handler, const char* args)
+    static bool HandleVIPCommand(ChatHandler* handler, char const* args)
     {
         uint32 accountId;
 
@@ -117,20 +117,19 @@ public:
             if (!*args)
                 return false;
 
-            char *szAcc = strtok((char*)args, " ");
-            std::string account_name = szAcc;
+            std::string accountName = strtok((char*)args, " ");
 
-            if (!AccountMgr::normalizeString(account_name))
+            if (!AccountMgr::normalizeString(accountName))
             {
-                handler->PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, account_name.c_str());
+                handler->PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, accountName.c_str());
                 handler->SetSentErrorMessage(true);
                 return false;
             }
 
-            accountId = AccountMgr::GetId(account_name);
+            accountId = AccountMgr::GetId(accountName);
             if (!accountId)
             {
-                handler->PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, account_name.c_str());
+                handler->PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, accountName.c_str());
                 handler->SetSentErrorMessage(true);
                 return false;
             }
@@ -138,15 +137,12 @@ public:
         else
             accountId = handler->GetSession()->GetAccountId();
 
-        QueryResult resultLogin = LoginDatabase.PQuery("SELECT DATEDIFF(FROM_UNIXTIME(unsetdate), NOW()) FROM account_vip WHERE id = %u AND active = 1", accountId);
+        uint32 days = AccountMgr::VipDaysLeft(accountId);
 
-        if (!resultLogin)
-            handler->PSendSysMessage("[VIP] Esta conta não é VIP.");
-        else
-        {
-            uint32 days = (*resultLogin)[0].GetUInt32();
+        if (days > 0)
             handler->PSendSysMessage("[VIP] O VIP expira em %u dia(s).", days);
-        }
+        else
+            handler->PSendSysMessage("[VIP] Esta conta não é VIP.");
 
         return true;
     }
