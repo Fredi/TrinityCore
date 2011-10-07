@@ -846,7 +846,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
         {
             uint32 days = AccountMgr::VipDaysLeft(GetAccountId());
             char buffer[40];
-            sprintf(buffer, "@Seu VIP expira em %u dia(s).", days);
+            sprintf(buffer, "@|cFFFFFF00Seu VIP expira em %u dia(s).", days);
             str_motd.append(buffer);
         }
 
