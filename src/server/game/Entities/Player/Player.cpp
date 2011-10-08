@@ -14704,11 +14704,11 @@ bool Player::CanRewardQuest(Quest const* quest, bool msg)
 
     // anti wpe
     if (!isGameMaster() && 
-          (!SatisfyQuestExclusiveGroup(pQuest, true)   || !SatisfyQuestRace(pQuest, true)
-        || !SatisfyQuestSkillOrClass(pQuest, true)  || !SatisfyQuestReputation(pQuest, true)
-        || !SatisfyQuestPreviousQuest(pQuest, true) /*|| !SatisfyQuestTimed(pQuest, true)*/
-        || !SatisfyQuestNextChain(pQuest, true)     || !SatisfyQuestPrevChain(pQuest, true)
-        || !SatisfyQuestConditions(pQuest, true)    || !SatisfyQuestLevel(pQuest, true)))
+          (!SatisfyQuestExclusiveGroup(quest, true)   || !SatisfyQuestRace(quest, true)
+        || !SatisfyQuestSkillOrClass(quest, true)  || !SatisfyQuestReputation(quest, true)
+        || !SatisfyQuestPreviousQuest(quest, true) /*|| !SatisfyQuestTimed(quest, true)*/
+        || !SatisfyQuestNextChain(quest, true)     || !SatisfyQuestPrevChain(quest, true)
+        || !SatisfyQuestConditions(quest, true)    || !SatisfyQuestLevel(quest, true)))
             return false;
 
     // prevent receive reward with quest items in bank
