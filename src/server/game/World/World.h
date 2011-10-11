@@ -165,6 +165,8 @@ enum WorldBoolConfigs
     CONFIG_OUTDOORPVP_WINTERGRASP_CUSTOM_HONOR,
     CONFIG_CONFIG_OUTDOORPVP_WINTERGRASP_ANTIFARM_ENABLE,
     CONFIG_BOOL_WARDEN_ENABLED,
+    CONFIG_PDUMP_NO_PATHS,
+    CONFIG_PDUMP_NO_OVERWRITE,
     BOOL_CONFIG_VALUE_COUNT
 };
 
@@ -779,6 +781,11 @@ class World
         CharacterNameData *GetCharacterNameData(uint32 guid);
         void ReloadSingleCharacterNameData(uint32 guid);
 
+        const CharacterNameData* GetCharacterNameData(uint32 guid) const;
+        void AddCharacterNameData(uint32 guid, const std::string& name, uint8 gender, uint8 race, uint8 playerClass);
+        void UpdateCharacterNameData(uint32 guid, const std::string& name, uint8 gender, uint8 race = RACE_NONE);
+        void DeleteCharaceterNameData(uint32 guid) { _characterNameDataMap.erase(guid); }
+
         uint32 GetCleaningFlags() const { return m_CleaningFlags; }
         void   SetCleaningFlags(uint32 flags) { m_CleaningFlags = flags; }
     protected:
@@ -867,8 +874,7 @@ class World
 
         std::list<std::string> m_Autobroadcasts;
 
-        std::map<uint32, CharacterNameData*> m_CharacterNameDataMap;
-        ACE_Thread_Mutex m_CharacterNameDataMapMutex;
+        std::map<uint32, CharacterNameData> _characterNameDataMap;
         void LoadCharacterNameData();
 
         void ProcessQueryCallbacks();

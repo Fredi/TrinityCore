@@ -3117,7 +3117,6 @@ LevelReq.Auction = 1
 LevelReq.Mail = 1
 
 #
-
 #     Anticheat.Enable
 #        Description: Enables or disables the Anticheat System functionality
 #        Default:     1 - (Enabled)
@@ -3150,6 +3149,19 @@ Anticheat.DetectionsEnabled = 31
 #        Default:     70
 
 Anticheat.MaxReportsForDailyReport = 70
+
+#     PlayerDump.DisallowPaths
+#        Description: Disallow using paths in PlayerDump output files
+#        Default:     1
+
+PlayerDump.DisallowPaths = 1
+
+#
+#     PlayerDump.DisallowOverwrite
+#        Description: Disallow overwriting existing files with PlayerDump
+#        Default:     1
+
+PlayerDump.DisallowOverwrite = 1
 
 ###################################################################################################
 
