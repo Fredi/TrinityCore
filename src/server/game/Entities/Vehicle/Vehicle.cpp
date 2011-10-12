@@ -525,5 +525,5 @@ void Vehicle::Relocate(Position pos)
         }
     }
 
-    _me->SetPosition(pos, true);
+    _me->UpdatePosition(pos, true);
 }
