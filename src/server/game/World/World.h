@@ -778,9 +778,6 @@ class World
             m_WintergrapsState = state;
         }
 
-        CharacterNameData *GetCharacterNameData(uint32 guid);
-        void ReloadSingleCharacterNameData(uint32 guid);
-
         const CharacterNameData* GetCharacterNameData(uint32 guid) const;
         void AddCharacterNameData(uint32 guid, const std::string& name, uint8 gender, uint8 race, uint8 playerClass);
         void UpdateCharacterNameData(uint32 guid, const std::string& name, uint8 gender, uint8 race = RACE_NONE);
