@@ -21,7 +21,6 @@ set(scripts_STAT_SRCS
   Custom/level_rewards.cpp
   Custom/chat_monitor.cpp
   Custom/npc_icc_ring_recover.cpp
-  Custom/cs_fake.cpp
 )
 
 message("  -> Prepared: Custom")

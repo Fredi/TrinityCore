@@ -1249,7 +1249,6 @@ void AddSC_killstreak();
 void AddSC_level_rewards();
 void AddSC_chat_monitor();
 void AddSC_npc_icc_ring_recover();
-void AddSC_fake_commandscript();
 #endif
 
 void AddCustomScripts()
@@ -1267,6 +1266,5 @@ void AddCustomScripts()
     AddSC_level_rewards();
     AddSC_chat_monitor();
     AddSC_npc_icc_ring_recover();
-    AddSC_fake_commandscript();
 #endif
 }
