@@ -1782,7 +1782,12 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
         }
         case SMART_ACTION_JUMP_TO_POS:
         {
+            if (!me)
+                return;
+
+            me->GetMotionMaster()->Clear();
             me->GetMotionMaster()->MoveJump(e.target.x, e.target.y, e.target.z, (float)e.action.jump.speedxy, (float)e.action.jump.speedz);
+            // TODO: Resume path when reached jump location
             break;
         }
         case SMART_ACTION_SEND_GOSSIP_MENU:
@@ -1795,7 +1800,7 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                 return;
 
             for (ObjectList::const_iterator itr = targets->begin(); itr != targets->end(); ++itr)
-                if(Player* player = (*itr)->ToPlayer())
+                if (Player* player = (*itr)->ToPlayer())
                 {
                     if (e.action.sendGossipMenu.gossipMenuId)
                         player->PrepareGossipMenu(GetBaseObject(), e.action.sendGossipMenu.gossipMenuId, true);
@@ -2632,6 +2637,19 @@ void SmartScript::UpdateTimer(SmartScriptHolder& e, uint32 const diff)
 
     if (e.timer < diff)
     {
+        // delay spell cast event if another spell is being casted
+        if (e.GetActionType() == SMART_ACTION_CAST)
+        {
+            if (!(e.action.cast.flags & SMARTCAST_INTERRUPT_PREVIOUS))
+            {
+                if (me && me->HasUnitState(UNIT_STAT_CASTING))
+                {
+                    e.timer = 1;
+                    return;
+                }
+            }
+        }
+
         e.active = true;//activate events with cooldown
         switch (e.GetEventType())//process ONLY timed events
         {
