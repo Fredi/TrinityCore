@@ -337,7 +337,7 @@ public:
             }
         }
 
-        void KilledUnit(Unit* pVictim)
+        void KilledUnit(Unit* /*victim*/)
         {
             me->MonsterSay(urand(0,1) ? SAY_DIE_1 : SAY_DIE_2, LANG_UNIVERSAL, 0);
         }
