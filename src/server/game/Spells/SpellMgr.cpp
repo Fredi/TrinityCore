@@ -3536,6 +3536,7 @@ void SpellMgr::LoadDbcDataCorrections()
             case 70823: // Coldflame (25N)
             case 70825: // Coldflame (25H)
             case 71420: // Frostbolt (Lady Deathwhisper)
+            case 71446: // Twilight Bloodbolt (Blood Queen)
                 spellInfo->EffectBasePoints[0] /= 1.4f; // damage 40% lower
                 break;
             default:
