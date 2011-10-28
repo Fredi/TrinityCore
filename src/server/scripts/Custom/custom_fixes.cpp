@@ -1,4 +1,5 @@
 #include "ScriptPCH.h"
+#include "Spell.h"
 #include "SpellAuraEffects.h"
 #include "ScriptMgr.h"
 
