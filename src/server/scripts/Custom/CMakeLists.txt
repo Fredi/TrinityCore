@@ -15,7 +15,7 @@ set(scripts_STAT_SRCS
   Custom/npc_teleport.cpp
   Custom/npc_vip.cpp
   Custom/event_npc.cpp
-  Custom/spells.cpp
+  Custom/custom_fixes.cpp
   Custom/npc_legion_master.cpp
   Custom/killstreak.cpp
   Custom/level_rewards.cpp
