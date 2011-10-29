@@ -214,10 +214,13 @@ std::string Warden::Penalty()
     uint32 action = sWorld->getIntConfig(CONFIG_WARDEN_CLIENT_FAIL_ACTION);
 
     // Notify online GMs
-    std::string str = "|cFFFFFC00[AC]|cFF00FFFF[|cFF60FF00" + std::string(_session->GetPlayer()->GetName()) + "|cFF00FFFF] Possible cheater! (Warden Penalty)";
-    WorldPacket data(SMSG_NOTIFICATION, str.size() + 1);
-    data << str;
-    sWorld->SendGlobalGMMessage(&data);
+    if (_session->GetPlayer())
+    {
+        std::string str = "|cFFFFFC00[AC]|cFF00FFFF[|cFF60FF00" + std::string(_session->GetPlayer()->GetName()) + "|cFF00FFFF] Possible cheater! (Warden Penalty)";
+        WorldPacket data(SMSG_NOTIFICATION, str.size() + 1);
+        data << str;
+        sWorld->SendGlobalGMMessage(&data);
+    }
 
     switch (action)
     {
