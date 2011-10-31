@@ -242,6 +242,11 @@ void WardenWin::RequestData()
         _currentChecks.push_back(id);
 
         wd = sWardenCheckMgr->GetWardenDataById(id);
+
+        // Skip if checks aren't in the stores anymore (e.g. by database edit & reload during runtime)
+        if (!wd)
+            continue;
+
         switch (wd->Type)
         {
             case MPQ_CHECK:
@@ -264,7 +269,11 @@ void WardenWin::RequestData()
 
     for (std::list<uint32>::iterator itr = _currentChecks.begin(); itr != _currentChecks.end(); ++itr)
     {
+        // Skip if checks aren't in the stores anymore (e.g. by database edit & reload during runtime)
         wd = sWardenCheckMgr->GetWardenDataById(*itr);
+
+        if (!wd)
+            continue;
 
         type = wd->Type;
         buff << uint8(type ^ xorByte);
@@ -330,6 +339,9 @@ void WardenWin::RequestData()
     pkt.append(buff);
     _session->SendPacket(&pkt);
 
+    // DEBUG CODE: Save time the request was sent for later comparison
+    _requestSent = time(NULL);
+
     _dataSent = true;
 
     std::stringstream stream;
@@ -347,11 +359,10 @@ void WardenWin::HandleData(ByteBuffer &buff)
     _clientResponseTimer = 0;
 
     // DEBUG CODE
-    if (_clientRespExceedCounter > 0)
+    if (_requestSent < time(NULL) - 30)
     {
-        sLog->outError("WARDEN: Player %s (guid: %u, account: %u) exceeded max check delay %u times before reporting back",
-            _session->GetPlayerName(), _session->GetGuidLow(), _session->GetAccountId(), _clientRespExceedCounter);
-        _clientRespExceedCounter = 0;
+        sLog->outError("WARDEN: Player %s (guid: %u, account: %u) took %s to respond to warden check request",
+            _session->GetPlayerName(), _session->GetGuidLow(), _session->GetAccountId(), secsToTimeString(uint32(time(NULL)- _requestSent), true).c_str());
     }
 
     uint16 Length;
@@ -402,6 +413,13 @@ void WardenWin::HandleData(ByteBuffer &buff)
     {
         rd = sWardenCheckMgr->GetWardenDataById(*itr);
         rs = sWardenCheckMgr->GetWardenResultById(*itr);
+
+        // Skip if checks aren't in the stores anymore (e.g. by database edit & reload during runtime)
+        if (!rd)
+        {
+            buff.read_skip(1);
+            continue;
+        }
 
         type = rd->Type;
         switch (type)
