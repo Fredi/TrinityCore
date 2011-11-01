@@ -262,7 +262,7 @@ public:
     {
         PrepareSpellScript(spell_toss_stinky_bomb_SpellScript)
 
-        void HandleScriptEffect(SpellEffIndex effIndex)
+        void HandleScriptEffect(SpellEffIndex /*effIndex*/)
         {
             Unit* caster = GetCaster();
 
@@ -301,7 +301,7 @@ public:
                 return SPELL_FAILED_CANT_DO_THAT_RIGHT_NOW;
         }
 
-        void HandleCleanBombEffect(SpellEffIndex effIndex)
+        void HandleCleanBombEffect(SpellEffIndex /*effIndex*/)
         {
             Unit* caster = GetCaster();
 
@@ -366,7 +366,7 @@ class item_water_bucket : public ItemScript
 
         item_water_bucket() : ItemScript("item_water_bucket") { }
 
-        bool OnUse(Player* player, Item* item, SpellCastTargets const& targets)
+        bool OnUse(Player* player, Item* /*item*/, SpellCastTargets const& targets)
         {
             if (Creature* dummy = player->SummonCreature(NPC_FIRE_DUMMY, targets.GetDst()->GetPositionX(), targets.GetDst()->GetPositionY(), targets.GetDst()->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 500))
             {

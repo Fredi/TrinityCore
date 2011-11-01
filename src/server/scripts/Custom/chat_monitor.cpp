@@ -10,32 +10,32 @@ class chat_monitor : public PlayerScript
 public:
     chat_monitor() : PlayerScript("chat_monitor") {}
 
-    void OnChat(Player* player, uint32 type, uint32 lang, std::string& msg)
+    void OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg)
     {
         CheckMessage(player, msg, NULL, NULL, NULL, NULL);
     }
 
-    void OnChat(Player* player, uint32 type, uint32 lang, std::string& msg, Player* receiver)
+    void OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg, Player* receiver)
     {
         CheckMessage(player, msg, receiver, NULL, NULL, NULL);
     }
 
-    void OnChat(Player* player, uint32 type, uint32 lang, std::string& msg, Group* group)
+    void OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg, Group* group)
     {
         CheckMessage(player, msg, NULL, group, NULL, NULL);
     }
 
-    void OnChat(Player* player, uint32 type, uint32 lang, std::string& msg, Guild* guild)
+    void OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg, Guild* guild)
     {
         CheckMessage(player, msg, NULL, NULL, guild, NULL);
     }
 
-    void OnChat(Player* player, uint32 type, uint32 lang, std::string& msg, Channel* channel)
+    void OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg, Channel* channel)
     {
         CheckMessage(player, msg, NULL, NULL, NULL, channel);
     }
 
-    void CheckMessage(Player* player, std::string& msg, Player* receiver, Group* group, Guild* guild, Channel* channel)
+    void CheckMessage(Player* player, std::string& msg, Player* /*receiver*/, Group* /*group*/, Guild* /*guild*/, Channel* /*channel*/)
     {
         if (player->isGameMaster())
             return;
