@@ -11,7 +11,7 @@ public:
         uint8 team = player->GetTeam();
         uint32 level = creature->getLevel(); // 80 = Both, 81 = Horde, 82 = Alliance
 
-        if ((level == 81 && team != HORDE) || (level == 82 && PlayerTeam != ALLIANCE))
+        if ((level == 81 && team != HORDE) || (level == 82 && team != ALLIANCE))
         {
             creature->MonsterWhisper("Te manda... Soh sirvo seus inimigos!", player->GetGUID());
             return true;
