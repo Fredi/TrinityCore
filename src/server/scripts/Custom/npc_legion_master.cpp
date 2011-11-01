@@ -242,12 +242,13 @@ class npc_legion_master : public CreatureScript
                     {
                         // Select a random target in the threat list that has mana
                         std::vector<Unit*> unitList;
-                        std::list<HostileReference*>& threatList = me->getThreatManager().getThreatList();
-                        for (std::list<HostileReference*>::const_iterator itr = threatList.begin(); itr != threatList.end(); ++itr)
+                        std::list<HostileReference*>* threatList = &me->getThreatManager().getThreatList();
+                        for (std::list<HostileReference*>::const_iterator itr = threatList->begin(); itr != threatList->end(); ++itr)
                         {
-                            if (Unit* target = Unit::GetUnit(*me, (*itr)->getUnitGuid()))
-                                if (target->GetCreateMana() > 0) // target has mana
-                                    unitList.push_back(target);
+                            if ((*itr)->getTarget()->GetTypeId() == TYPEID_PLAYER
+                                && (*itr)->getTarget()->getPowerType() == POWER_MANA
+                                && (*itr)->getTarget()->GetPower(POWER_MANA))
+                                unitList.push_back((*itr)->getTarget());
                         }
 
                         if (!unitList.empty())
