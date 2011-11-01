@@ -1242,7 +1242,6 @@ void AddSC_argen_tournament();
 void AddSC_DuelReset();
 void AddSC_npc_teleport();
 void AddSC_npc_vip();
-void AddSC_event_npc();
 void AddSC_custom_fixes();
 void AddSC_npc_legion_master();
 void AddSC_killstreak();
@@ -1259,7 +1258,6 @@ void AddCustomScripts()
     AddSC_DuelReset();
     AddSC_npc_teleport();
     AddSC_npc_vip();
-    AddSC_event_npc();
     AddSC_custom_fixes();
     AddSC_npc_legion_master();
     AddSC_killstreak();

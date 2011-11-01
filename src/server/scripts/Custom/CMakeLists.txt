@@ -14,7 +14,6 @@ set(scripts_STAT_SRCS
   Custom/duel_reset.cpp
   Custom/npc_teleport.cpp
   Custom/npc_vip.cpp
-  Custom/event_npc.cpp
   Custom/custom_fixes.cpp
   Custom/npc_legion_master.cpp
   Custom/killstreak.cpp
