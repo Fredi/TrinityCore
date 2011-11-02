@@ -856,6 +856,18 @@ void Battleground::EndBattleground(uint32 winner)
                 UpdatePlayerScore(plr, SCORE_BONUS_HONOR, GetBonusHonorFromKill(loser_kills));
         }
 
+        if (!isArena() && !m_PrematureCountDown)
+        {
+            uint32 guid = plr->GetGUIDLow();
+
+            QueryResult result = CharacterDatabase.PQuery("SELECT 1 FROM vitorias WHERE guid='%u'", guid);
+            if (!result)
+                CharacterDatabase.PExecute("INSERT INTO vitorias (guid, wins, losses) VALUES ('%u', 0, 0)", guid);
+
+            char const* change = team == winner ? "wins = wins" : "losses = losses";
+            CharacterDatabase.PExecute("UPDATE vitorias SET %s + 1 WHERE guid = '%u'", change, guid);
+        }
+
         plr->ResetAllPowers();
         plr->CombatStopWithPets(true);
 
