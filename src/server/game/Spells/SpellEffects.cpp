@@ -2844,6 +2844,21 @@ void Spell::EffectOpenLock(SpellEffIndex effIndex)
     uint32 lockId = 0;
     uint64 guid = 0;
 
+    // selection by spell family
+    switch (m_spellInfo->SpellFamilyName)
+    {
+        case SPELLFAMILY_GENERIC:
+        {
+            switch (m_spellInfo->Id)
+            {
+                case 38790:
+                    if (player)
+                        player->KilledMonsterCredit(22112, 0);
+                    return;
+            }
+        }
+    }
+
     // Get lockId
     if (gameObjTarget)
     {
