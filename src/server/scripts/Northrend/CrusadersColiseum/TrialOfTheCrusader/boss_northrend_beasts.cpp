@@ -291,7 +291,8 @@ public:
 
         void EnterEvadeMode()
         {
-            m_instance->DoUseDoorOrButton(m_instance->GetData64(GO_MAIN_GATE_DOOR));
+            if (m_instance)
+                m_instance->DoUseDoorOrButton(m_instance->GetData64(GO_MAIN_GATE_DOOR));
             ScriptedAI::EnterEvadeMode();
         }
 
