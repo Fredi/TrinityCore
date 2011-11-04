@@ -8,7 +8,7 @@ public:
 
     bool OnGossipHello(Player* player, Creature* creature)
     {
-        uint8 team = player->GetTeam();
+        uint32 team = player->GetTeam();
         uint32 level = creature->getLevel(); // 80 = Both, 81 = Horde, 82 = Alliance
 
         if ((level == 81 && team != HORDE) || (level == 82 && team != ALLIANCE))
