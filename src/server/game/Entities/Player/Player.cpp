@@ -21066,6 +21066,18 @@ void Player::LeaveBattleground(bool teleportToEntryPoint)
         {
             if (bg->GetStatus() == STATUS_IN_PROGRESS || bg->GetStatus() == STATUS_WAIT_JOIN)
             {
+                uint32 guid = GetGUIDLow();
+                // decrease a win a increase a loss
+                QueryResult result = CharacterDatabase.PQuery("SELECT 1 FROM vitorias WHERE guid='%u'", guid);
+                if (!result)
+                    CharacterDatabase.PExecute("INSERT INTO vitorias (guid, wins, losses) VALUES ('%u', 0, 0)", guid);
+                CharacterDatabase.PExecute("UPDATE vitorias SET wins = wins - 1, losses = losses + 1 WHERE guid = '%u'", guid);
+                // hall of shame
+                result = CharacterDatabase.PQuery("SELECT 1 FROM deserters WHERE guid='%u'", guid);
+                if (!result)
+                    CharacterDatabase.PExecute("INSERT INTO deserters (guid, shame) VALUES ('%u', 0)", guid);
+                CharacterDatabase.PExecute("UPDATE deserters SET shame = shame + 1 WHERE guid = '%u'", guid);
+
                 //lets check if player was teleported from BG and schedule delayed Deserter spell cast
                 if (IsBeingTeleportedFar())
                 {
