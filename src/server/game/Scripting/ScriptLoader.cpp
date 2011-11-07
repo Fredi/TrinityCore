@@ -1240,7 +1240,6 @@ void AddBattlegroundScripts()
 
 #ifdef SCRIPTS
 /* This is where custom scripts' loading functions should be declared. */
-void AddSC_argen_tournament();
 void AddSC_DuelReset();
 void AddSC_npc_teleport();
 void AddSC_npc_vip();
@@ -1256,7 +1255,6 @@ void AddCustomScripts()
 {
 #ifdef SCRIPTS
     /* This is where custom scripts should be added. */
-    AddSC_argen_tournament();
     AddSC_DuelReset();
     AddSC_npc_teleport();
     AddSC_npc_vip();
