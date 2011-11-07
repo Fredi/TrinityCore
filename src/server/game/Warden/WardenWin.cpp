@@ -412,6 +412,8 @@ void WardenWin::HandleData(ByteBuffer &buff)
     for (std::list<uint32>::iterator itr = _currentChecks.begin(); itr != _currentChecks.end(); ++itr)
     {
         rd = sWardenCheckMgr->GetWardenDataById(*itr);
+        if (!rd)
+            continue;
         rs = sWardenCheckMgr->GetWardenResultById(*itr);
 
         type = rd->Type;
