@@ -3539,6 +3539,9 @@ void SpellMgr::LoadDbcDataCorrections()
             case 71446: // Twilight Bloodbolt (Blood Queen)
                 spellInfo->EffectBasePoints[0] /= 1.4f; // damage 40% lower
                 break;
+            case 20484: // Rebirth
+                spellInfo->AttributesEx4 |= SPELL_ATTR4_NOT_USABLE_IN_ARENA;
+                break;
             default:
                 break;
         }
