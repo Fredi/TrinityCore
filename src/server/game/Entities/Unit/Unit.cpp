@@ -6725,12 +6725,24 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
             {
                 // Heart of the Crusader
                 case 20335: // rank 1
+                    if (!victim)
+                        return false;
+
+                    target = victim;
                     triggered_spell_id = 21183;
                     break;
                 case 20336: // rank 2
+                    if (!victim)
+                        return false;
+
+                    target = victim;
                     triggered_spell_id = 54498;
                     break;
                 case 20337: // rank 3
+                    if (!victim)
+                        return false;
+
+                    target = victim;
                     triggered_spell_id = 54499;
                     break;
                 // Judgement of Light
@@ -8001,11 +8013,12 @@ bool Unit::HandleAuraProc(Unit* victim, uint32 damage, Aura* triggeredByAura, Sp
             else if (dummySpell->SpellIconID == 3015)
             {
                 *handled = true;
-                if (procSpell->Category == SPELLCATEGORY_JUDGEMENT)
+                if (victim)
                 {
                     CastSpell(victim, 68055, true);
                     return true;
                 }
+                return true;
             }
             // Glyph of Divinity
             else if (dummySpell->Id == 54939)
