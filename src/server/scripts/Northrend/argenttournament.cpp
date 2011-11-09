@@ -3132,4 +3132,5 @@ void AddSC_Argent_Tournament()
     new npc_lake_frog;
     new npc_maiden_of_ashwood_lake;
     new npc_maiden_of_drak_mar;
+    new npc_black_knight_gryphon;
 }
