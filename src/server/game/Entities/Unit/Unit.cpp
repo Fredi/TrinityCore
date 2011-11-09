@@ -5854,6 +5854,9 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                 if (!HasInArc(M_PI, victim))
                     return false;
 
+                if (HasUnitState(UNIT_STAT_STUNNED))
+                    return false;
+
                 triggered_spell_id = 22858;
                 break;
             }
