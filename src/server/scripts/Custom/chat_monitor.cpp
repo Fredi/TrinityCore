@@ -62,6 +62,8 @@ public:
         WorldPacket data(SMSG_NOTIFICATION, (report.size() + 1));
         data << report;
         sWorld->SendGlobalGMMessage(&data);
+
+        sWorld->SendGMText(LANG_CHAT_MONITOR, player->GetName(), msg.c_str());
     }
 
 private:
