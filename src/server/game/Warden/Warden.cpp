@@ -213,7 +213,7 @@ std::string Warden::Penalty()
         sWorld->SendGlobalGMMessage(&data);
 
         std::string name = std::string(_session->GetPlayer()->GetName()) + " (Warden Penalty)";
-        sWorld->SendGMText(LANG_BAN_CHEATER, name.c_str());
+        sWorld->SendGMText(LANG_WARDEN_PENALTY, name.c_str());
     }
 
     switch (action)
