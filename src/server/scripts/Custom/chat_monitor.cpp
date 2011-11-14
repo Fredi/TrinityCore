@@ -1,4 +1,5 @@
 #include "ScriptPCH.h"
+#include "Channel.h"
 
 enum ChatMonitor
 {
@@ -35,10 +36,14 @@ public:
         CheckMessage(player, msg, NULL, NULL, NULL, channel);
     }
 
-    void CheckMessage(Player* player, std::string& msg, Player* /*receiver*/, Group* /*group*/, Guild* /*guild*/, Channel* /*channel*/)
+    void CheckMessage(Player* player, std::string& msg, Player* /*receiver*/, Group* /*group*/, Guild* /*guild*/, Channel* channel)
     {
         if (player->isGameMaster())
             return;
+
+        // Send LFG messages to other team GMs
+        if (channel && channel->IsLFG())
+            sWorld->SendGMTextOtherTeam(LANG_CHAT_MONITOR_LFG, player->GetTeam(), player->GetName(), msg.c_str());
 
         bool found = false;
 
