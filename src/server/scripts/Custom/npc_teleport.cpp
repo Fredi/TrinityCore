@@ -62,6 +62,23 @@ public:
         else
             player->ADD_GOSSIP_ITEM(5, "Teleport para Azshara Crater", GOSSIP_SENDER_MAIN, 6401);
 
+        QueryResult result = WorldDatabase.PQuery("SELECT guild FROM creature_guild WHERE guid = %u", creature->GetGUIDLow());
+        if (result)
+        {
+            if (player->GetGuildId() == (*result)[0].GetUInt32() || player->isGameMaster())
+            {
+                player->ADD_GOSSIP_ITEM(5, "Teleport para Wintergrasp", GOSSIP_SENDER_MAIN, 6403);
+                player->ADD_GOSSIP_ITEM(5, "Teleport para Icecrown Citadel", GOSSIP_SENDER_MAIN, 6404);
+            }
+        }
+
+        if (player->GetGuildId())
+        {
+            result = WorldDatabase.PQuery("SELECT mapId FROM guild_house WHERE guild = %u", player->GetGuildId());
+            if (result)
+                player->ADD_GOSSIP_ITEM(5, "Teleport para Guild Tower", GOSSIP_SENDER_MAIN, 6405);
+        }
+
         player->PlayerTalkClass->SendGossipMenu(2713, creature->GetGUID());
         return true;
     }
@@ -126,6 +143,24 @@ public:
                 break;
             case 6402:
                 TeleportPlayer(37, 1094.2f, 298.032f, 338.616f, 3.21441f, player, creature);
+                break;
+            case 6403: // Wintergrasp
+                player->TeleportTo(571, 4760.7f, 2143.7f, 423.0f, 1.13f);
+                break;
+            case 6404: // Icecrown Citadel
+                player->TeleportTo(571, 5857.03f, 2102.8f, 635.933f, 3.58219f);
+                break;
+            case 6405: // Guild Tower
+                QueryResult result = WorldDatabase.PQuery("SELECT mapId, posX, posY, posZ FROM guild_house WHERE guild = %u", player->GetGuildId());
+                if (result)
+                {
+                    Field* fields = result->Fetch();
+                    uint32 mapId = fields[0].GetUInt32();
+                    float posX = fields[1].GetFloat();
+                    float posY = fields[2].GetFloat();
+                    float posZ = fields[3].GetFloat();
+                    player->TeleportTo(mapId, posX, posY, posZ, player->GetOrientation());
+                }
                 break;
         }
 

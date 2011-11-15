@@ -19,6 +19,7 @@ set(scripts_STAT_SRCS
   Custom/level_rewards.cpp
   Custom/chat_monitor.cpp
   Custom/npc_icc_ring_recover.cpp
+  Custom/guild_house.cpp
 )
 
 message("  -> Prepared: Custom")
