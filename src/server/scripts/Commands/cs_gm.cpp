@@ -139,7 +139,7 @@ public:
                 if ((max + max2 + strlen(name)) == 16)
                     max2 = max - 1;
                 if (handler->GetSession())
-                    handler->PSendSysMessage("|    %s GMLevel %u", name, security);
+                    handler->PSendSysMessage("|    %s", name);
                 else
                     handler->PSendSysMessage("|%*s%s%*s|   %u  |", max, " ", name, max2, " ", security);
             }
