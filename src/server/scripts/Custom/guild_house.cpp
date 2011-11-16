@@ -242,7 +242,7 @@ public:
                 _guildId = result ? (*result)[0].GetUInt32() : 0;
             }
 
-            if (_guildId && player->GetGuildId() != _guildId)
+            if (_guildId && player->GetGuildId() != _guildId && !player->isGameMaster())
                 player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->GetOrientation());
 
             me->SetOrientation(me->GetHomePosition().GetOrientation());
