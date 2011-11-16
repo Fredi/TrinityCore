@@ -225,9 +225,6 @@ public:
 
         void MoveInLineOfSight(Unit* who)
         {
-            if (!_guildId)
-                return;
-
             if (!who || !who->IsInWorld())
                 return;
 
@@ -236,14 +233,17 @@ public:
 
             Player* player = who->GetCharmerOrOwnerPlayerOrPlayerItself();
 
-            if (!player || player->isGameMaster() || player->IsBeingTeleported())
+            if (!player || player->IsBeingTeleported())
                 return;
 
-            if (player->GetGuildId() != _guildId)
+            if (!_guildId && player->isGameMaster())
             {
-                me->MonsterYell("Você não deveria estar aqui", LANG_UNIVERSAL, 0);
-                player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->GetOrientation());
+                QueryResult result = WorldDatabase.PQuery("SELECT guild FROM creature_guild WHERE guid = %u", me->GetGUIDLow());
+                _guildId = result ? (*result)[0].GetUInt32() : 0;
             }
+
+            if (_guildId && player->GetGuildId() != _guildId)
+                player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->GetOrientation());
 
             me->SetOrientation(me->GetHomePosition().GetOrientation());
             return;
