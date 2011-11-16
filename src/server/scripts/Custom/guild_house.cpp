@@ -8,21 +8,22 @@ public:
 
     ChatCommand* GetCommands() const
     {
-        ChatCommand static guildHouseNpcCommandTable[] =
+        static ChatCommand guildHouseNpcCommandTable[] =
         {
             { "set",            SEC_GAMEMASTER,  false, &HandleNpcSetCommand,           "", NULL },
             { "remove",         SEC_GAMEMASTER,  false, &HandleNpcRemoveCommand,        "", NULL },
             { NULL,             0,               false, NULL,                           "", NULL }
         };
-        ChatCommand static guildHouseCommandTable[] =
+        static ChatCommand guildHouseCommandTable[] =
         {
             { "set",            SEC_GAMEMASTER,  false, &HandleSetCommand,              "", NULL },
             { "remove",         SEC_GAMEMASTER,  false, &HandleRemoveCommand,           "", NULL },
             { "appear",         SEC_GAMEMASTER,  false, &HandleAppearCommand,           "", NULL },
+            { "list",           SEC_GAMEMASTER,  false, &HandleListCommand,             "", NULL },
             { "npc",            SEC_GAMEMASTER,  false, NULL,      "", guildHouseNpcCommandTable },
             { NULL,             0,               false, NULL,                           "", NULL }
         };
-        ChatCommand static commandTable[] =
+        static ChatCommand commandTable[] =
         {
             { "guildhouse",     SEC_GAMEMASTER,  false, NULL,         "", guildHouseCommandTable },
             { NULL,             0,               false, NULL,                           "", NULL }
@@ -30,7 +31,7 @@ public:
         return commandTable;
     }
 
-    bool static HandleNpcSetCommand(ChatHandler* handler, char const* args)
+    static bool HandleNpcSetCommand(ChatHandler* handler, char const* args)
     {
         if (!*args)
             return false;
@@ -63,7 +64,7 @@ public:
         return true;
     }
 
-    bool static HandleNpcRemoveCommand(ChatHandler* handler, char const* /*args*/)
+    static bool HandleNpcRemoveCommand(ChatHandler* handler, char const* /*args*/)
     {
         Creature* creature = handler->getSelectedCreature();
         if (!creature)
@@ -85,7 +86,7 @@ public:
         return true;
     }
 
-    bool static HandleSetCommand(ChatHandler* handler, char const* args)
+    static bool HandleSetCommand(ChatHandler* handler, char const* args)
     {
         if (!*args)
             return false;
@@ -178,6 +179,26 @@ public:
 
         return true;
     }
+
+    static bool HandleListCommand(ChatHandler* handler, char const* /*args*/)
+    {
+        QueryResult result = WorldDatabase.Query("SELECT guild, gm, date FROM guild_house");
+        if (!result)
+        {
+            handler->SendSysMessage("No guild has a house.");
+            return true;
+        }
+
+        do
+        {
+            Field* fields = result->Fetch();
+            Guild* guild = sGuildMgr->GetGuildById(fields[0].GetUInt32());
+            if (guild)
+                handler->PSendSysMessage("Guild %s set by %s on %s", guild->GetName().c_str(), fields[1].GetCString(), fields[2].GetCString());
+        } while (result->NextRow());
+
+        return true;
+    }
 };
 
 class npc_guild_house : public CreatureScript
@@ -200,6 +221,7 @@ public:
         void Reset() {}
         void EnterCombat(Unit* /*who*/) {}
         void AttackStart(Unit* /*who*/) {}
+        void UpdateAI(uint32 const /*diff*/) {}
 
         void MoveInLineOfSight(Unit* who)
         {
@@ -226,8 +248,6 @@ public:
             me->SetOrientation(me->GetHomePosition().GetOrientation());
             return;
         }
-
-        void UpdateAI(uint32 const /*diff*/) {}
 
     private:
         uint32 _guildId;
