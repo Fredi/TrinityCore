@@ -352,7 +352,7 @@ class ChatHandler
         bool HandleSaveAllCommand(const char* args);
 
         // Utility methods for commands
-        bool LookupPlayerSearchCommand(QueryResult result, int32 limit);
+        bool LookupPlayerSearchCommand(QueryResult result, int32 limit, int32 security = 0);
         bool HandleBanListHelper(QueryResult result);
         bool HandleBanHelper(BanMode mode, char const* args);
         bool HandleBanInfoHelper(uint32 accountid, char const* accountname);

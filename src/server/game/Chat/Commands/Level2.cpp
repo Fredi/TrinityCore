@@ -678,7 +678,7 @@ bool ChatHandler::HandleLookupPlayerIpCommand(const char* args)
 
     QueryResult result = LoginDatabase.PQuery ("SELECT id, username FROM account WHERE last_ip = '%s'", ip.c_str ());
 
-    return LookupPlayerSearchCommand (result, limit);
+    return LookupPlayerSearchCommand(result, limit, int32(m_session->GetSecurity()));
 }
 
 bool ChatHandler::HandleLookupPlayerNameCommand(char const* args)
@@ -704,7 +704,7 @@ bool ChatHandler::HandleLookupPlayerNameCommand(char const* args)
 
     result = LoginDatabase.PQuery("SELECT id, username FROM account WHERE last_ip = '%s'", ip.c_str());
 
-    return LookupPlayerSearchCommand(result, int32(limit ? atoi(limit) : -1));
+    return LookupPlayerSearchCommand(result, int32(limit ? atoi(limit) : -1), int32(m_session->GetSecurity()));
 }
 
 bool ChatHandler::HandleLookupPlayerAccountCommand(const char* args)
@@ -723,7 +723,7 @@ bool ChatHandler::HandleLookupPlayerAccountCommand(const char* args)
 
     QueryResult result = LoginDatabase.PQuery ("SELECT id, username FROM account WHERE username = '%s'", account.c_str ());
 
-    return LookupPlayerSearchCommand (result, limit);
+    return LookupPlayerSearchCommand(result, limit, int32(m_session->GetSecurity()));
 }
 
 bool ChatHandler::HandleLookupPlayerEmailCommand(const char* args)
@@ -740,10 +740,10 @@ bool ChatHandler::HandleLookupPlayerEmailCommand(const char* args)
 
     QueryResult result = LoginDatabase.PQuery ("SELECT id, username FROM account WHERE email = '%s'", email.c_str ());
 
-    return LookupPlayerSearchCommand (result, limit);
+    return LookupPlayerSearchCommand(result, limit, int32(m_session->GetSecurity()));
 }
 
-bool ChatHandler::LookupPlayerSearchCommand(QueryResult result, int32 limit)
+bool ChatHandler::LookupPlayerSearchCommand(QueryResult result, int32 limit, int32 security)
 {
     if (!result)
     {
@@ -757,15 +757,18 @@ bool ChatHandler::LookupPlayerSearchCommand(QueryResult result, int32 limit)
     uint32 maxResults = sWorld->getIntConfig(CONFIG_MAX_RESULTS_LOOKUP_COMMANDS);
     do
     {
+        Field* fields = result->Fetch();
+        uint32 acc_id = fields[0].GetUInt32();
+        std::string acc_name = fields[1].GetString();
+
+        if (AccountMgr::GetSecurity(acc_id) > security)
+            continue;
+
         if (maxResults && count++ == maxResults)
         {
             PSendSysMessage(LANG_COMMAND_LOOKUP_MAX_RESULTS, maxResults);
             return true;
         }
-
-        Field* fields = result->Fetch();
-        uint32 acc_id = fields[0].GetUInt32();
-        std::string acc_name = fields[1].GetString();
 
         QueryResult chars = CharacterDatabase.PQuery("SELECT guid, name FROM characters WHERE account = '%u'", acc_id);
         if (chars)
