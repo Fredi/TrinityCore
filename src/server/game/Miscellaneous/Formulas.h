@@ -179,7 +179,7 @@ namespace Trinity
                 }
 
                 // VIPs get 10% more XP
-                float vip_rate = pl->GetSession()->IsVIP() ? 1.1f : 1.0f;
+                float vip_rate = player->GetSession()->IsVIP() ? 1.1f : 1.0f;
                 gain = uint32(gain * sWorld->getRate(RATE_XP_KILL) * vip_rate);
             }
 
