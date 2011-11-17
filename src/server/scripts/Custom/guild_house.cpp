@@ -273,7 +273,7 @@ public:
         if (player->GetGuildId() != (*result)[0].GetUInt32() && !player->isGameMaster())
         {
             player->CLOSE_GOSSIP_MENU();
-            creature->MonsterWhisper("Desculpe $N, só atendo membros da guild.", player->GetGUID(), false);
+            player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->GetOrientation());
             return true;
         }
 
@@ -287,9 +287,111 @@ public:
     }
 };
 
+class npc_guild_house_services : public CreatureScript
+{
+public:
+    npc_guild_house_services() : CreatureScript("npc_guild_house_services") { }
+
+    bool OnGossipHello(Player* player, Creature* creature)
+    {
+        QueryResult result = WorldDatabase.PQuery("SELECT guild FROM creature_guild WHERE guid = %u", creature->GetGUIDLow());
+        if (!result)
+            return true;
+
+        if (player->GetGuildId() != (*result)[0].GetUInt32() && !player->isGameMaster())
+        {
+            player->CLOSE_GOSSIP_MENU();
+            player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->GetOrientation());
+            return true;
+        }
+
+        player->ADD_GOSSIP_ITEM(9, "Heal"                     , GOSSIP_SENDER_MAIN, 1201);
+        player->ADD_GOSSIP_ITEM(7, "[Buffs] ->"                , GOSSIP_SENDER_MAIN, 1202);
+
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+
+        return true;
+    }
+
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
+    {
+        player->PlayerTalkClass->ClearMenus();
+
+        switch(action)
+        {
+            case 1201: // Heal
+                if (player->HasAura(45523))
+                {
+                    player->CLOSE_GOSSIP_MENU();
+                    creature->MonsterWhisper("Desculpe $N, não posso fazer isto nesse momento.", player->GetGUID(), false);
+                }
+                else
+                {
+                    player->CLOSE_GOSSIP_MENU();
+                    player->CastSpell(player, 39321, true);
+                    player->CastSpell(player, 45523, true);
+                }
+                break;
+            case 1202: // Buffs
+                player->ADD_GOSSIP_ITEM(5, "Power Word: Fortitude, Rank 8", GOSSIP_SENDER_MAIN, 4000);
+                player->ADD_GOSSIP_ITEM(5, "Greater Blessing of Kings", GOSSIP_SENDER_MAIN, 4001);
+                player->ADD_GOSSIP_ITEM(5, "Greater Bleesing of Mights", GOSSIP_SENDER_MAIN,4002);
+                player->ADD_GOSSIP_ITEM(5, "Greater Blessing of Wisdom", GOSSIP_SENDER_MAIN, 4003);
+                player->ADD_GOSSIP_ITEM(5, "Mark of the Wild, Rank 9", GOSSIP_SENDER_MAIN, 4004);
+                player->ADD_GOSSIP_ITEM(5, "Arcane Intellect, Rank 7", GOSSIP_SENDER_MAIN, 4005);
+                player->ADD_GOSSIP_ITEM(5, "Thorns, Rank 8", GOSSIP_SENDER_MAIN, 4007);
+                player->ADD_GOSSIP_ITEM(5, "Divine Spirit, Rank 8", GOSSIP_SENDER_MAIN, 4008);
+                player->ADD_GOSSIP_ITEM(5, "Shadow Protection, Rank 5", GOSSIP_SENDER_MAIN, 4009);
+
+                player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+
+                break;
+            case 4000:
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 48161, true);
+                break;
+            case 4001:
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 25898, true);
+                break;
+            case 4002:
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 48934, true);
+                break;
+            case 4003:
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 48938, true);
+                break;
+            case 4004:
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 48469, true);
+                break;
+            case 4005:
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 42995, true);
+                break;
+            case 4007:
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 53307, true);
+                break;
+            case 4008:
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 48073, true);
+                break;
+            case 4009:
+                player->CLOSE_GOSSIP_MENU();
+                player->CastSpell(player, 48169, true);
+                break;
+        }
+
+        return true;
+    }
+};
+
 void AddSC_guild_house()
 {
     new guild_house_commandscript();
     new npc_guild_house();
     new npc_guild_house_vendor();
+    new npc_guild_house_services();
 }
