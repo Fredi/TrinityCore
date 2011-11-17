@@ -8083,8 +8083,8 @@ void Player::_ApplyWeaponDependentAuraCritMod(Item* item, WeaponAttackType attac
         default: return;
     }
 
-    if (!item->IsBroken()&&item->IsFitToSpellRequirements(aura->GetSpellInfo()))
-        HandleBaseModValue(mod, FLAT_MOD, float (aura->GetAmount()), apply);
+    if (!item->IsBroken() && item->IsFitToSpellRequirements(aura->GetSpellInfo()) && CanUseAttackType(attackType))
+        HandleBaseModValue(mod, FLAT_MOD, float(aura->GetAmount()), apply);
 }
 
 void Player::_ApplyWeaponDependentAuraDamageMod(Item* item, WeaponAttackType attackType, AuraEffect const* aura, bool apply)
