@@ -3,7 +3,7 @@
 
 enum ChatMonitor
 {
-    CHAT_MONITOR_WORD_COUNT = 13
+    CHAT_MONITOR_WORD_COUNT = 12
 };
 
 class chat_monitor : public PlayerScript
@@ -11,34 +11,34 @@ class chat_monitor : public PlayerScript
 public:
     chat_monitor() : PlayerScript("chat_monitor") {}
 
-    void OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg)
+    void OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg)
     {
-        CheckMessage(player, msg, NULL, NULL, NULL, NULL);
+        CheckMessage(player, msg, lang, NULL, NULL, NULL);
     }
 
-    void OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg, Player* receiver)
+    void OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg, Player* receiver)
     {
-        CheckMessage(player, msg, receiver, NULL, NULL, NULL);
+        CheckMessage(player, msg, lang, NULL, NULL, NULL);
     }
 
-    void OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg, Group* group)
+    void OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg, Group* group)
     {
-        CheckMessage(player, msg, NULL, group, NULL, NULL);
+        CheckMessage(player, msg, lang, group, NULL, NULL);
     }
 
-    void OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg, Guild* guild)
+    void OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg, Guild* guild)
     {
-        CheckMessage(player, msg, NULL, NULL, guild, NULL);
+        CheckMessage(player, msg, lang, NULL, guild, NULL);
     }
 
-    void OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg, Channel* channel)
+    void OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg, Channel* channel)
     {
-        CheckMessage(player, msg, NULL, NULL, NULL, channel);
+        CheckMessage(player, msg, lang, NULL, NULL, channel);
     }
 
-    void CheckMessage(Player* player, std::string& msg, Player* /*receiver*/, Group* /*group*/, Guild* /*guild*/, Channel* channel)
+    void CheckMessage(Player* player, std::string& msg, uint32 lang, Group* /*group*/, Guild* /*guild*/, Channel* channel)
     {
-        if (player->isGameMaster())
+        if (player->isGameMaster() || lang == LANG_ADDON)
             return;
 
         // Send LFG messages to other team GMs
@@ -76,8 +76,8 @@ private:
 };
 
 std::string const chat_monitor::words[CHAT_MONITOR_WORD_COUNT] = {
-    "server", "servidor", "http", "www", "realm", "hack", "cheat",
-    "emu", "sentinel", "pacote", "packet", "wpe", ".com"};
+    "serv", "servidor", "http", "www", "realm", "hack", "cheat",
+    "emu", "pacote", "packet", "wpe", ".com"};
 
 void AddSC_chat_monitor()
 {
