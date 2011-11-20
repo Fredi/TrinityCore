@@ -245,6 +245,15 @@ public:
             if (_guildId && player->GetGuildId() != _guildId && !player->isGameMaster())
                 player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->GetOrientation());
 
+            if (QueryResult result = WorldDatabase.PQuery("SELECT posZ FROM guild_house WHERE guild = %u", _guildId))
+            {
+                if (player->m_positionZ > (*result)[0].GetFloat() - 10.0f)
+                {
+                    player->CastSpell(player, 12438, true);
+                    return;
+                }
+            }
+
             me->SetOrientation(me->GetHomePosition().GetOrientation());
             return;
         }
@@ -305,8 +314,11 @@ public:
             return true;
         }
 
-        player->ADD_GOSSIP_ITEM(9, "Heal"                     , GOSSIP_SENDER_MAIN, 1201);
-        player->ADD_GOSSIP_ITEM(7, "[Buffs] ->"                , GOSSIP_SENDER_MAIN, 1202);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_BATTLE, "Heal",   GOSSIP_SENDER_MAIN, 1201);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_TALK,   "Buffs" , GOSSIP_SENDER_MAIN, 1202);
+
+        if (creature->isVendor())
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
         player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
 
@@ -381,6 +393,9 @@ public:
             case 4009:
                 player->CLOSE_GOSSIP_MENU();
                 player->CastSpell(player, 48169, true);
+                break;
+            case GOSSIP_ACTION_TRADE:
+                player->GetSession()->SendListInventory(creature->GetGUID());
                 break;
         }
 
