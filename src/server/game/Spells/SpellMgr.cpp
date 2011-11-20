@@ -3568,6 +3568,10 @@ void SpellMgr::LoadDbcDataCorrections()
             case 71446: // Twilight Bloodbolt (Blood Queen)
                 spellInfo->EffectBasePoints[0] /= 1.4f; // damage 40% lower
                 break;
+            case 74403: // Ragefire's Flame Breath
+            case 74404:
+                spellInfo->EffectBasePoints[1] /= 1.3f; // damage 30% lower
+                break;
             case 20484: // Rebirth
                 spellInfo->AttributesEx4 |= SPELL_ATTR4_NOT_USABLE_IN_ARENA;
                 break;
