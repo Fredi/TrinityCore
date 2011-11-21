@@ -1657,6 +1657,10 @@ void Player::Update(uint32 p_time)
         }
     }
 
+    //Fix invisible exploit hunters when ranged attack
+    if (getAttackTimer(RANGED_ATTACK) && HasAura(58984))
+        RemoveAura(58984);
+
     if (HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_RESTING))
     {
         if (roll_chance_i(3) && GetTimeInnEnter() > 0)      // freeze update
