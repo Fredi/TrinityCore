@@ -489,7 +489,7 @@ class spell_gen_trick : public SpellScriptLoader
                 }
             }
 
-            void Register()
+            void Register() 
             {
                 OnEffectHitTarget += SpellEffectFn(spell_gen_trick_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
             }
@@ -1401,6 +1401,80 @@ public:
     }
 };
 
+enum TheTurkinator
+{
+    SPELL_KILL_COUNTER_VISUAL       = 62015,
+    SPELL_KILL_COUNTER_VISUAL_MAX   = 62021,
+};
+
+#define THE_THUKINATOR_10           "Turkey Hunter!"
+#define THE_THUKINATOR_20           "Turkey Domination!"
+#define THE_THUKINATOR_30           "Turkey Slaughter!"
+#define THE_THUKINATOR_40           "TURKEY TRIUMPH!"
+
+class spell_gen_turkey_tracker : public SpellScriptLoader
+{
+    public:
+        spell_gen_turkey_tracker() : SpellScriptLoader("spell_gen_turkey_tracker") {}
+
+        class spell_gen_turkey_tracker_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_turkey_tracker_SpellScript);
+
+            bool Validate(SpellInfo const* /*spellEntry*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_KILL_COUNTER_VISUAL))
+                    return false;
+                if (!sSpellMgr->GetSpellInfo(SPELL_KILL_COUNTER_VISUAL_MAX))
+                    return false;
+                return true;
+            }
+
+            void HandleScript(SpellEffIndex /*effIndex*/)
+            {
+                Player* target = GetHitPlayer();
+                if (!target)
+                    return;
+
+                if (Aura* aura = GetCaster()->ToPlayer()->GetAura(GetSpellInfo()->Id))
+                {
+                    switch (aura->GetStackAmount())
+                    {
+                        case 10:
+                            target->MonsterTextEmote(THE_THUKINATOR_10, 0, true);
+                            GetCaster()->CastSpell(target, SPELL_KILL_COUNTER_VISUAL);
+                            break;
+                        case 20:
+                            target->MonsterTextEmote(THE_THUKINATOR_20, 0, true);
+                            GetCaster()->CastSpell(target, SPELL_KILL_COUNTER_VISUAL);
+                            break;
+                        case 30:
+                            target->MonsterTextEmote(THE_THUKINATOR_30, 0, true);
+                            GetCaster()->CastSpell(target, SPELL_KILL_COUNTER_VISUAL);
+                            break;
+                        case 40:
+                            target->MonsterTextEmote(THE_THUKINATOR_40, 0, true);
+                            GetCaster()->CastSpell(target, SPELL_KILL_COUNTER_VISUAL);
+                            GetCaster()->CastSpell(target, SPELL_KILL_COUNTER_VISUAL_MAX); // Achievement Credit
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_turkey_tracker_SpellScript::HandleScript, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_turkey_tracker_SpellScript();
+        }
+};
+
 void AddSC_generic_spell_scripts()
 {
     new spell_gen_absorb0_hitlimit1();
@@ -1433,4 +1507,5 @@ void AddSC_generic_spell_scripts()
     new spell_gen_launch();
     new spell_gen_vehicle_scaling();
     new spell_gen_oracle_wolvar_reputation();
+    new spell_gen_turkey_tracker();
 }

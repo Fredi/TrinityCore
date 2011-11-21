@@ -300,6 +300,36 @@ class achievement_bg_sa_defense_of_ancients : public AchievementCriteriaScript
         }
 };
 
+enum TerokkarTurkeyTime
+{
+    SPELL_PILGRIMS_DRESS    = 44785,
+    SPELL_PILGRIMS_ROBE     = 46824,
+    SPELL_PILGRIMS_ATTIRE   = 46800,
+};
+
+class achievement_terokkar_turkey_time : public AchievementCriteriaScript
+{
+    public:
+        achievement_terokkar_turkey_time() : AchievementCriteriaScript("achievement_terokkar_turkey_time")
+        {
+        }
+
+        bool OnCheck(Player* player, Unit* /*target*/)
+        {
+            if (!player)
+                return false;
+
+            for (uint8 i = EQUIPMENT_SLOT_START; i < EQUIPMENT_SLOT_END; ++i)
+            {
+                Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, i);
+                if (item && (item->GetEntry() == SPELL_PILGRIMS_DRESS || item->GetEntry() == SPELL_PILGRIMS_ROBE || item->GetEntry() == SPELL_PILGRIMS_ATTIRE))                
+                    return true;
+            }
+
+            return false;
+        }
+};
+
 void AddSC_achievement_scripts()
 {
     new achievement_storm_glory();
@@ -318,4 +348,5 @@ void AddSC_achievement_scripts()
     new achievement_arena_kills("achievement_arena_3v3_kills", ARENA_TYPE_3v3);
     new achievement_arena_kills("achievement_arena_5v5_kills", ARENA_TYPE_5v5);
     new achievement_bg_sa_defense_of_ancients();
+    new achievement_terokkar_turkey_time();
 }
