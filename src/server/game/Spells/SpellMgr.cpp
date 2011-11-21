@@ -3488,6 +3488,7 @@ void SpellMgr::LoadDbcDataCorrections()
                 break;
             case 73529: // Shadow Trap
                 spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_10_YARDS;   // 10yd
+                spellInfo->EffectBasePoints[0] /= 1.3f; // damage 30% lower
                 break;
             case 74282: // Shadow Trap (searcher)
                 spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_3_YARDS;   // 3yd
@@ -3576,7 +3577,6 @@ void SpellMgr::LoadDbcDataCorrections()
             case 73781: // Infest (25H)
                 spellInfo->EffectBasePoints[1] /= 1.3f; // damage 30% lower
                 break;
-            case 73529: // Shadow Trap
             case 68983: // Remorseless Winter (10N)
             case 73791: // Remorseless Winter (25N)
             case 73792: // Remorseless Winter (10H)
