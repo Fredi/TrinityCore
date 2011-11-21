@@ -242,7 +242,7 @@ public:
                 _guildId = result ? (*result)[0].GetUInt32() : 0;
             }
 
-            if (_guildId && player->GetGuildId() != _guildId && !player->isGameMaster())
+            if (_guildId && player->GetGuildId() != _guildId && player->m_positionZ > 180.0f && !player->isGameMaster())
                 player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->GetOrientation());
 
             if (QueryResult result = WorldDatabase.PQuery("SELECT posZ FROM guild_house WHERE guild = %u", _guildId))
