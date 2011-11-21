@@ -3570,7 +3570,18 @@ void SpellMgr::LoadDbcDataCorrections()
                 break;
             case 74403: // Ragefire's Flame Breath
             case 74404:
+            case 70541: // Infest (10N)
+            case 73779: // Infest (25N)
+            case 73780: // Infest (10H)
+            case 73781: // Infest (25H)
                 spellInfo->EffectBasePoints[1] /= 1.3f; // damage 30% lower
+                break;
+            case 73529: // Shadow Trap
+            case 68983: // Remorseless Winter (10N)
+            case 73791: // Remorseless Winter (25N)
+            case 73792: // Remorseless Winter (10H)
+            case 73793: // Remorseless Winter (25H)
+                spellInfo->EffectBasePoints[0] /= 1.3f; // damage 30% lower
                 break;
             case 20484: // Rebirth
                 spellInfo->AttributesEx4 |= SPELL_ATTR4_NOT_USABLE_IN_ARENA;
