@@ -20,6 +20,7 @@ set(scripts_STAT_SRCS
   Custom/chat_monitor.cpp
   Custom/npc_icc_ring_recover.cpp
   Custom/guild_house.cpp
+  Custom/ArgentTournament.cpp
 )
 
 message("  -> Prepared: Custom")

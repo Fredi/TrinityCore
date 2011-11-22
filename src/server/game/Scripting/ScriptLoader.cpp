@@ -66,6 +66,9 @@ void AddSC_gps_commandscript();
 void AddSC_modadd_commandscript();
 void AddSC_vip_commandscript();
 
+//Custom
+void AddSC_Argen_Tournament();
+
 #ifdef SCRIPTS
 //world
 void AddSC_areatrigger_scripts();
@@ -1270,5 +1273,6 @@ void AddCustomScripts()
     AddSC_chat_monitor();
     AddSC_npc_icc_ring_recover();
     AddSC_guild_house();
+    AddSC_Argen_Tournament();
 #endif
 }
