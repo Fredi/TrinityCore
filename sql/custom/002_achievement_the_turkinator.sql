@@ -1,4 +1,4 @@
-﻿-- Achievement: The Turkinator
+-- Achievement: The Turkinator
 SET @ENTRY := 32820; -- Wild Turkey
 SET @SPELL := 62014; -- Turkey Tracker
 

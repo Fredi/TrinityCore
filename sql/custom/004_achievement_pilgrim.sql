@@ -1,4 +1,4 @@
-﻿-- Achievement: Pilgrim
+-- Achievement: Pilgrim
 UPDATE `achievement_reward` SET
 `title_H` = '168',  -- the Pilgrim
 `item` = '44810',   -- Turkey Cage

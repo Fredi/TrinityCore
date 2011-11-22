@@ -1,4 +1,4 @@
-﻿UPDATE `creature_template` SET `VehicleId` = '321' WHERE `entry` IN (34823,34812,34824,34822,34819); -- Temp Fix (not blizz)
+UPDATE `creature_template` SET `VehicleId` = '321' WHERE `entry` IN (34823,34812,34824,34822,34819); -- Temp Fix (not blizz)
 
 DELETE FROM `npc_spellclick_spells` WHERE `spell_id`=46598 AND `npc_entry` IN (34823,34812,34824,34822,34819);
 INSERT INTO `npc_spellclick_spells` (`npc_entry`, `spell_id`, `quest_start`, `quest_start_active`, `quest_end`, `cast_flags`, `aura_required`, `aura_forbidden`, `user_type`) VALUES

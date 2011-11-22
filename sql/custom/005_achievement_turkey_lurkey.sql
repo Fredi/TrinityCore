@@ -1,4 +1,4 @@
-﻿-- Achievement: Turkey Lurkey
+-- Achievement: Turkey Lurkey
 DELETE FROM `achievement_criteria_data` WHERE `type`= 2 AND `criteria_id` IN (11163,11164,11165,11158,11159,11160,11161,11162);
 INSERT INTO `achievement_criteria_data` (`criteria_id`, `type`, `value1`, `value2`, `ScriptName`) VALUES
 ('11163', '2', '4', '10', ''), -- Blood Elf Rogue

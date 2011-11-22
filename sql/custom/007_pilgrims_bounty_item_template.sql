@@ -1,4 +1,4 @@
-﻿UPDATE `item_template` SET `BuyCount`=5 WHERE `entry`=44853; -- Honey
+UPDATE `item_template` SET `BuyCount`=5 WHERE `entry`=44853; -- Honey
 UPDATE `item_template` SET `BuyCount`=5 WHERE `entry`=44835; -- Autumnal Herbs
 UPDATE `item_template` SET `BuyCount`=5 WHERE `entry`=44854; -- Tangy Wetland Cranberries
 UPDATE `item_template` SET `BuyCount`=5 WHERE `entry`=44855; -- Teldrassil Sweet Potato
