@@ -13,30 +13,30 @@ public:
 
     void OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg)
     {
-        CheckMessage(player, msg, lang, NULL, NULL, NULL);
+        CheckMessage(player, msg, lang, NULL, NULL, NULL, NULL);
     }
 
     void OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg, Player* receiver)
     {
-        CheckMessage(player, msg, lang, NULL, NULL, NULL);
+        CheckMessage(player, msg, lang, receiver, NULL, NULL, NULL);
     }
 
     void OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg, Group* group)
     {
-        CheckMessage(player, msg, lang, group, NULL, NULL);
+        CheckMessage(player, msg, lang, NULL, group, NULL, NULL);
     }
 
     void OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg, Guild* guild)
     {
-        CheckMessage(player, msg, lang, NULL, guild, NULL);
+        CheckMessage(player, msg, lang, NULL, NULL, guild, NULL);
     }
 
     void OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg, Channel* channel)
     {
-        CheckMessage(player, msg, lang, NULL, NULL, channel);
+        CheckMessage(player, msg, lang, NULL, NULL, NULL, channel);
     }
 
-    void CheckMessage(Player* player, std::string& msg, uint32 lang, Group* /*group*/, Guild* /*guild*/, Channel* channel)
+    void CheckMessage(Player* player, std::string& msg, uint32 lang, Player* /*receiver*/, Group* /*group*/, Guild* /*guild*/, Channel* channel)
     {
         if (player->isGameMaster() || lang == LANG_ADDON)
             return;
