@@ -3593,6 +3593,9 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectDieSides[0] = 0;
                 spellInfo->EffectBasePoints[0] = 52391; // Ride Vehicle (forces seat 0)
                 break;
+            case 62012: // Turkey Caller
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_0_YARDS;
+                break;
             default:
                 break;
         }

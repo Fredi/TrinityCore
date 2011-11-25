@@ -4715,6 +4715,19 @@ INSERT INTO `creature_questrelation` (`id`,`quest`) VALUES
 -- -- Event Loots -- 
 -- -----------------
 
+-- Sets Wild Turkey and Lonely Turkey neutral.
+UPDATE `creature_template` SET `faction_A`=31,`faction_H`=31 WHERE `entry` IN (32820,32956);
+-- Adds the loot to those turkeys.
+SET @turkey:=32820; -- Wild Turkey
+SET @turkey2:=32956; -- Lonely Turkey
+DELETE FROM `creature_loot_template` WHERE `entry` IN (32820,32956);
+INSERT INTO `creature_loot_template` (`entry`,`item`,`ChanceOrQuestChance`,`lootmode`,`groupid`,`mincountOrRef`,`maxcount`) VALUES 
+(@turkey,44834,100,1,0,1,1),
+(@turkey2,44834,100,1,0,1,1);
+-- Sets loot id for those turkeys.
+UPDATE `creature_template` SET `lootid`=32820 WHERE `entry`=32820;
+UPDATE `creature_template` SET `lootid`=32956 WHERE `entry`=32956;
+
 -- Fix loot for cooking book
 DELETE FROM `item_loot_template` WHERE `entry` IN (46809,46810);
 INSERT INTO `item_loot_template` (`entry`,`item`,`ChanceOrQuestChance`,`lootmode`,`groupid`,`mincountOrRef`,`maxcount`) VALUES

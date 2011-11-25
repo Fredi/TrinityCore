@@ -1433,11 +1433,14 @@ class spell_gen_turkey_tracker : public SpellScriptLoader
 
             void HandleScript(SpellEffIndex /*effIndex*/)
             {
+                if (GetCaster()->GetAura(SPELL_KILL_COUNTER_VISUAL_MAX))
+                    return;
+
                 Player* target = GetHitPlayer();
                 if (!target)
                     return;
 
-                if (Aura* aura = GetCaster()->ToPlayer()->GetAura(GetSpellInfo()->Id))
+                if (Aura const* aura = GetCaster()->ToPlayer()->GetAura(GetSpellInfo()->Id))
                 {
                     switch (aura->GetStackAmount())
                     {
@@ -1487,12 +1490,12 @@ class spell_gen_feast_on : public SpellScriptLoader
 
             void HandleDummy(SpellEffIndex /*effIndex*/)
             {
-                int32 basePoints0 = GetSpellInfo()->Effects[EFFECT_0].CalcValue();
+                int32 bp0 = GetSpellInfo()->Effects[EFFECT_0].CalcValue();
 
                 Unit* caster = GetCaster();
                 if (caster->IsVehicle())
                     if (Unit* player = caster->GetVehicleKit()->GetPassenger(0))
-                        player->CastSpell(player, basePoints0, true);
+                        caster->CastSpell(player, bp0, true, NULL, NULL, player->ToPlayer()->GetGUID());
             }
 
             void Register()
@@ -1504,6 +1507,579 @@ class spell_gen_feast_on : public SpellScriptLoader
         SpellScript* GetSpellScript() const
         {
             return new spell_gen_feast_on_SpellScript();
+        }
+};
+
+enum WellFedPilgrimsBount
+{
+    // Feast On
+    SPELL_A_SERVING_OF_TURKEY           = 61807,
+    SPELL_A_SERVING_OF_CRANBERRIES      = 61804,
+    SPELL_A_SERVING_OF_STUFFING         = 61806,
+    SPELL_A_SERVING_OF_SWEET_POTATOES   = 61808,
+    SPELL_A_SERVING_OF_PIE              = 61805,
+
+    // Well Fed
+    SPELL_WELL_FED_AP                   = 65414,
+    SPELL_WELL_FED_ZM                   = 65412,
+    SPELL_WELL_FED_HIT                  = 65416,
+    SPELL_WELL_FED_HASTE                = 65410,
+    SPELL_WELL_FED_SPIRIT               = 65415,
+
+    // Pilgrim's Paunch
+    SPELL_THE_SPIRIT_OF_SHARING         = 61849,
+};
+
+class spell_gen_well_fed_pilgrims_bount_ap : public SpellScriptLoader
+{
+    public:
+        spell_gen_well_fed_pilgrims_bount_ap() : SpellScriptLoader("spell_gen_well_fed_pilgrims_bount_ap") {}
+
+        class spell_gen_well_fed_pilgrims_bount_ap_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_well_fed_pilgrims_bount_ap_SpellScript);
+
+            bool Validate(SpellInfo const* /*spellEntry*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_WELL_FED_AP))
+                    return false;
+                return true;
+            }
+
+            void HandleScript(SpellEffIndex effIndex)
+            {
+                PreventHitDefaultEffect(effIndex);
+                Player* target = GetHitPlayer();
+                if (!target)
+                    return;
+
+                Aura const* Turkey = target->GetAura(SPELL_A_SERVING_OF_TURKEY);
+                Aura const* Cranberies = target->GetAura(SPELL_A_SERVING_OF_CRANBERRIES);
+                Aura const* Stuffing = target->GetAura(SPELL_A_SERVING_OF_STUFFING);
+                Aura const* SweetPotatoes = target->GetAura(SPELL_A_SERVING_OF_SWEET_POTATOES);
+                Aura const* Pie = target->GetAura(SPELL_A_SERVING_OF_PIE);
+
+                // A Serving of Turkey - Attack power and Stamina
+                if (Aura const* aura = target->GetAura(SPELL_A_SERVING_OF_TURKEY))
+                {
+                    if (aura->GetStackAmount() == 5)
+                        target->CastSpell(target, SPELL_WELL_FED_AP, true);
+                }
+
+                // The Spirit of Sharing - Achievement Credit
+                if (!target->GetAura(SPELL_THE_SPIRIT_OF_SHARING))
+                {
+                    if ((Turkey && Turkey->GetStackAmount() == 5) && (Cranberies && Cranberies->GetStackAmount() == 5) && (Stuffing && Stuffing->GetStackAmount() == 5) &&
+                        (SweetPotatoes && SweetPotatoes->GetStackAmount() == 5) && (Pie && Pie->GetStackAmount() == 5))
+                        target->CastSpell(target, SPELL_THE_SPIRIT_OF_SHARING, true);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_well_fed_pilgrims_bount_ap_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_APPLY_AURA);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_well_fed_pilgrims_bount_ap_SpellScript();
+        }
+};
+
+class spell_gen_well_fed_pilgrims_bount_zm : public SpellScriptLoader
+{
+    public:
+        spell_gen_well_fed_pilgrims_bount_zm() : SpellScriptLoader("spell_gen_well_fed_pilgrims_bount_zm") {}
+
+        class spell_gen_well_fed_pilgrims_bount_zm_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_well_fed_pilgrims_bount_zm_SpellScript);
+
+            bool Validate(SpellInfo const* /*spellEntry*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_WELL_FED_ZM))
+                    return false;
+                return true;
+            }
+
+            void HandleScript(SpellEffIndex effIndex)
+            {                
+                PreventHitDefaultEffect(effIndex);
+                Player* target = GetHitPlayer();
+                if (!target)
+                    return;
+
+                Aura const* Turkey = target->GetAura(SPELL_A_SERVING_OF_TURKEY);
+                Aura const* Cranberies = target->GetAura(SPELL_A_SERVING_OF_CRANBERRIES);
+                Aura const* Stuffing = target->GetAura(SPELL_A_SERVING_OF_STUFFING);
+                Aura const* SweetPotatoes = target->GetAura(SPELL_A_SERVING_OF_SWEET_POTATOES);
+                Aura const* Pie = target->GetAura(SPELL_A_SERVING_OF_PIE);
+
+                // A Serving of Cranberries - Spell power and Stamina
+                if (Aura const* aura = target->GetAura(SPELL_A_SERVING_OF_CRANBERRIES))
+                {
+                    if (aura->GetStackAmount() == 5)
+                        target->CastSpell(target, SPELL_WELL_FED_ZM, true);
+                }
+
+                // The Spirit of Sharing - Achievement Credit
+                if (!target->GetAura(SPELL_THE_SPIRIT_OF_SHARING))
+                {
+                    if ((Turkey && Turkey->GetStackAmount() == 5) && (Cranberies && Cranberies->GetStackAmount() == 5) && (Stuffing && Stuffing->GetStackAmount() == 5) &&
+                        (SweetPotatoes && SweetPotatoes->GetStackAmount() == 5) && (Pie && Pie->GetStackAmount() == 5))
+                        target->CastSpell(target, SPELL_THE_SPIRIT_OF_SHARING, true);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_well_fed_pilgrims_bount_zm_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_APPLY_AURA);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_well_fed_pilgrims_bount_zm_SpellScript();
+        }
+};
+
+class spell_gen_well_fed_pilgrims_bount_hit : public SpellScriptLoader
+{
+    public:
+        spell_gen_well_fed_pilgrims_bount_hit() : SpellScriptLoader("spell_gen_well_fed_pilgrims_bount_hit") {}
+
+        class spell_gen_well_fed_pilgrims_bount_hit_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_well_fed_pilgrims_bount_hit_SpellScript);
+
+            bool Validate(SpellInfo const* /*spellEntry*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_WELL_FED_HIT))
+                    return false;
+                return true;
+            }
+
+            void HandleScript(SpellEffIndex effIndex)
+            {
+                PreventHitDefaultEffect(effIndex);
+                Player* target = GetHitPlayer();
+                if (!target)
+                    return;
+
+                Aura const* Turkey = target->GetAura(SPELL_A_SERVING_OF_TURKEY);
+                Aura const* Cranberies = target->GetAura(SPELL_A_SERVING_OF_CRANBERRIES);
+                Aura const* Stuffing = target->GetAura(SPELL_A_SERVING_OF_STUFFING);
+                Aura const* SweetPotatoes = target->GetAura(SPELL_A_SERVING_OF_SWEET_POTATOES);
+                Aura const* Pie = target->GetAura(SPELL_A_SERVING_OF_PIE);
+
+                // A Serving of Stuffing - Hit rating and Stamina
+                if (Aura const* aura = target->GetAura(SPELL_A_SERVING_OF_STUFFING))
+                {
+                    if (aura->GetStackAmount() == 5)
+                        target->CastSpell(target, SPELL_WELL_FED_HIT, true);
+                }
+
+                // The Spirit of Sharing - Achievement Credit
+                if (!target->GetAura(SPELL_THE_SPIRIT_OF_SHARING))
+                {
+                    if ((Turkey && Turkey->GetStackAmount() == 5) && (Cranberies && Cranberies->GetStackAmount() == 5) && (Stuffing && Stuffing->GetStackAmount() == 5) &&
+                        (SweetPotatoes && SweetPotatoes->GetStackAmount() == 5) && (Pie && Pie->GetStackAmount() == 5))
+                        target->CastSpell(target, SPELL_THE_SPIRIT_OF_SHARING, true);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_well_fed_pilgrims_bount_hit_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_APPLY_AURA);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_well_fed_pilgrims_bount_hit_SpellScript();
+        }
+};
+
+class spell_gen_well_fed_pilgrims_bount_haste : public SpellScriptLoader
+{
+    public:
+        spell_gen_well_fed_pilgrims_bount_haste() : SpellScriptLoader("spell_gen_well_fed_pilgrims_bount_haste") {}
+
+        class spell_gen_well_fed_pilgrims_bount_haste_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_well_fed_pilgrims_bount_haste_SpellScript);
+
+            bool Validate(SpellInfo const* /*spellEntry*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_WELL_FED_HASTE))
+                    return false;
+                return true;
+            }
+
+            void HandleScript(SpellEffIndex effIndex)
+            {
+                PreventHitDefaultEffect(effIndex);
+                Player* target = GetHitPlayer();
+                if (!target)
+                    return;
+
+                Aura const* Turkey = target->GetAura(SPELL_A_SERVING_OF_TURKEY);
+                Aura const* Cranberies = target->GetAura(SPELL_A_SERVING_OF_CRANBERRIES);
+                Aura const* Stuffing = target->GetAura(SPELL_A_SERVING_OF_STUFFING);
+                Aura const* SweetPotatoes = target->GetAura(SPELL_A_SERVING_OF_SWEET_POTATOES);
+                Aura const* Pie = target->GetAura(SPELL_A_SERVING_OF_PIE);
+
+                // A Serving of Sweet Potatoes - Haste rating and Stamina
+                if (Aura const* aura = target->GetAura(SPELL_A_SERVING_OF_SWEET_POTATOES))
+                {
+                    if (aura->GetStackAmount() == 5)
+                        target->CastSpell(target, SPELL_WELL_FED_HASTE, true);
+                }
+
+                // The Spirit of Sharing - Achievement Credit
+                if (!target->GetAura(SPELL_THE_SPIRIT_OF_SHARING))
+                {
+                    if ((Turkey && Turkey->GetStackAmount() == 5) && (Cranberies && Cranberies->GetStackAmount() == 5) && (Stuffing && Stuffing->GetStackAmount() == 5) &&
+                        (SweetPotatoes && SweetPotatoes->GetStackAmount() == 5) && (Pie && Pie->GetStackAmount() == 5))
+                        target->CastSpell(target, SPELL_THE_SPIRIT_OF_SHARING, true);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_well_fed_pilgrims_bount_haste_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_APPLY_AURA);
+            }
+
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_well_fed_pilgrims_bount_haste_SpellScript();
+        }
+};
+
+class spell_gen_well_fed_pilgrims_bount_spirit : public SpellScriptLoader
+{
+    public:
+        spell_gen_well_fed_pilgrims_bount_spirit() : SpellScriptLoader("spell_gen_well_fed_pilgrims_bount_spirit") {}
+
+        class spell_gen_well_fed_pilgrims_bount_spirit_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_well_fed_pilgrims_bount_spirit_SpellScript);
+
+            bool Validate(SpellInfo const* /*spellEntry*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_WELL_FED_SPIRIT))
+                    return false;
+                return true;
+            }
+
+            void HandleScript(SpellEffIndex effIndex)
+            {
+                PreventHitDefaultEffect(effIndex);
+                Player* target = GetHitPlayer();
+                if (!target)
+                    return;
+
+                Aura const* Turkey = target->GetAura(SPELL_A_SERVING_OF_TURKEY);
+                Aura const* Cranberies = target->GetAura(SPELL_A_SERVING_OF_CRANBERRIES);
+                Aura const* Stuffing = target->GetAura(SPELL_A_SERVING_OF_STUFFING);
+                Aura const* SweetPotatoes = target->GetAura(SPELL_A_SERVING_OF_SWEET_POTATOES);
+                Aura const* Pie = target->GetAura(SPELL_A_SERVING_OF_PIE);
+
+                // Feast On Pie - Spirit and Stamina
+                if (Aura const* aura = target->GetAura(SPELL_A_SERVING_OF_PIE))
+                {
+                    if (aura->GetStackAmount() == 5)
+                        target->CastSpell(target, SPELL_WELL_FED_SPIRIT, true);
+                }
+
+                // The Spirit of Sharing - Achievement Credit
+                if (!target->GetAura(SPELL_THE_SPIRIT_OF_SHARING))
+                {
+                    if ((Turkey && Turkey->GetStackAmount() == 5) && (Cranberies && Cranberies->GetStackAmount() == 5) && (Stuffing && Stuffing->GetStackAmount() == 5) &&
+                        (SweetPotatoes && SweetPotatoes->GetStackAmount() == 5) && (Pie && Pie->GetStackAmount() == 5))
+                        target->CastSpell(target, SPELL_THE_SPIRIT_OF_SHARING, true);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_well_fed_pilgrims_bount_spirit_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_APPLY_AURA);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_well_fed_pilgrims_bount_spirit_SpellScript();
+        }
+};
+
+enum OnPlatePilgrimsBount
+{
+    // "FOOD FIGHT!" - Achivement Credit
+    SPELL_ON_PLATE_TURKEY           = 61928,
+    SPELL_ON_PLATE_CRANBERRIES      = 61925,
+    SPELL_ON_PLATE_STUFFING         = 61927,
+    SPELL_ON_PLATE_SWEET_POTATOES   = 61929,
+    SPELL_ON_PLATE_PIE              = 61926,
+
+    // Sharing is Caring - Achivement Credit
+    SPELL_PASS_THE_TURKEY           = 66373,
+    SPELL_PASS_THE_CRANBERRIES      = 66372,
+    SPELL_PASS_THE_STUFFING         = 66375,
+    SPELL_PASS_THE_SWEET_POTATOES   = 66376,
+    SPELL_PASS_THE_PIE              = 66374,
+};
+
+class spell_gen_on_plate_pilgrims_bount_turkey : public SpellScriptLoader
+{
+    public:
+        spell_gen_on_plate_pilgrims_bount_turkey() : SpellScriptLoader("spell_gen_on_plate_pilgrims_bount_turkey") { }
+
+        class spell_gen_on_plate_pilgrims_bount_turkey_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_on_plate_pilgrims_bount_turkey_SpellScript);
+
+            bool Validate(SpellInfo const* /*spellEntry*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_ON_PLATE_TURKEY))
+                    return false;
+                return true;
+            }
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                Unit* caster = GetCaster();
+                if (caster->IsVehicle())
+                {
+                    Unit* player = caster->GetVehicleKit()->GetPassenger(0);
+                    if (!player)
+                        return;
+
+                    player->CastSpell(GetHitUnit(), SPELL_ON_PLATE_TURKEY, true, NULL, NULL, player->ToPlayer()->GetGUID());
+                    player->CastSpell(player, SPELL_PASS_THE_TURKEY, true);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_on_plate_pilgrims_bount_turkey_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_on_plate_pilgrims_bount_turkey_SpellScript();
+        }
+};
+
+class spell_gen_on_plate_pilgrims_bount_cranberries : public SpellScriptLoader
+{
+    public:
+        spell_gen_on_plate_pilgrims_bount_cranberries() : SpellScriptLoader("spell_gen_on_plate_pilgrims_bount_cranberries") { }
+
+        class spell_gen_on_plate_pilgrims_bount_cranberries_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_on_plate_pilgrims_bount_cranberries_SpellScript);
+
+            bool Validate(SpellInfo const* /*spellEntry*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_ON_PLATE_CRANBERRIES))
+                    return false;
+                return true;
+            }
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                Unit* caster = GetCaster();
+                if (caster->IsVehicle())
+                {
+                    Unit* player = caster->GetVehicleKit()->GetPassenger(0);
+                    if (!player)
+                        return;
+
+                    player->CastSpell(GetHitUnit(), SPELL_ON_PLATE_CRANBERRIES, true, NULL, NULL, player->ToPlayer()->GetGUID());
+                    player->CastSpell(player, SPELL_PASS_THE_CRANBERRIES, true);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_on_plate_pilgrims_bount_cranberries_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_on_plate_pilgrims_bount_cranberries_SpellScript();
+        }
+};
+
+class spell_gen_on_plate_pilgrims_bount_stuffing : public SpellScriptLoader
+{
+    public:
+        spell_gen_on_plate_pilgrims_bount_stuffing() : SpellScriptLoader("spell_gen_on_plate_pilgrims_bount_stuffing") { }
+
+        class spell_gen_on_plate_pilgrims_bount_stuffing_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_on_plate_pilgrims_bount_stuffing_SpellScript);
+
+            bool Validate(SpellInfo const* /*spellEntry*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_ON_PLATE_STUFFING))
+                    return false;
+                return true;
+            }
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                Unit* caster = GetCaster();
+                if (caster->IsVehicle())
+                {
+                    Unit* player = caster->GetVehicleKit()->GetPassenger(0);
+                    if (!player)
+                        return;
+
+                    player->CastSpell(GetHitUnit(), SPELL_ON_PLATE_STUFFING, true, NULL, NULL, player->ToPlayer()->GetGUID());
+                    player->CastSpell(player, SPELL_PASS_THE_STUFFING, true);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_on_plate_pilgrims_bount_stuffing_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_on_plate_pilgrims_bount_stuffing_SpellScript();
+        }
+};
+
+class spell_gen_on_plate_pilgrims_bount_sweet_potatoes : public SpellScriptLoader
+{
+    public:
+        spell_gen_on_plate_pilgrims_bount_sweet_potatoes() : SpellScriptLoader("spell_gen_on_plate_pilgrims_bount_sweet_potatoes") { }
+
+        class spell_gen_on_plate_pilgrims_bount_sweet_potatoes_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_on_plate_pilgrims_bount_sweet_potatoes_SpellScript);
+
+            bool Validate(SpellInfo const* /*spellEntry*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_ON_PLATE_SWEET_POTATOES))
+                    return false;
+                return true;
+            }
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                Unit* caster = GetCaster();
+                if (caster->IsVehicle())
+                {
+                    Unit* player = caster->GetVehicleKit()->GetPassenger(0);
+                    if (!player)
+                        return;
+
+                    player->CastSpell(GetHitUnit(), SPELL_ON_PLATE_SWEET_POTATOES, true, NULL, NULL, player->ToPlayer()->GetGUID());
+                    player->CastSpell(player, SPELL_PASS_THE_SWEET_POTATOES, true);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_gen_on_plate_pilgrims_bount_sweet_potatoes_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_on_plate_pilgrims_bount_sweet_potatoes_SpellScript();
+        }
+};
+
+class spell_gen_on_plate_pilgrims_bount_pie : public SpellScriptLoader
+{
+    public:
+        spell_gen_on_plate_pilgrims_bount_pie() : SpellScriptLoader("spell_gen_on_plate_pilgrims_bount_pie") { }
+
+        class spell_gen_on_plate_pilgrims_bount_pie_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_on_plate_pilgrims_bount_pie_SpellScript);
+
+            bool Validate(SpellInfo const* /*spellEntry*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_ON_PLATE_PIE))
+                    return false;
+                return true;
+            }
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                Unit* caster = GetCaster();
+                if (caster->IsVehicle())
+                {
+                    Unit* player = caster->GetVehicleKit()->GetPassenger(0);
+                    if (!player)
+                        return;
+
+                    player->CastSpell(GetHitUnit(), SPELL_ON_PLATE_PIE, true, NULL, NULL, player->ToPlayer()->GetGUID());
+                    player->CastSpell(player, SPELL_PASS_THE_PIE, true);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHit += SpellEffectFn(spell_gen_on_plate_pilgrims_bount_pie_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_on_plate_pilgrims_bount_pie_SpellScript();
+        }
+};
+
+enum BountifulFeast
+{
+    // Bountiful Feast
+    SPELL_BOUNTIFUL_FEAST_DRINK          = 66041,
+    SPELL_BOUNTIFUL_FEAST_FOOD           = 66478,
+    SPELL_BOUNTIFUL_FEAST_REFRESHMENT    = 66622,
+};
+
+class spell_gen_bountiful_feast : public SpellScriptLoader
+{
+    public:
+        spell_gen_bountiful_feast() : SpellScriptLoader("spell_gen_bountiful_feast") { }
+
+        class spell_gen_bountiful_feast_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_bountiful_feast_SpellScript);
+
+            void HandleScriptEffect(SpellEffIndex /*effIndex*/)
+            {
+                Unit* caster = GetCaster();
+                if (!caster)
+                    return;
+
+                caster->CastSpell(caster, SPELL_BOUNTIFUL_FEAST_DRINK, true);
+                caster->CastSpell(caster, SPELL_BOUNTIFUL_FEAST_FOOD, true);
+                caster->CastSpell(caster, SPELL_BOUNTIFUL_FEAST_REFRESHMENT, true);
+            }
+
+            void Register()
+            {
+                OnEffectHit += SpellEffectFn(spell_gen_bountiful_feast_SpellScript::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_gen_bountiful_feast_SpellScript();
         }
 };
 
@@ -1541,4 +2117,15 @@ void AddSC_generic_spell_scripts()
     new spell_gen_oracle_wolvar_reputation();
     new spell_gen_turkey_tracker();
     new spell_gen_feast_on();
+    new spell_gen_well_fed_pilgrims_bount_ap();
+    new spell_gen_well_fed_pilgrims_bount_zm();
+    new spell_gen_well_fed_pilgrims_bount_hit();
+    new spell_gen_well_fed_pilgrims_bount_haste();
+    new spell_gen_well_fed_pilgrims_bount_spirit();
+    new spell_gen_on_plate_pilgrims_bount_turkey();
+    new spell_gen_on_plate_pilgrims_bount_cranberries();
+    new spell_gen_on_plate_pilgrims_bount_stuffing();
+    new spell_gen_on_plate_pilgrims_bount_sweet_potatoes();
+    new spell_gen_on_plate_pilgrims_bount_pie();
+    new spell_gen_bountiful_feast();
 }
