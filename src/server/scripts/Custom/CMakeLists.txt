@@ -21,6 +21,7 @@ set(scripts_STAT_SRCS
   Custom/npc_icc_ring_recover.cpp
   Custom/guild_house.cpp
   Custom/ArgentTournament.cpp
+  Custom/cast_log.cpp
 )
 
 message("  -> Prepared: Custom")
