@@ -36,8 +36,10 @@ public:
             if (!found)
                 return;
 
-            sLog->outCast("Player %s (GuidLow: %u) casts %u",
-                player->GetName(), player->GetGUIDLow(), spell->GetSpellInfo()->Id);
+            if (spell->m_targets.GetUnitTarget())
+                if (Player* target = spell->m_targets.GetUnitTarget()->ToPlayer())
+                    sLog->outCast("Player %s (%u) casts %u - Target: %s (%u)",
+                        player->GetName(), player->GetGUIDLow(), spell->GetSpellInfo()->Id, target->GetName(), target->GetGUIDLow());
         }
     }
 };
