@@ -9,7 +9,7 @@ class cast_log : public PlayerScript
 public:
     cast_log() : PlayerScript("cast_log") {}
 
-    void OnSpellCast(Player* player, Spell* spell, bool skipCheck)
+    void OnSpellCast(Player* player, Spell* spell, bool /*skipCheck*/)
     {
         if (!sWorld->getBoolConfig(CONFIG_CASTLOG_ENABLED))
             return;
@@ -17,8 +17,14 @@ public:
         if (spell->GetOriginalCaster() != player)
             return;
 
-        Battleground* bg = player->GetBattleground();
-        if (bg || player->duel)
+        Player* target = NULL;
+        if (spell->m_targets.GetUnitTarget())
+            target = spell->m_targets.GetUnitTarget()->ToPlayer();
+
+        if (!target)
+            return;
+
+        if (player->GetBattleground() || player->duel || target == player)
         {
             bool found = false;
             uint32 accountId;
@@ -36,10 +42,12 @@ public:
             if (!found)
                 return;
 
-            if (spell->m_targets.GetUnitTarget())
-                if (Player* target = spell->m_targets.GetUnitTarget()->ToPlayer())
-                    sLog->outCast("Player %s (%u) casts %u - Target: %s (%u)",
-                        player->GetName(), player->GetGUIDLow(), spell->GetSpellInfo()->Id, target->GetName(), target->GetGUIDLow());
+            if (target == player)
+                sLog->outCast("Player %s (%u) casts %u on self",
+                    player->GetName(), player->GetGUIDLow(), spell->GetSpellInfo()->Id);
+            else
+                sLog->outCast("Player %s (%u) casts %u - Target: %s (%u)",
+                    player->GetName(), player->GetGUIDLow(), spell->GetSpellInfo()->Id, target->GetName(), target->GetGUIDLow());
         }
     }
 };
