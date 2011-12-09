@@ -37,6 +37,10 @@ public:
         if (!found)
             return;
 
+        SpellCastResult result = spell->CheckCast(true);
+        if (result != SPELL_CAST_OK)
+            return;
+
         if (target == player)
             sLog->outCast("CastSpellOpcode: Player %s (%u) casts %u on self",
                 player->GetName(), player->GetGUIDLow(), spell->GetSpellInfo()->Id);
