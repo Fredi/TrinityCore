@@ -3117,6 +3117,14 @@ void SpellMgr::LoadDbcDataCorrections()
             case 24259: // Spell Lock silence (temporary hack)
                 spellInfo->speed = 80;
                 break;
+            case 23880: // Bloodthirst
+                spellInfo->Effect[EFFECT_0] = SPELL_EFFECT_HEAL_PCT;
+                spellInfo->EffectBasePoints[EFFECT_0] = 0; // default to 1%
+                // make it capable of crit as magic effect using spell crit chance
+                spellInfo->AttributesEx2 &= ~SPELL_ATTR2_CANT_CRIT;
+                spellInfo->DmgClass = SPELL_DAMAGE_CLASS_MAGIC;
+                spellInfo->SchoolMask = SPELL_SCHOOL_MASK_HOLY;
+                break;
             case 23881: // Bloodthirst
                 spellInfo->EffectImplicitTargetA[EFFECT_1] = TARGET_UNIT_CASTER;
                 break;
