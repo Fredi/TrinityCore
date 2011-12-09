@@ -9,12 +9,9 @@ class cast_log : public PlayerScript
 public:
     cast_log() : PlayerScript("cast_log") {}
 
-    void OnSpellCast(Player* player, Spell* spell, bool /*skipCheck*/)
+    void OnCastSpellOpcode(Player* player, Spell* spell)
     {
         if (!sWorld->getBoolConfig(CONFIG_CASTLOG_ENABLED))
-            return;
-
-        if (spell->GetOriginalCaster() != player)
             return;
 
         Player* target = NULL;
@@ -24,31 +21,31 @@ public:
         if (!target)
             return;
 
-        if (player->GetBattleground() || player->duel || target == player)
+        if (!player->GetBattleground() && !player->duel && target != player)
+            return;
+
+        bool found = false;
+        uint32 accountId;
+        std::istringstream ss(ConfigMgr::GetStringDefault("CastLogs.Accounts", ""));
+
+        while (ss >> accountId)
         {
-            bool found = false;
-            uint32 accountId;
-            std::istringstream ss(ConfigMgr::GetStringDefault("CastLogs.Accounts", ""));
-
-            while (ss >> accountId)
+            if (accountId == player->GetSession()->GetAccountId())
             {
-                if (accountId == player->GetSession()->GetAccountId())
-                {
-                    found = true;
-                    break;
-                }
+                found = true;
+                break;
             }
-
-            if (!found)
-                return;
-
-            if (target == player)
-                sLog->outCast("Player %s (%u) casts %u on self",
-                    player->GetName(), player->GetGUIDLow(), spell->GetSpellInfo()->Id);
-            else
-                sLog->outCast("Player %s (%u) casts %u - Target: %s (%u)",
-                    player->GetName(), player->GetGUIDLow(), spell->GetSpellInfo()->Id, target->GetName(), target->GetGUIDLow());
         }
+
+        if (!found)
+            return;
+
+        if (target == player)
+            sLog->outCast("CastSpellOpcode: Player %s (%u) casts %u on self",
+                player->GetName(), player->GetGUIDLow(), spell->GetSpellInfo()->Id);
+        else
+            sLog->outCast("CastSpellOpcode: Player %s (%u) casts %u - Target: %s (%u)",
+                player->GetName(), player->GetGUIDLow(), spell->GetSpellInfo()->Id, target->GetName(), target->GetGUIDLow());
     }
 };
 
