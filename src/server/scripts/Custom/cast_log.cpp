@@ -21,9 +21,6 @@ public:
         if (!target)
             return;
 
-        if (!player->GetBattleground() && !player->duel && target != player)
-            return;
-
         bool found = false;
         uint32 accountId;
         std::istringstream ss(ConfigMgr::GetStringDefault("CastLogs.Accounts", ""));
