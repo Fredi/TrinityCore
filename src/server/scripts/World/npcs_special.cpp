@@ -2772,8 +2772,7 @@ public:
     bool OnGossipHello(Player* player, Creature* creature)
     {
         // Argent Pony Bridle options
-        const AchievementEntry* achiPonyUp = GetAchievementStore()->LookupEntry(ACHI_PONY_UP);
-        if (player->GetAchievementMgr().HasAchieved(achiPonyUp))
+        if (player->GetAchievementMgr().HasAchieved(ACHI_PONY_UP))
             if (!creature->HasAura(SPELL_SQUIRE_TIRED))
             {
                 uint8 stateMask = STATE_BANK | STATE_SHOP | STATE_MAIL;
