@@ -3564,51 +3564,93 @@ void SpellMgr::LoadDbcDataCorrections()
             // CUSTOM STUFF
             //
             // Trial Of The Crusader (lowering damage)
-            case 66013: // Penetrating Cold
-            case 66880: // Acid Spit 
-            case 66901: // Paralytic Spray
-            case 66902: // Burning Spray
-            case 66796: // Fire Spit
-            case 66048: // Light Vortex
-            case 66058: // Dark Vortex
-            case 65795: // Unleashed Light
-            case 65808: // Unleashed Dark
+            case 66013: // Penetrating Cold (10N)
+            case 67700: // Penetrating Cold (25N)
+            case 68509: // Penetrating Cold (10H)
+            case 68510: // Penetrating Cold (25H)
+            case 66880: // Acid Spit (10N)
+            case 67606: // Acid Spit (25N)
+            case 67607: // Acid Spit (10H)
+            case 67608: // Acid Spit (25H)
+            case 66901: // Paralytic Spray (10N)
+            case 67615: // Paralytic Spray (25N)
+            case 67616: // Paralytic Spray (10H)
+            case 67617: // Paralytic Spray (25H)
+            case 66902: // Burning Spray (10N)
+            case 67627: // Burning Spray (25N)
+            case 67628: // Burning Spray (10H)
+            case 67629: // Burning Spray (25H)
+            case 66796: // Fire Spit (10N)
+            case 67632: // Fire Spit (25N)
+            case 67633: // Fire Spit (10H)
+            case 67634: // Fire Spit (25H)
+            case 66048: // Light Vortex (10N)
+            case 67203: // Light Vortex (25N)
+            case 67204: // Light Vortex (10H)
+            case 67205: // Light Vortex (25H)
+            case 65795: // Unleashed Light (10N)
+            case 67238: // Unleashed Light (25N)
+            case 67239: // Unleashed Light (10H)
+            case 67240: // Unleashed Light (25H)
+            case 65808: // Unleashed Dark (10N)
+            case 67172: // Unleashed Dark (25N)
+            case 67173: // Unleashed Dark (10H)
+            case 67174: // Unleashed Dark (25H)
+                spellInfo->EffectBasePoints[0] *= 0.6f; // damage 40% lower
+                break;
+            case 66118: // Leeching Swarm (10N)
+            case 67630: // Leeching Swarm (25N)
+            case 68646: // Leeching Swarm (10H)
+            case 68647: // Leeching Swarm (25H)
                 spellInfo->EffectBasePoints[0] /= 2;
                 break;
-            case 66118: // Leeching Swarm (lower damage to 5% each second)
-                spellInfo->EffectBasePoints[0] = 4;
-                break;
+            //
             // Icecrown Citadel
             case 69065: // Impaled (lower damage to 5% each second)
                 spellInfo->EffectBasePoints[1] = 4;
                 break;
-            case 71623: // Delirious Slash
-                spellInfo->EffectBasePoints[1] /= 2;
+            case 71623: // Delirious Slash (10N)
+            case 71624: // Delirious Slash (25N)
+            case 71625: // Delirious Slash (10H)
+            case 71626: // Delirious Slash (25H)
+                spellInfo->EffectBasePoints[1] *= 0.5; // damage 50% lower
                 break;
             case 72227: // Gastric Explosion
             case 69146: // Coldflame (10N)
-            case 70824: // Coldflame (10H)
             case 70823: // Coldflame (25N)
+            case 70824: // Coldflame (10H)
             case 70825: // Coldflame (25H)
-            case 71420: // Frostbolt (Lady Deathwhisper)
+            case 71420: // Frostbolt (10N)
+            case 72007: // Frostbolt (25N)
+            case 72501: // Frostbolt (10H)
+            case 72502: // Frostbolt (25H)
             case 72497: // Dark Martydom (25H)
-            case 71446: // Twilight Bloodbolt (Blood Queen)
-                spellInfo->EffectBasePoints[0] /= 1.4f; // damage 40% lower
+            case 71446: // Twilight Bloodbolt (10N)
+            case 71478: // Twilight Bloodbolt (25N)
+            case 71479: // Twilight Bloodbolt (10H)
+            case 71480: // Twilight Bloodbolt (25H)
+                spellInfo->EffectBasePoints[0] *= 0.6f; // damage 40% lower
                 break;
-            case 74403: // Ragefire's Flame Breath
-            case 74404:
             case 70541: // Infest (10N)
             case 73779: // Infest (25N)
             case 73780: // Infest (10H)
             case 73781: // Infest (25H)
-                spellInfo->EffectBasePoints[1] /= 1.3f; // damage 30% lower
+                spellInfo->EffectBasePoints[1] *= 0.7f; // damage 30% lower
                 break;
             case 68983: // Remorseless Winter (10N)
             case 73791: // Remorseless Winter (25N)
             case 73792: // Remorseless Winter (10H)
             case 73793: // Remorseless Winter (25H)
-                spellInfo->EffectBasePoints[0] /= 1.3f; // damage 30% lower
+                spellInfo->EffectBasePoints[0] *= 0.7f; // damage 30% lower
                 break;
+            //
+            // Ruby Sanctum
+            case 74403: // Ragefire's Flame Breath (10N)
+            case 74404: // Ragefire's Flame Breath (25N)
+                spellInfo->EffectBasePoints[1] *= 0.7f; // damage 30% lower
+                break;
+            //
+            // Custom patches
             case 20484: // Rebirth
                 spellInfo->AttributesEx4 |= SPELL_ATTR4_NOT_USABLE_IN_ARENA;
                 break;
