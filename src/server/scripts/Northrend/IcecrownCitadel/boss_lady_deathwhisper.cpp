@@ -457,11 +457,11 @@ class boss_lady_deathwhisper : public CreatureScript
                             events.ScheduleEvent(EVENT_P1_SHADOW_BOLT, urand(5000, 8000), 0, PHASE_ONE);
                             break;
                         case EVENT_P1_REANIMATE_CULTIST:
-                            ReanimateCultist();
+                            //ReanimateCultist();
                             break;
                         case EVENT_P1_EMPOWER_CULTIST:
-                            EmpowerCultist();
-                            events.ScheduleEvent(EVENT_P1_EMPOWER_CULTIST, urand(18000, 25000));
+                            //EmpowerCultist();
+                            //events.ScheduleEvent(EVENT_P1_EMPOWER_CULTIST, urand(18000, 25000));
                             break;
                         case EVENT_P2_FROSTBOLT:
                             DoCastVictim(SPELL_FROSTBOLT);
