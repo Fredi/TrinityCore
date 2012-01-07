@@ -277,7 +277,7 @@ class boss_lady_deathwhisper : public CreatureScript
                 events.Reset();
                 events.SetPhase(PHASE_ONE);
                 // phase-independent events
-                events.ScheduleEvent(EVENT_BERSERK, 600000);
+                events.ScheduleEvent(EVENT_BERSERK, 900000);
                 events.ScheduleEvent(EVENT_DEATH_AND_DECAY, 10000);
                 // phase one only
                 events.ScheduleEvent(EVENT_P1_SUMMON_WAVE, 5000, 0, PHASE_ONE);
