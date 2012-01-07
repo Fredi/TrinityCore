@@ -5682,7 +5682,7 @@ void AuraEffect::HandlePeriodicDummyAuraTick(Unit* target, Unit* caster) const
                         if (caster->GetOwner()->IsMounted())
                             caster->Mount(29736);
                         else if (caster->IsMounted())
-                            caster->Unmount();
+                            caster->Dismount();
                     }
                     break;
             }
