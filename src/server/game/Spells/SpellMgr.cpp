@@ -3663,10 +3663,6 @@ void SpellMgr::LoadDbcDataCorrections()
             case 20484: // Rebirth
                 spellInfo->AttributesEx4 |= SPELL_ATTR4_NOT_USABLE_IN_ARENA;
                 break;
-            case 63163: // Apply Enchanted Bridle (Argent Tournament)
-                spellInfo->EffectDieSides[0] = 0;
-                spellInfo->EffectBasePoints[0] = 52391; // Ride Vehicle (forces seat 0)
-                break;
             case 62012: // Turkey Caller
                 spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_0_YARDS;
                 break;
