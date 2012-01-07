@@ -2982,8 +2982,10 @@ void SpellMgr::LoadDbcDataCorrections()
 
         switch (spellInfo->Id)
         {
-            case 42835: // Spout
-                spellInfo->Effect[0] = 0; // remove damage effect, only anim is needed
+            case 40244: case 40245: // Simon Game Visual
+            case 40246: case 40247: // Simon Game Visual
+            case 42835: // Spout, remove damage effect, only anim is needed
+                spellInfo->Effect[0] = 0;
                 break;
             case 30657: // Quake
                 spellInfo->EffectTriggerSpell[0] = 30571;
@@ -3668,6 +3670,11 @@ void SpellMgr::LoadDbcDataCorrections()
             case 62012: // Turkey Caller
                 spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_0_YARDS;
                 break;
+            case 40055: // Introspection
+            case 40165: // Introspection
+            case 40166: // Introspection
+            case 40167: // Introspection
+                spellInfo->Attributes |= SPELL_ATTR0_NEGATIVE_1;
             default:
                 break;
         }
