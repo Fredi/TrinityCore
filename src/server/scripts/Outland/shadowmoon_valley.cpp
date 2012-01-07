@@ -640,9 +640,6 @@ enum Karynaku
     QUEST_ALLY_OF_NETHER    = 10870,
     QUEST_ZUHULED_THE_WACK  = 10866,
     NPC_ZUHULED_THE_WACKED  = 11980,
-
-    NPC_ZUHULED_THE_WACKED  = 11980,
-
     TAXI_PATH_ID            = 649,
 };
 
