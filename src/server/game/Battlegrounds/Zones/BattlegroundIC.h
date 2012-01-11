@@ -654,6 +654,8 @@ const Position workshopBombs[2] =
 
 enum Spells
 {
+    SPELL_BERSERK           = 47008,
+
     SPELL_OIL_REFINERY      = 68719,
     SPELL_QUARRY            = 68720,
 

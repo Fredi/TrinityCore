@@ -424,6 +424,11 @@ bool BattlegroundIC::SetupBattleground()
     for (uint8 i = BG_IC_GO_HUGE_SEAFORIUM_BOMBS_A_1; i < BG_IC_GO_HUGE_SEAFORIUM_BOMBS_H_4; i++)
         GetBGObject(i)->SetRespawnTime(10);
 
+    if (Creature* creature = GetBgMap()->GetCreature(NPC_HIGH_COMMANDER_HALFORD_WYRMBANE))
+        creature->CastSpell(creature, SPELL_BERSERK, false);
+    if (Creature* creature = GetBgMap()->GetCreature(NPC_OVERLORD_AGMAR))
+        creature->CastSpell(creature, SPELL_BERSERK, false);
+
     return true;
 }
 
@@ -850,6 +855,22 @@ void BattlegroundIC::DestroyGate(Player* player, GameObject* go)
             break;
     default:
         break;
+    }
+
+    switch (go->GetEntry())
+    {
+        case GO_HORDE_GATE_1:
+        case GO_HORDE_GATE_2:
+        case GO_HORDE_GATE_3:
+            if (Creature* creature = GetBgMap()->GetCreature(NPC_OVERLORD_AGMAR))
+                creature->RemoveAurasDueToSpell(SPELL_BERSERK);
+            break;
+        case GO_ALLIANCE_GATE_1:
+        case GO_ALLIANCE_GATE_2:
+        case GO_ALLIANCE_GATE_3:
+            if (Creature* creature = GetBgMap()->GetCreature(NPC_HIGH_COMMANDER_HALFORD_WYRMBANE))
+                creature->RemoveAurasDueToSpell(SPELL_BERSERK);
+            break;
     }
 
     SendMessage2ToAll(lang_entry, CHAT_MSG_BG_SYSTEM_NEUTRAL, NULL, (player->GetTeamId() == TEAM_ALLIANCE ? LANG_BG_IC_HORDE_KEEP : LANG_BG_IC_ALLIANCE_KEEP));
