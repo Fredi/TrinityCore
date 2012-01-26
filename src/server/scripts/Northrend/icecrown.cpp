@@ -115,65 +115,6 @@ public:
 };
 
 /*######
-## npc_alorah_and_grimmin
-######*/
-
-enum ealorah_and_grimmin
-{
-    SPELL_CHAIN                     = 68341,
-    NPC_FJOLA_LIGHTBANE             = 36065,
-    NPC_EYDIS_DARKBANE              = 36066,
-    NPC_PRIESTESS_ALORAH            = 36101,
-    NPC_PRIEST_GRIMMIN              = 36102
-};
-
-class npc_alorah_and_grimmin : public CreatureScript
-{
-public:
-    npc_alorah_and_grimmin() : CreatureScript("npc_alorah_and_grimmin") { }
-
-    struct npc_alorah_and_grimminAI : public ScriptedAI
-    {
-        npc_alorah_and_grimminAI(Creature* creature) : ScriptedAI(creature) {}
-
-        bool uiCast;
-
-        void Reset()
-        {
-            uiCast = false;
-        }
-
-        void UpdateAI(const uint32 /*uiDiff*/)
-        {
-            if (uiCast)
-                return;
-            uiCast = true;
-            Creature* target = NULL;
-
-            switch (me->GetEntry())
-            {
-                case NPC_PRIESTESS_ALORAH:
-                    target = me->FindNearestCreature(NPC_EYDIS_DARKBANE, 10.0f);
-                    break;
-                case NPC_PRIEST_GRIMMIN:
-                    target = me->FindNearestCreature(NPC_FJOLA_LIGHTBANE, 10.0f);
-                    break;
-            }
-            if (target)
-                DoCast(target, SPELL_CHAIN);
-
-            if (!UpdateVictim())
-                return;
-        }
-    };
-
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return new npc_alorah_and_grimminAI(creature);
-    }
-};
-
-/*######
 ## npc_guardian_pavilion
 ######*/
 
@@ -641,7 +582,6 @@ public:
 void AddSC_icecrown()
 {
     new npc_arete;
-    new npc_alorah_and_grimmin;
     new npc_guardian_pavilion;
     new npc_vereth_the_cunning;
     new npc_the_ocular();
