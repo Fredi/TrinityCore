@@ -2520,62 +2520,6 @@ public:
     }
 };
 
-class spell_tournament_defend : public SpellScriptLoader
-{
-public:
-    spell_tournament_defend() : SpellScriptLoader("spell_tournament_defend") { }
-
-    class spell_tournament_defend_AuraScript : public AuraScript
-    {
-        PrepareAuraScript(spell_tournament_defend_AuraScript);
-
-        void OnStackChange(AuraEffect const* aurEff, AuraEffectHandleModes mode)
-        {
-            if (Unit* target = GetTarget())
-            {
-                target->RemoveAurasDueToSpell(63130);
-                target->RemoveAurasDueToSpell(63131);
-                target->RemoveAurasDueToSpell(63132);
-                
-                switch(GetStackAmount())
-                {
-                    case 1:
-                        target->CastSpell(target,63130,true,0,aurEff);
-                        break;
-                    case 2:
-                        target->CastSpell(target,63131,true,0,aurEff);
-                        break;
-                    case 3:
-                        target->CastSpell(target,63132,true,0,aurEff);
-                        break;
-                }
-            }
-        }
-
-        void OnAuraRemoved(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
-        {
-            if (Unit* target = GetTarget())
-            {
-                target->RemoveAurasDueToSpell(63130);
-                target->RemoveAurasDueToSpell(63131);
-                target->RemoveAurasDueToSpell(63132);
-            }
-        }
-        
-        void Register()
-        {
-            AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_CHANGE_AMOUNT);
-            AfterEffectApply += AuraEffectApplyFn(spell_tournament_defend_AuraScript::OnStackChange, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
-            AfterEffectRemove += AuraEffectRemoveFn(spell_tournament_defend_AuraScript::OnAuraRemoved, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
-        }
-    };
-
-    AuraScript* GetAuraScript() const
-    {
-        return new spell_tournament_defend_AuraScript();
-    }
-};
-
 /*########
 ## npc_tournament_dummy
 #########*/
@@ -2886,7 +2830,6 @@ void AddSC_Argen_Tournament()
     new npc_lake_frog;
     new npc_maiden_of_ashwood_lake;
     new npc_maiden_of_drak_mar;
-    new spell_tournament_defend();
     new npc_tournament_dummy();
     new npc_free_your_mind();
 }
