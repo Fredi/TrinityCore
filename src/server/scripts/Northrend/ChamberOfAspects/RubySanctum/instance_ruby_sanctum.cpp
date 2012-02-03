@@ -122,7 +122,6 @@ public:
             return false;
         }
 
-<<<<<<< HEAD
         void OpenDoor(uint64 guid)
         {
             if(!guid)
@@ -167,32 +166,6 @@ public:
                                 pPlayer->SendUpdateWorldState(UPDATE_STATE_UI_COUNT_T, 100 - value);
                             else pPlayer->SendUpdateWorldState(UPDATE_STATE_UI_COUNT_R, value);
                             pPlayer->SendUpdateWorldState(UPDATE_STATE_UI_SHOW,1);
-=======
-            bool SetBossState(uint32 type, EncounterState state)
-            {
-                if (!InstanceScript::SetBossState(type, state))
-                    return false;
-
-                switch (type)
-                {
-                    case DATA_BALTHARUS_THE_WARBORN:
-                    {
-                        if (state == DONE && GetBossState(DATA_SAVIANA_RAGEFIRE) == DONE)
-                        {
-                            HandleGameObject(FlameWallsGUID, true);
-                            if (Creature* zarithrian = instance->GetCreature(GeneralZarithrianGUID))
-                                zarithrian->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
-                        }
-                        break;
-                    }
-                    case DATA_SAVIANA_RAGEFIRE:
-                    {
-                        if (state == DONE && GetBossState(DATA_BALTHARUS_THE_WARBORN) == DONE)
-                        {
-                            HandleGameObject(FlameWallsGUID, true);
-                            if (Creature* zarithrian = instance->GetCreature(GeneralZarithrianGUID))
-                                zarithrian->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
->>>>>>> 92ad375864772638ca50ea00b3c89ca36e0d9c3c
                         }
            }
            else
