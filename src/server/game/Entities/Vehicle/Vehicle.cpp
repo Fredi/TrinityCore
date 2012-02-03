@@ -51,7 +51,7 @@ Vehicle::Vehicle(Unit* unit, VehicleEntry const* vehInfo, uint32 creatureEntry) 
         case 452:
         case 453:
         case 510:
-            _me->SetControlled(true, UNIT_STAT_ROOT);
+            _me->SetControlled(true, UNIT_STATE_ROOT);
             _me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             _me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK_DEST, true);
         case 117:
@@ -218,7 +218,7 @@ void Vehicle::ApplyAllImmunities()
             _me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_DECREASE_SPEED, true);
             break;
         case 321: // Pilgrims Bount: Chair
-            _me->SetControlled(true, UNIT_STAT_ROOT);
+            _me->SetControlled(true, UNIT_STATE_ROOT);
             break;
         default:
             break;
