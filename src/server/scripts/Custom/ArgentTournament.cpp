@@ -508,7 +508,7 @@ public:
 
         void DoMeleeAttackIfReady()
         {
-            if (me->HasUnitState(UNIT_STAT_CASTING))
+            if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
             if (me->isAttackReady())
