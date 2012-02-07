@@ -517,6 +517,24 @@ bool Unit::HasAuraTypeWithFamilyFlags(AuraType auraType, uint32 familyName, uint
     return false;
 }
 
+bool Unit::HasBreakableByDamageAuraType(AuraType type) const
+{
+    AuraEffectList const& auras = GetAuraEffectsByType(type);
+    for (AuraEffectList::const_iterator itr = auras.begin(); itr != auras.end(); ++itr)
+        if ((*itr)->GetSpellInfo()->Attributes & SPELL_ATTR0_BREAKABLE_BY_DAMAGE || (*itr)->GetSpellInfo()->AuraInterruptFlags & AURA_INTERRUPT_FLAG_TAKE_DAMAGE)
+            return true;
+    return false;
+}
+
+bool Unit::HasBreakableByDamageCrowdControlAura() const
+{
+    return (   HasBreakableByDamageAuraType(SPELL_AURA_MOD_CONFUSE)
+            || HasBreakableByDamageAuraType(SPELL_AURA_MOD_FEAR)
+            || HasBreakableByDamageAuraType(SPELL_AURA_MOD_STUN)
+            || HasBreakableByDamageAuraType(SPELL_AURA_MOD_ROOT)
+            || HasBreakableByDamageAuraType(SPELL_AURA_TRANSFORM));
+}
+
 void Unit::DealDamageMods(Unit* victim, uint32 &damage, uint32* absorb)
 {
     if (!victim || !victim->isAlive() || victim->HasUnitState(UNIT_STATE_IN_FLIGHT) || (victim->GetTypeId() == TYPEID_UNIT && victim->ToCreature()->IsInEvadeMode()))
@@ -1269,9 +1287,9 @@ void Unit::DealMeleeDamage(CalcDamageInfo* damageInfo, bool durabilityLoss)
 
     // Hmmmm dont like this emotes client must by self do all animations
     if (damageInfo->HitInfo & HITINFO_CRITICALHIT)
-        victim->HandleEmoteCommand(EMOTE_ONESHOT_WOUNDCRITICAL);
+        victim->HandleEmoteCommand(EMOTE_ONESHOT_WOUND_CRITICAL);
     if (damageInfo->blocked_amount && damageInfo->TargetState != VICTIMSTATE_BLOCKS)
-        victim->HandleEmoteCommand(EMOTE_ONESHOT_PARRYSHIELD);
+        victim->HandleEmoteCommand(EMOTE_ONESHOT_PARRY_SHIELD);
 
     if (damageInfo->TargetState == VICTIMSTATE_PARRY)
     {
@@ -3335,19 +3353,19 @@ void Unit::_RemoveNoStackAurasDueToAura(Aura* aura)
         return;
 
     bool remove = false;
-    for (AuraMap::iterator i = m_ownedAuras.begin(); i != m_ownedAuras.end(); ++i)
+    for (AuraApplicationMap::iterator i = m_appliedAuras.begin(); i != m_appliedAuras.end(); ++i)
     {
         if (remove)
         {
             remove = false;
-            i = m_ownedAuras.begin();
+            i = m_appliedAuras.begin();
         }
 
-        if (aura->CanStackWith(i->second))
+        if (aura->CanStackWith(i->second->GetBase()))
             continue;
 
-        RemoveOwnedAura(i, AURA_REMOVE_BY_DEFAULT);
-        if (i == m_ownedAuras.end())
+        RemoveAura(i, AURA_REMOVE_BY_DEFAULT);
+        if (i == m_appliedAuras.end())
             break;
         remove = true;
     }
@@ -3521,17 +3539,25 @@ void Unit::RemoveAuraFromStack(uint32 spellId, uint64 casterGUID, AuraRemoveMode
     }
 }
 
-void Unit::RemoveAurasDueToSpellByDispel(uint32 spellId, uint64 casterGUID, Unit* dispeller, uint8 chargesRemoved/*= 1*/)
+void Unit::RemoveAurasDueToSpellByDispel(uint32 spellId, uint32 dispellerSpellId, uint64 casterGUID, Unit* dispeller, uint8 chargesRemoved/*= 1*/)
 {
     for (AuraMap::iterator iter = m_ownedAuras.lower_bound(spellId); iter != m_ownedAuras.upper_bound(spellId);)
     {
         Aura* aura = iter->second;
         if (aura->GetCasterGUID() == casterGUID)
         {
+            DispelInfo dispelInfo(dispeller, dispellerSpellId, chargesRemoved);
+
+            // Call OnDispel hook on AuraScript
+            aura->CallScriptDispel(&dispelInfo);
+
             if (aura->GetSpellInfo()->AttributesEx7 & SPELL_ATTR7_DISPEL_CHARGES)
-                aura->ModCharges(-chargesRemoved, AURA_REMOVE_BY_ENEMY_SPELL);
+                aura->ModCharges(-dispelInfo.GetRemovedCharges(), AURA_REMOVE_BY_ENEMY_SPELL);
             else
-                aura->ModStackAmount(-chargesRemoved, AURA_REMOVE_BY_ENEMY_SPELL);
+                aura->ModStackAmount(-dispelInfo.GetRemovedCharges(), AURA_REMOVE_BY_ENEMY_SPELL);
+
+            // Call AfterDispel hook on AuraScript
+            aura->CallScriptAfterDispel(&dispelInfo);
 
             switch (aura->GetSpellInfo()->SpellFamilyName)
             {
@@ -3561,7 +3587,7 @@ void Unit::RemoveAurasDueToSpellByDispel(uint32 spellId, uint64 casterGUID, Unit
                         {
                             // final heal
                             int32 healAmount = aurEff->GetAmount();
-                            int32 stack = chargesRemoved;
+                            int32 stack = dispelInfo.GetRemovedCharges();
                             CastCustomSpell(this, 33778, &healAmount, &stack, NULL, true, NULL, NULL, aura->GetCasterGUID());
 
                             // mana
@@ -4863,8 +4889,8 @@ bool Unit::HandleHasteAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                 case 13877:
                 case 33735:
                 {
-                    target = SelectNearbyTarget();
-                    if (!target || target == victim)
+                    target = SelectNearbyTarget(victim);
+                    if (!target)
                         return false;
                     basepoints0 = damage;
                     triggered_spell_id = 22482;
@@ -5019,7 +5045,7 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                 case 18765:
                 case 35429:
                 {
-                    target = SelectNearbyTarget();
+                    target = SelectNearbyTarget(victim);
                     if (!target)
                         return false;
 
@@ -5739,7 +5765,7 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                 // Sweeping Strikes
                 case 12328:
                 {
-                    target = SelectNearbyTarget();
+                    target = SelectNearbyTarget(victim);
                     if (!target)
                         return false;
 
@@ -5818,12 +5844,12 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                 if (!victim || !victim->isAlive() || !procSpell)
                     return false;
 
-                target = SelectNearbyTarget();
-                if (!target || target == victim)
+                target = SelectNearbyTarget(victim);
+                if (!target)
                     return false;
 
-                CastSpell(target, 58567, true);
-                return true;
+                triggered_spell_id = 58567;
+                break;
             }
             break;
         }
@@ -14807,7 +14833,7 @@ void Unit::UpdateReactives(uint32 p_time)
     }
 }
 
-Unit* Unit::SelectNearbyTarget(float dist) const
+Unit* Unit::SelectNearbyTarget(Unit* exclude, float dist) const
 {
     std::list<Unit*> targets;
     Trinity::AnyUnfriendlyUnitInObjectRangeCheck u_check(this, this, dist);
@@ -14817,6 +14843,9 @@ Unit* Unit::SelectNearbyTarget(float dist) const
     // remove current target
     if (getVictim())
         targets.remove(getVictim());
+        
+    if (exclude)
+        targets.remove(exclude);
 
     // remove not LoS targets
     for (std::list<Unit*>::iterator tIter = targets.begin(); tIter != targets.end();)
