@@ -1260,6 +1260,7 @@ void AddSC_chat_monitor();
 void AddSC_npc_icc_ring_recover();
 void AddSC_guild_house();
 void AddSC_cast_log();
+void AddSC_npc_custom_vendor();
 #endif
 
 void AddCustomScripts()
@@ -1278,5 +1279,6 @@ void AddCustomScripts()
     AddSC_guild_house();
     AddSC_Argen_Tournament();
     AddSC_cast_log();
+    AddSC_npc_custom_vendor();
 #endif
 }
