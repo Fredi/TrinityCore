@@ -77,8 +77,6 @@
 #include "AnticheatMgr.h"
 #include "AuctionHouseBot.h"
 #include "OutdoorPvPWG.h"
-#include "WardenCheckMgr.h"
-#include "Warden.h"
 
 volatile bool World::m_stopEvent = false;
 uint8 World::m_ExitCode = SHUTDOWN_EXIT_CODE;
@@ -1178,15 +1176,6 @@ void World::LoadConfigSettings(bool reload)
     // cast logging
     m_bool_configs[CONFIG_CASTLOG_ENABLED] = ConfigMgr::GetBoolDefault("CastLogs.Enabled", false);
 
-    // Warden
-    m_bool_configs[CONFIG_WARDEN_ENABLED]              = ConfigMgr::GetBoolDefault("Warden.Enabled", false);
-    m_int_configs[CONFIG_WARDEN_NUM_MEM_CHECKS]        = ConfigMgr::GetIntDefault("Warden.NumMemChecks", 3);
-    m_int_configs[CONFIG_WARDEN_NUM_OTHER_CHECKS]      = ConfigMgr::GetIntDefault("Warden.NumOtherChecks", 7);
-    m_int_configs[CONFIG_WARDEN_CLIENT_BAN_DURATION]   = ConfigMgr::GetIntDefault("Warden.BanDuration", 86400);
-    m_int_configs[CONFIG_WARDEN_CLIENT_CHECK_HOLDOFF]  = ConfigMgr::GetIntDefault("Warden.ClientCheckHoldOff", 30);
-    m_int_configs[CONFIG_WARDEN_CLIENT_FAIL_ACTION]    = ConfigMgr::GetIntDefault("Warden.ClientCheckFailAction", 0);
-    m_int_configs[CONFIG_WARDEN_CLIENT_RESPONSE_DELAY] = ConfigMgr::GetIntDefault("Warden.ClientResponseDelay", 600);
-
     // Dungeon finder
     m_bool_configs[CONFIG_DUNGEON_FINDER_ENABLE] = ConfigMgr::GetBoolDefault("DungeonFinder.Enable", false);
 
@@ -1758,10 +1747,6 @@ void World::SetInitialWorldSettings()
 
     sLog->outString("Loading Transport NPCs...");
     sMapMgr->LoadTransportNPCs();
-
-    ///- Initialize Warden
-    sLog->outString("Loading Warden Checks..." );
-    sWardenCheckMgr->LoadWardenChecks();
 
     sLog->outString("Deleting expired bans...");
     LoginDatabase.Execute("DELETE FROM ip_banned WHERE unbandate <= UNIX_TIMESTAMP() AND unbandate<>bandate");

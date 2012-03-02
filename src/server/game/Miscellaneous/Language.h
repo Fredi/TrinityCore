@@ -1087,7 +1087,6 @@ enum TrinityStrings
     LANG_BAN_CHEATER                    = 11002,
     LANG_CHAT_MONITOR                   = 11003,
     LANG_CHAT_MONITOR_LFG               = 11004,
-    LANG_WARDEN_PENALTY                 = 11005,
 
     // NOT RESERVED IDS                   12000-1999999999
     // `db_script_string` table index     2000000000-2000009999 (MIN_DB_SCRIPT_STRING_ID-MAX_DB_SCRIPT_STRING_ID)
