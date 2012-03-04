@@ -26,6 +26,7 @@
 #include "CellImpl.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
+#include "CreatureTextMgr.h"
 #include "icecrown_citadel.h"
 
 enum Texts
@@ -499,15 +500,8 @@ class boss_the_lich_king : public CreatureScript
             {
                 _JustDied();
                 DoCastAOE(SPELL_PLAY_MOVIE, false);
-                me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
+                me->SetLevitate(false);
                 me->RemoveByteFlag(UNIT_FIELD_BYTES_1, 3, 0x03);
-                float x, y, z;
-                me->GetPosition(x, y, z);
-                // use larger distance for vmap height search than in most other cases
-                float ground_Z = me->GetMap()->GetHeight(x, y, z, true, MAX_FALL_DISTANCE);
-                if (fabs(ground_Z - z) < 0.1f)
-                    return;
-
                 me->GetMotionMaster()->MoveFall();
             }
 
@@ -669,7 +663,7 @@ class boss_the_lich_king : public CreatureScript
                     summons.DespawnAll();
                     SendMusicToPlayers(MUSIC_FURY_OF_FROSTMOURNE);
                     DoCastAOE(SPELL_FURY_OF_FROSTMOURNE);
-                    me->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                    me->SetWalk(true);
                     events.ScheduleEvent(EVENT_OUTRO_TALK_1, 2600, 0, PHASE_OUTRO);
                     events.ScheduleEvent(EVENT_OUTRO_EMOTE_TALK, 6600, 0, PHASE_OUTRO);
                     events.ScheduleEvent(EVENT_OUTRO_EMOTE_TALK, 17600, 0, PHASE_OUTRO);
@@ -875,7 +869,7 @@ class boss_the_lich_king : public CreatureScript
                         case EVENT_INTRO_MOVE_1:
                             me->SetSheath(SHEATH_STATE_MELEE);
                             me->RemoveAurasDueToSpell(SPELL_EMOTE_SIT_NO_SHEATH);
-                            me->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                            me->SetWalk(true);
                             me->GetMotionMaster()->MovePoint(POINT_LK_INTRO_1, LichKingIntro[0]);
                             break;
                         case EVENT_INTRO_MOVE_2:
@@ -905,7 +899,7 @@ class boss_the_lich_king : public CreatureScript
                             events.ScheduleEvent(EVENT_FINISH_INTRO, 1000, 0, PHASE_INTRO);
                             break;
                         case EVENT_FINISH_INTRO:
-                            me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                            me->SetWalk(false);
                             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
                             me->SetReactState(REACT_AGGRESSIVE);
                             events.SetPhase(PHASE_ONE);
@@ -1083,7 +1077,7 @@ class boss_the_lich_king : public CreatureScript
                             DoCastAOE(SPELL_SOUL_BARRAGE);
                             sCreatureTextMgr->SendSound(me, SOUND_PAIN, CHAT_MSG_MONSTER_YELL, 0, TEXT_RANGE_NORMAL, TEAM_OTHER, false);
                             // set flight
-                            me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
+                            me->SetLevitate(true);
                             me->SetByteFlag(UNIT_FIELD_BYTES_1, 3, 0x03);
                             me->GetMotionMaster()->MovePoint(POINT_LK_OUTRO_2, OutroFlying);
                             break;
@@ -1233,11 +1227,11 @@ class npc_tirion_fordring_tft : public CreatureScript
 
             void sGossipSelect(Player* /*player*/, uint32 sender, uint32 action)
             {
-                if (me->GetCreatureInfo()->GossipMenuId == sender && !action)
+                if (me->GetCreatureTemplate()->GossipMenuId == sender && !action)
                 {
                     _events.SetPhase(PHASE_INTRO);
                     me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                    me->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                    me->SetWalk(true);
                     me->GetMotionMaster()->MovePoint(POINT_TIRION_INTRO, TirionIntro);
                 }
             }
@@ -1275,7 +1269,7 @@ class npc_tirion_fordring_tft : public CreatureScript
                             me->HandleEmoteCommand(EMOTE_ONESHOT_POINT_NO_SHEATHE);
                             break;
                         case EVENT_INTRO_CHARGE:
-                            me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                            me->SetWalk(false);
                             me->GetMotionMaster()->MovePoint(POINT_TIRION_CHARGE, TirionCharge);
                             break;
                         case EVENT_OUTRO_TALK_1:

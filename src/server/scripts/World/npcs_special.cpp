@@ -33,7 +33,6 @@ npc_guardian            100%    guardianAI used to prevent players from accessin
 npc_garments_of_quests   80%    NPC's related to all Garments of-quests 5621, 5624, 5625, 5648, 565
 npc_injured_patient     100%    patients for triage-quests (6622 and 6624)
 npc_doctor              100%    Gustaf Vanhowzen and Gregory Victor, quest 6622 and 6624 (Triage)
-npc_kingdom_of_dalaran_quests   Misc NPC's gossip option related to quests 12791, 12794 and 12796
 npc_mount_vendor        100%    Regular mount vendors all over the world. Display gossip if player doesn't meet the requirements to buy
 npc_rogue_trainer        80%    Scripted trainers, so they are able to offer item 17126 for class quest 6681
 npc_sayge               100%    Darkmoon event fortune teller, buff player based on answers given
@@ -139,8 +138,8 @@ public:
 
                 if (!spawnedTemplate)
                 {
-                    SpawnAssoc = NULL;
                     sLog->outErrorDb("TCSR: Creature template entry %u does not exist in DB, which is required by npc_air_force_bots", SpawnAssoc->spawnedCreatureEntry);
+                    SpawnAssoc = NULL;
                     return;
                 }
             }
@@ -423,7 +422,7 @@ public:
             float x, y, z;
             me->GetPosition(x, y, z);
             me->Relocate(x, y, z + 0.94f);
-            me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
+            me->SetLevitate(true);
             me->HandleEmoteCommand(EMOTE_ONESHOT_DANCE);
             WorldPacket data;                       //send update position to client
             me->BuildHeartBeatMsg(&data);
@@ -766,7 +765,7 @@ public:
                 DoScriptText(RAND(SAY_DOC1, SAY_DOC2, SAY_DOC3), me);
 
                 uint32 mobId = me->GetEntry();
-                me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                me->SetWalk(false);
 
                 switch (mobId)
                 {
@@ -1134,50 +1133,6 @@ public:
     CreatureAI* GetAI(Creature* creature) const
     {
         return new npc_guardianAI(creature);
-    }
-};
-
-/*######
-## npc_kingdom_of_dalaran_quests
-######*/
-
-enum eKingdomDalaran
-{
-    SPELL_TELEPORT_DALARAN  = 53360,
-    ITEM_KT_SIGNET          = 39740,
-    QUEST_MAGICAL_KINGDOM_A = 12794,
-    QUEST_MAGICAL_KINGDOM_H = 12791,
-    QUEST_MAGICAL_KINGDOM_N = 12796
-};
-
-#define GOSSIP_ITEM_TELEPORT_TO "I am ready to be teleported to Dalaran."
-
-class npc_kingdom_of_dalaran_quests : public CreatureScript
-{
-public:
-    npc_kingdom_of_dalaran_quests() : CreatureScript("npc_kingdom_of_dalaran_quests") { }
-    bool OnGossipHello(Player* player, Creature* creature)
-    {
-        if (creature->isQuestGiver())
-            player->PrepareQuestMenu(creature->GetGUID());
-
-        if (player->HasItemCount(ITEM_KT_SIGNET, 1) && (!player->GetQuestRewardStatus(QUEST_MAGICAL_KINGDOM_A) ||
-            !player->GetQuestRewardStatus(QUEST_MAGICAL_KINGDOM_H) || !player->GetQuestRewardStatus(QUEST_MAGICAL_KINGDOM_N)))
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT_TO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-
-        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
-        return true;
-    }
-
-    bool OnGossipSelect(Player* player, Creature* /*creature*/, uint32 /*sender*/, uint32 action)
-    {
-        player->PlayerTalkClass->ClearMenus();
-        if (action == GOSSIP_ACTION_INFO_DEF + 1)
-        {
-            player->CLOSE_GOSSIP_MENU();
-            player->CastSpell(player, SPELL_TELEPORT_DALARAN, false);
-        }
-        return true;
     }
 };
 
@@ -1696,7 +1651,7 @@ public:
         {
             SpellTimer = 0;
 
-            CreatureTemplate const* Info = me->GetCreatureInfo();
+            CreatureTemplate const* Info = me->GetCreatureTemplate();
 
             IsViper = Info->Entry == C_VIPER ? true : false;
 
@@ -3431,7 +3386,6 @@ void AddSC_npcs_special()
     new npc_injured_patient;
     new npc_garments_of_quests;
     new npc_guardian;
-    new npc_kingdom_of_dalaran_quests;
     new npc_mount_vendor;
     new npc_rogue_trainer;
     new npc_sayge;
@@ -3459,4 +3413,3 @@ void AddSC_npcs_special()
     new npc_firework;
     new npc_spring_rabbit();
 }
-

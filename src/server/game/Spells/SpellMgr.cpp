@@ -106,9 +106,6 @@ DiminishingGroup GetDiminishingReturnsGroupForSpell(SpellInfo const* spellproto,
             // Hamstring - limit duration to 10s in PvP
             if (spellproto->SpellFamilyFlags[0] & 0x2)
                 return DIMINISHING_LIMITONLY;
-            // Improved Hamstring
-            else if (spellproto->AttributesEx3 & 0x80000 && spellproto->SpellIconID == 23)
-                return DIMINISHING_ROOT;
             // Charge Stun (own diminishing)
             else if (spellproto->SpellFamilyFlags[0] & 0x01000000)
                 return DIMINISHING_CHARGE;
@@ -2669,9 +2666,18 @@ void SpellMgr::UnloadSpellInfoStore()
     for (uint32 i = 0; i < mSpellInfoMap.size(); ++i)
     {
         if (mSpellInfoMap[i])
-          delete mSpellInfoMap[i];
+            delete mSpellInfoMap[i];
     }
     mSpellInfoMap.clear();
+}
+
+void SpellMgr::UnloadSpellInfoImplicitTargetConditionLists()
+{
+    for (uint32 i = 0; i < mSpellInfoMap.size(); ++i)
+    {
+        if (mSpellInfoMap[i])
+            mSpellInfoMap[i]->_UnloadImplicitTargetConditionLists();
+    }
 }
 
 void SpellMgr::LoadSpellCustomAttr()
@@ -3147,7 +3153,6 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectSpellClassMask[0] = flag96(685904631, 1151048, 0);
                 break;
             case 74396: // Fingers of Frost visual buff
-            case 53257: // Cobra Strikes
                 spellInfo->procCharges = 2;
                 spellInfo->StackAmount = 0;
                 break;
