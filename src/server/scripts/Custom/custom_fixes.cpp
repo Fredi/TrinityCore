@@ -360,39 +360,6 @@ public:
     }
 };
 
-class item_water_bucket : public ItemScript
-{
-    public:
-
-        item_water_bucket() : ItemScript("item_water_bucket") { }
-
-        bool OnUse(Player* player, Item* /*item*/, SpellCastTargets const& targets)
-        {
-            if (Creature* dummy = player->SummonCreature(NPC_FIRE_DUMMY, targets.GetDst()->GetPositionX(), targets.GetDst()->GetPositionY(), targets.GetDst()->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 500))
-            {
-                std::list<Creature*> firesList;
-                Trinity::AllCreaturesOfEntryInRange checker(dummy, NPC_HEADLESS_FIRE, 3.0f);
-                Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(dummy, firesList, checker);
-                player->VisitNearbyObject(3.0f, searcher);
-
-                if (firesList.empty())
-                {
-                    // Just some extra checks...
-                    Creature* fire = dummy->FindNearestCreature(NPC_HEADLESS_FIRE, 3.0f, true);
-                    if (fire && fire->isAlive())
-                        fire->AI()->SetGUID(player->GetGUID(), EVENT_FIRE_HIT_BY_BUCKET);
-                    else
-                        return false;
-                }
-
-                for (std::list<Creature*>::const_iterator i = firesList.begin(); i != firesList.end(); ++i)
-                    if ((*i) && (*i)->isAlive())
-                        (*i)->AI()->SetGUID(player->GetGUID(), EVENT_FIRE_HIT_BY_BUCKET);
-            }
-            return false;
-        }
-};
-
 class npc_halloween_fire : public CreatureScript
 {
 public:
@@ -470,54 +437,6 @@ public:
     }
 };
 
-/*##########
-# Quest 9361
-###########*/
-
-enum HelboarMeatSpells
-{
-    SPELL_PURIFY_HELBOAR_MEAT           = 29200,
-    SPELL_SUMMON_PURIFIED_HELBOAR_MEAT  = 29277,
-    SPELL_SUMMON_TOXIC_HELBOAR_MEAT     = 29278
-};
-
-class spell_purify_helboar_meat : public SpellScriptLoader
-{
-public:
-    spell_purify_helboar_meat() : SpellScriptLoader("spell_purify_helboar_meat") {}
-
-    class spell_purify_helboar_meat_SpellScript : public SpellScript
-    {
-        PrepareSpellScript(spell_purify_helboar_meat_SpellScript);
-
-        bool Validate(SpellInfo const* /*spellInfo*/)
-        {
-            if (!sSpellMgr->GetSpellInfo(SPELL_PURIFY_HELBOAR_MEAT) ||
-                !sSpellMgr->GetSpellInfo(SPELL_SUMMON_PURIFIED_HELBOAR_MEAT) ||
-                !sSpellMgr->GetSpellInfo(SPELL_SUMMON_TOXIC_HELBOAR_MEAT))
-                return false;
-            return true;
-        }
-
-        void HandleDummy(SpellEffIndex /*effIndex*/)
-        {
-            if (Unit* caster = GetCaster())
-                if (Player* player = caster->ToPlayer())
-                    player->CastSpell(player, urand(0, 1) == 0 ? SPELL_SUMMON_PURIFIED_HELBOAR_MEAT : SPELL_SUMMON_TOXIC_HELBOAR_MEAT, false);
-        }
-
-        void Register()
-        {
-            OnEffectHit += SpellEffectFn(spell_purify_helboar_meat_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
-        }
-    };
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_purify_helboar_meat_SpellScript();
-    }
-};
-
 void AddSC_custom_fixes()
 {
     new spell_oracle_wolvar;
@@ -528,7 +447,5 @@ void AddSC_custom_fixes()
     new at_wickerman_festival();
     new spell_halloween_wand();
     new go_wickerman_ember();
-    new item_water_bucket();
     new npc_halloween_fire();
-    new spell_purify_helboar_meat();
 }
