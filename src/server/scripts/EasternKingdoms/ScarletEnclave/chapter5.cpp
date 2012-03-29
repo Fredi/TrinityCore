@@ -287,10 +287,10 @@ class npc_highlord_darion_mograine : public CreatureScript
 public:
     npc_highlord_darion_mograine() : CreatureScript("npc_highlord_darion_mograine") { }
 
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
     {
         player->PlayerTalkClass->ClearMenus();
-        switch (uiAction)
+        switch (action)
         {
             case GOSSIP_ACTION_INFO_DEF+1:
                 player->CLOSE_GOSSIP_MENU();
@@ -578,7 +578,8 @@ public:
                         temp->GetMotionMaster()->MovePoint(0, LightofDawnLoc[16].x, LightofDawnLoc[16].y, LightofDawnLoc[16].z);
                     }
                     JumpToNextStep(10000);
-                } break;
+                }
+                break;
                 case 4:
                     DoScriptText(SAY_LIGHT_OF_DAWN27, me);
                     me->SetStandState(UNIT_STAND_STATE_KNEEL);
@@ -938,7 +939,7 @@ public:
                         case 33: // Darion supports to jump to lich king here
                             if (Unit::GetCreature(*me, uiLichKingGUID))
                                 DoCast(me, SPELL_MOGRAINE_CHARGE); // jumping charge
-    //   doesn't make it looks well, so workarounds, Darion charges, looks better
+                            // doesn't make it looks well, so workarounds, Darion charges, looks better
                             me->SetSpeed(MOVE_RUN, 3.0f);
                             me->SetWalk(false);
                             SetHoldState(false);
@@ -1309,7 +1310,6 @@ public:
                         case 71:
                             //if (GameObject* go = me->GetMap()->GetGameObject(uiDawnofLightGUID)) // Turn off dawn of light
                             //    go->SetPhaseMask(0, true);
-
                             {
                                 Map* map = me->GetMap(); // search players with in 50 yards for quest credit
                                 Map::PlayerList const &PlayerList = map->GetPlayers();

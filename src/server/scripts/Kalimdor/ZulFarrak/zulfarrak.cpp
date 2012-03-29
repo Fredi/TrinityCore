@@ -61,10 +61,10 @@ class npc_sergeant_bly : public CreatureScript
 public:
     npc_sergeant_bly() : CreatureScript("npc_sergeant_bly") { }
 
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
     {
         player->PlayerTalkClass->ClearMenus();
-        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        if (action == GOSSIP_ACTION_INFO_DEF+1)
         {
             player->CLOSE_GOSSIP_MENU();
             CAST_AI(npc_sergeant_bly::npc_sergeant_blyAI, creature->AI())->PlayerGUID = player->GetGUID();
@@ -199,18 +199,6 @@ public:
 +## go_troll_cage
 +######*/
 
-void initBlyCrewMember(InstanceScript* instance, uint32 entry, float x, float y, float z)
-{
-   if (Creature* crew = instance->instance->GetCreature(instance->GetData64(entry)))
-   {
-        crew->SetReactState(REACT_AGGRESSIVE);
-        crew->SetWalk(true);
-        crew->SetHomePosition(x, y, z, 0);
-        crew->GetMotionMaster()->MovePoint(1, x, y, z);
-        crew->setFaction(FACTION_FREED);
-    }
-}
-
 class go_troll_cage : public GameObjectScript
 {
 public:
@@ -231,6 +219,18 @@ public:
         return false;
     }
 
+private:
+    void initBlyCrewMember(InstanceScript* instance, uint32 entry, float x, float y, float z)
+    {
+        if (Creature* crew = instance->instance->GetCreature(instance->GetData64(entry)))
+        {
+            crew->SetReactState(REACT_AGGRESSIVE);
+            crew->SetWalk(true);
+            crew->SetHomePosition(x, y, z, 0);
+            crew->GetMotionMaster()->MovePoint(1, x, y, z);
+            crew->setFaction(FACTION_FREED);
+        }
+    }
 };
 
 /*######
@@ -258,10 +258,10 @@ class npc_weegli_blastfuse : public CreatureScript
 public:
     npc_weegli_blastfuse() : CreatureScript("npc_weegli_blastfuse") { }
 
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
     {
         player->PlayerTalkClass->ClearMenus();
-        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        if (action == GOSSIP_ACTION_INFO_DEF+1)
         {
             player->CLOSE_GOSSIP_MENU();
             //here we make him run to door, set the charge and run away off to nowhere
