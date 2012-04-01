@@ -270,7 +270,7 @@ void World::AddSession_(WorldSession* s)
     {
         AddQueuedPlayer (s);
         UpdateMaxSessionCounters();
-        sLog->outDetail ("PlayerQueue: Account id %u is in Queue Position (%u).", s->GetAccountId(), ++QueueSize);
+        sLog->outDetail("PlayerQueue: Account id %u is in Queue Position (%u).", s->GetAccountId(), ++QueueSize);
         return;
     }
 
@@ -287,7 +287,7 @@ void World::AddSession_(WorldSession* s)
         float popu = (float)GetActiveSessionCount();              // updated number of users on the server
         popu /= pLimit;
         popu *= 2;
-        sLog->outDetail ("Server Population (%f).", popu);
+        sLog->outDetail("Server Population (%f).", popu);
     }
 }
 
@@ -1799,7 +1799,7 @@ void World::SetInitialWorldSettings()
 
     uint32 startupDuration = GetMSTimeDiffToNow(startupBegin);
     sLog->outString();
-    sLog->outString("WORLD: World initialized in %u minutes %u seconds", (startupDuration / 60000), ((startupDuration % 60000) / 1000) );
+    sLog->outString("WORLD: World initialized in %u minutes %u seconds", (startupDuration / 60000), ((startupDuration % 60000) / 1000));
     sLog->outString();
 }
 
