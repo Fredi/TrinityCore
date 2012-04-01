@@ -776,11 +776,11 @@ bool ChatHandler::HandleLookupPlayerNameCommand(char const* args)
 
     QueryResult result = LoginDatabase.PQuery("SELECT last_ip FROM account WHERE id = '%u'", accountId);
 
-    std::string ip = (*result)[0].GetString();
+    PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_BY_IP);
+    stmt->setString(0, (*result)[0].GetString());
+    PreparedQueryResult psResult = LoginDatabase.Query(stmt);
 
-    result = LoginDatabase.PQuery("SELECT id, username FROM account WHERE last_ip = '%s'", ip.c_str());
-
-    return LookupPlayerSearchCommand(result, int32(limit ? atoi(limit) : -1), int32(m_session->GetSecurity()));
+    return LookupPlayerSearchCommand(psResult, int32(limit ? atoi(limit) : -1), int32(m_session->GetSecurity()));
 }
 
 bool ChatHandler::HandleLookupPlayerAccountCommand(const char* args)
@@ -844,10 +844,6 @@ bool ChatHandler::LookupPlayerSearchCommand(PreparedQueryResult result, int32 li
             PSendSysMessage(LANG_COMMAND_LOOKUP_MAX_RESULTS, maxResults);
             return true;
         }
-
-        Field* fields = result->Fetch();
-        uint32 acc_id = fields[0].GetUInt32();
-        std::string acc_name = fields[1].GetString();
 
         PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHAR_GUID_NAME_BY_ACC);
         stmt->setUInt32(0, acc_id);

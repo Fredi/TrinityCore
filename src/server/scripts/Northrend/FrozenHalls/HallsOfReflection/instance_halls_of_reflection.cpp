@@ -388,14 +388,6 @@ public:
                             pChest->SetPhaseMask(1, true);
                         if(GameObject *pPortal = instance->GetGameObject(uiPortal))
                             pPortal->SetPhaseMask(1, true);
-
-                        DoCompleteAchievement(ACHIEV_HALLS_OF_REFLECTION_N);
-                        if(instance->IsHeroic())
-                        {
-                            DoCompleteAchievement(ACHIEV_HALLS_OF_REFLECTION_H);
-                            DoCastSpellOnPlayers(SPELL_ACHIEV_CHECK);
-                            DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_NOT_RETREATING_EVENT);
-                        }
                     }
                     break;
                 case DATA_SUMMONS:

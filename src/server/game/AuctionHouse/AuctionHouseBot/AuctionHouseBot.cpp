@@ -845,10 +845,9 @@ void AuctionHouseBot::Initialize()
 
     if (AHBSeller)
     {
-        QueryResult results = QueryResult(NULL);
         char npcQuery[] = "SELECT distinct item FROM npc_vendor";
-        results = WorldDatabase.Query(npcQuery);
-        if (results != NULL)
+        QueryResult results = WorldDatabase.Query(npcQuery);
+        if (results->GetRowCount() > 0)
         {
             do
             {
@@ -874,7 +873,7 @@ void AuctionHouseBot::Initialize()
             "SELECT item FROM skinning_loot_template";
 
         results = WorldDatabase.Query(lootQuery);
-        if (results != NULL)
+        if (results->GetRowCount() > 0)
         {
             do
             {
